@@ -1,0 +1,328 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lacquer.dev/schema/component.schema.json",
+  "title": "Lacquer component spec",
+  "description": "The framework-agnostic contract for one catalog entry: what it is, what it is made of, every state it must express, how it must behave for keyboard and assistive tech, which token roles it consumes, when to use it, what is forbidden, and where its examples live. Authored as YAML in spec/catalog/**; compiled to JSON in spec/dist/. Enums marked `x-vocab` are injected from spec/schema/vocab.yaml by the build. While an entry is a draft only id, catalog, group and status are required; the full contract is required once it is stable.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "catalog", "group", "status"],
+  "if": { "properties": { "status": { "const": "stable" } } },
+  "then": {
+    "required": ["name", "kind", "tier", "version", "summary", "states", "accessibility", "usage", "rules"],
+    "properties": { "states": { "minItems": 1 }, "accessibility": { "required": ["name"] } }
+  },
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$", "description": "Kebab-case identifier. Folder name must match." },
+    "name": { "type": "string", "minLength": 1 },
+    "kind": { "type": "string", "x-vocab": "kinds" },
+    "catalog": { "type": "string", "x-vocab": "catalogs" },
+    "group": { "type": "string", "x-vocab": "groups" },
+    "tier": { "type": "integer", "enum": [1, 2, 3] },
+    "atomic_level": { "type": "string", "x-vocab": "atomic_levels" },
+    "maturity": { "type": "string", "x-vocab": "maturity" },
+    "status": { "type": "string", "x-vocab": "status" },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "default": "0.1.0" },
+    "summary": { "type": "string", "minLength": 1, "maxLength": 240, "description": "One sentence. This is what search and MCP listings show." },
+    "aliases": { "type": "array", "items": { "type": "string" }, "description": "What other systems call it. Search matches on these." },
+    "found_in": { "type": "array", "items": { "type": "string" } },
+
+    "anatomy": {
+      "type": "array",
+      "description": "Named parts, in DOM order. Every part becomes a data-slot in implementations and a target for the grader.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["part"],
+        "properties": {
+          "part": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+          "element": { "type": "string", "description": "Preferred native element, if one exists." },
+          "required": { "type": "boolean", "default": true },
+          "slot": { "type": "boolean", "default": false, "description": "Consumer-supplied content goes here." },
+          "description": { "type": "string" }
+        }
+      }
+    },
+
+    "variants": {
+      "type": "array",
+      "description": "Independent axes of variation. Keep axes orthogonal; overlapping axes (appearance + emphasis + variant) are the API smell Curtis warns about.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["axis", "values"],
+        "properties": {
+          "axis": { "type": "string" },
+          "values": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+          "default": { "type": "string" },
+          "guidance": { "type": "string" }
+        }
+      }
+    },
+    "modifiers": { "type": "array", "items": { "type": "string" }, "description": "Boolean switches that are not an axis (full-width, with-dividers)." },
+
+    "states": {
+      "type": "array",
+      "description": "Every state this entry must express. Ids come from vocab.states. `treatment` is the visual delta from enabled, in token roles; `a11y` is how the state reaches the accessibility tree, or the word none.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id"],
+        "properties": {
+          "id": { "type": "string", "x-vocab": "states" },
+          "required": { "type": "boolean", "default": true },
+          "treatment": { "type": "string" },
+          "a11y": { "type": "string" },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+
+    "modes": {
+      "type": "array",
+      "description": "Component-specific display modes that are not interaction states (a message list `following` vs `released`, a citation `single` vs `multiple`). Same contract as states: a treatment and an a11y expression each. Keep interaction states in `states`.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+          "treatment": { "type": "string" },
+          "a11y": { "type": "string" },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+
+    "machine": {
+      "type": "object",
+      "description": "For principles that define a lifecycle: the states, transitions and announcements other components consume.",
+      "additionalProperties": false,
+      "required": ["states", "transitions"],
+      "properties": {
+        "initial": { "type": "string" },
+        "states": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id"],
+            "properties": {
+              "id": { "type": "string" },
+              "terminal": { "type": "boolean" },
+              "user_sees": { "type": "string" },
+              "composer_control": { "type": "string" },
+              "announcement": { "type": "string" }
+            }
+          }
+        },
+        "transitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["from", "to", "on"],
+            "properties": {
+              "from": { "type": "string" },
+              "to": { "type": "string" },
+              "on": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "api": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Framework-neutral API. Renderers translate; they do not invent.",
+      "properties": {
+        "props": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "type"],
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "type": "string" },
+              "default": {},
+              "required": { "type": "boolean", "default": false },
+              "description": { "type": "string" },
+              "maps_to": { "type": "string", "description": "The DOM/ARIA attribute this prop drives, if any." }
+            }
+          }
+        },
+        "slots": { "type": "array", "items": { "type": "string" } },
+        "events": { "type": "array", "items": { "type": "object", "required": ["name"], "properties": { "name": { "type": "string" }, "payload": { "type": "string" }, "description": { "type": "string" } } } },
+        "interactions": { "type": "array", "items": { "type": "string" }, "description": "What the user can do with it, one action each. An empty list means none." },
+        "composition": { "type": "string", "description": "What is composed from children vs configured by props, and why." }
+      }
+    },
+
+    "accessibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "apg": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "pattern": { "type": "string" }, "url": { "type": "string", "format": "uri" } }
+        },
+        "role": { "type": "string", "description": "Implicit or explicit role of the root, or none." },
+        "name": { "type": "string", "description": "Where the accessible name comes from." },
+        "aria": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["attr"],
+            "properties": { "attr": { "type": "string" }, "on": { "type": "string" }, "when": { "type": "string" }, "value": { "type": "string" } }
+          }
+        },
+        "keyboard": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["key", "action"],
+            "properties": { "key": { "type": "string" }, "action": { "type": "string" }, "when": { "type": "string" } }
+          }
+        },
+        "focus": { "type": "string", "description": "Focus movement rules: on open, on close, trapping, restoration." },
+        "announcements": { "type": "string", "description": "Live-region behaviour, if any." },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "tokens": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "consumes": { "type": "array", "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*(\\.([a-z0-9-]+|\\*))+$" }, "description": "Token roles, dotted. Never values." },
+        "defines": { "type": "array", "items": { "type": "string" }, "description": "Roles this entry introduces that others may consume (rare; principles mostly)." }
+      }
+    },
+
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Copy rules. The grader checks these against rendered text.",
+      "properties": {
+        "label": { "type": "string" },
+        "voice": { "type": "string" },
+        "limits": { "type": "string" },
+        "strings": { "type": "object", "additionalProperties": { "type": "string" }, "description": "Default strings an implementation must localise, keyed by purpose." }
+      }
+    },
+
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "use_when": { "type": "array", "items": { "type": "string" } },
+        "avoid_when": { "type": "array", "items": { "type": "string" } },
+        "instead": {
+          "type": "array",
+          "description": "Decision rules: when a different entry is the honest answer.",
+          "items": { "type": "object", "additionalProperties": false, "required": ["when", "use"], "properties": { "when": { "type": "string" }, "use": { "type": "string" } } }
+        },
+        "pairs_well_with": { "type": "array", "items": { "type": "string" } },
+        "reuses": { "type": "array", "items": { "type": "string" }, "description": "Catalog ids this entry is built from." },
+        "exemplars": { "type": "array", "items": { "type": "string" }, "description": "Shipping products that do it well, and what to look at." },
+        "ai_products_rely_on": { "type": "boolean", "description": "AI products depend on this core entry, directly or as a building block." }
+      }
+    },
+
+    "rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "What the grader enforces. `shared` cites ids from spec/rules/*.yaml; `local` defines rules that only make sense for this entry. Forbidden usage is a local rule with polarity: forbid.",
+      "properties": {
+        "shared": { "type": "array", "items": { "type": "string", "pattern": "^LQ-[A-Z0-9]+-\\d{2}$" } },
+        "local": { "type": "array", "items": { "$ref": "#/$defs/rule" } }
+      }
+    },
+
+    "examples": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "good": { "type": "array", "items": { "$ref": "#/$defs/example" } },
+        "anti": {
+          "type": "array",
+          "description": "Forbidden usage as code. Each must cite the rule(s) it violates so the grader can use it as a fixture.",
+          "items": {
+            "allOf": [ { "$ref": "#/$defs/example" }, { "type": "object", "required": ["violates"] } ]
+          }
+        }
+      }
+    },
+
+    "implementations": {
+      "type": "array",
+      "description": "Concrete code for a renderer: the reference implementation of this entry.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["renderer", "file"],
+        "properties": {
+          "renderer": { "type": "string", "x-vocab": "renderers" },
+          "file": { "type": "string" },
+          "status": { "type": "string", "enum": ["sketch", "reference", "published"] }
+        }
+      }
+    },
+
+    "grading": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "weight": { "type": "number", "minimum": 0, "default": 1, "description": "Relative weight when this entry appears in a graded screen." },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "sources": { "type": "array", "items": { "type": "string" } }
+  },
+
+  "$defs": {
+    "rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "level", "polarity", "statement"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^LQ-[A-Z0-9]+-\\d{2}$" },
+        "level": { "type": "string", "x-vocab": "rule_levels" },
+        "polarity": { "type": "string", "enum": ["require", "forbid"] },
+        "title": { "type": "string" },
+        "statement": { "type": "string", "description": "One testable sentence." },
+        "rationale": { "type": "string" },
+        "detect": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "How a tool would find a violation. `static` runs on source or a DOM snapshot; `runtime` needs a live page.",
+          "properties": { "static": { "type": "string" }, "runtime": { "type": "string" } }
+        },
+        "fix": { "type": "string" },
+        "applies_to": { "type": "array", "items": { "type": "string" }, "description": "Catalog ids, groups (group:actions) or `*`." },
+        "phase": { "type": "string", "enum": ["compose", "wait", "stream", "act", "approve", "review", "trust", "recover", "persist"], "description": "For AI-loop rules: the step of the agent loop the rule guards." },
+        "source": { "type": "string", "enum": ["apg", "wcag", "law"], "description": "External authority the rule restates, if any." }
+      }
+    },
+    "example": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "renderer", "file"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "renderer": { "type": "string", "x-vocab": "renderers" },
+        "file": { "type": "string", "description": "Relative to the entry folder." },
+        "export": { "type": "string" },
+        "description": { "type": "string" },
+        "demonstrates": { "type": "array", "items": { "type": "string" }, "description": "Tags: state:<id>, variant:<axis>=<value>, rule:<id>." },
+        "violates": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

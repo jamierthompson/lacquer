@@ -1,0 +1,158 @@
+# AI-loop rules: what a trustworthy agent surface does while it waits, streams,
+# acts, asks, reviews, recovers and discloses. `phase` is the step of the agent
+# loop the rule guards.
+
+version: 1
+rules:
+  - id: LQ-WAIT-01
+    level: MUST
+    polarity: require
+    phase: wait
+    title: "Indicator by 400 ms"
+    statement: "Any pending agent response shows a visible indicator within 400 ms, a text status by 5 s, and elapsed time by 10 s."
+    detect:
+      runtime: "Timer-based DOM check for indicator, [data-status-text], [data-elapsed]."
+  - id: LQ-WAIT-02
+    level: MUST
+    polarity: forbid
+    phase: wait
+    title: "No determinate bar without a denominator"
+    statement: "No determinate progress bar without a known denominator."
+    detect:
+      static: "role=\"progressbar\" requires aria-valuemax bound to a real count, else must be indeterminate."
+  - id: LQ-STREAM-01
+    level: MUST
+    polarity: require
+    phase: stream
+    title: "Stop inside the output region"
+    statement: "Any stream longer than 1 s exposes a Stop control within the output region, not only in the composer."
+    detect:
+      static: "Stop target inside or adjacent to the streaming container, at least 32 by 32 px."
+  - id: LQ-STREAM-02
+    level: MUST
+    polarity: forbid
+    phase: stream
+    title: "No reflow beyond one line"
+    statement: "Streaming must not reflow previously rendered content by more than one line height."
+    detect:
+      runtime: "Layout-shift measurement on the streamed region; CLS contribution below 0.05 per response."
+  - id: LQ-STREAM-03
+    level: MUST
+    polarity: require
+    phase: stream
+    title: "Auto-scroll yields to the user"
+    statement: "Auto-scroll disengages on any user scroll-up and offers a jump-to-latest affordance."
+    detect:
+      runtime: "Scroll listener present; no programmatic scrollTo while userScrolled === true."
+  - id: LQ-TOOL-01
+    level: MUST
+    polarity: require
+    phase: act
+    title: "Name the tool and its target"
+    statement: "A tool call that takes more than 2 s shows its name and target (file, URL, query), not just a spinner."
+    detect:
+      runtime: "Tool card contains non-empty name and target text nodes before the 2 s mark."
+  - id: LQ-TOOL-02
+    level: MUST
+    polarity: require
+    phase: act
+    title: "Writes look different from reads"
+    statement: "Write and destructive tool calls are visually distinct from reads without expansion."
+    detect:
+      static: "Tool cards carry data-effect=\"read|write|destroy\" mapped to distinct tokens."
+  - id: LQ-GATE-01
+    level: MUST
+    polarity: require
+    phase: approve
+    title: "Per-action approval for destructive actions"
+    statement: "Destructive agent actions (delete, send, pay, deploy, post, overwrite) require explicit per-action approval with a preview; \"always allow\" may not be the default option or initial focus."
+    detect:
+      static: "Approval dialog has a preview region; the default-focused button is not always-allow; no batch approval for data-effect=\"destroy\"."
+  - id: LQ-GATE-02
+    level: MUST
+    polarity: require
+    phase: approve
+    title: "Verb, object and scope"
+    statement: "Every approval prompt names verb, object and scope in its primary text."
+    detect:
+      static: "Regex on prompt title for a verb and a path, URL or identifier token."
+  - id: LQ-REVIEW-01
+    level: MUST
+    polarity: require
+    phase: review
+    title: "Undo or preview every write"
+    statement: "Every agent write is undoable for at least 10 s or was previewed before apply."
+    detect:
+      runtime: "Each write emits an undo affordance or follows a diff-preview acceptance event."
+  - id: LQ-ERR-01
+    level: MUST
+    polarity: require
+    phase: recover
+    title: "Keep the input, offer Retry"
+    statement: "Every error state preserves the user's input and offers Retry."
+    detect:
+      static: "Error component contains a retry action; composer value unchanged after error."
+  - id: LQ-TRUST-01
+    level: MUST
+    polarity: require
+    phase: trust
+    title: "Cite retrieved claims"
+    statement: "Claims rendered from retrieved sources carry an adjacent citation that links to the source."
+    detect:
+      static: "Retrieved spans have a sibling [data-cite] with href."
+  - id: LQ-A11Y-01
+    level: MUST
+    polarity: require
+    phase: stream
+    title: "Polite, throttled live regions"
+    statement: "Streaming regions use aria-live=\"polite\" and announce status changes at most once per 2 s."
+    detect:
+      runtime: "Live region present; no aria-live=\"assertive\" on streams; throttled updates."
+  - id: LQ-MOTION-01
+    level: MUST
+    polarity: require
+    phase: wait
+    title: "Reduced motion branch"
+    statement: "Thinking and streaming animations degrade under prefers-reduced-motion."
+    detect:
+      static: "Media query present; no transform-based looping animation in the reduced-motion branch."
+  - id: LQ-TRUST-02
+    level: MUST
+    polarity: forbid
+    phase: trust
+    title: "Never fake confidence"
+    statement: "The interface never implies more certainty than the model expressed; hedges, uncertainty and refusals are shown as given, not smoothed over."
+    detect:
+      static: "No copy or styling upgrades a hedged or uncertain output to a definitive one; uncertainty is rendered where the backend reports it."
+  - id: LQ-DISCLOSE-01
+    level: MUST
+    polarity: require
+    phase: act
+    title: "Collapsed by default"
+    statement: "Reasoning, tool detail and sources are collapsed by default behind a one-line summary; expanding is the user's choice."
+    detect:
+      static: "Collapsible defaults closed; a summary line stays visible while closed."
+  - id: LQ-RECOVER-01
+    level: MUST
+    polarity: require
+    phase: recover
+    title: "Stop and regenerate always"
+    statement: "Every generated message can be stopped while streaming and regenerated after it completes."
+    detect:
+      static: "A stop action is wired while status is streaming; a regenerate action is present on completed assistant messages."
+  - id: LQ-STYLE-01
+    level: MUST
+    polarity: forbid
+    phase: trust
+    title: "No AI purple"
+    statement: "AI is not signaled with a new hue. --ai-accent is an alias of an existing brand token."
+    detect:
+      static: "No literal color in Lacquer code; --ai-accent resolves to a token the consumer already has."
+  - id: LQ-STYLE-02
+    level: MUST
+    polarity: forbid
+    phase: trust
+    title: "No bare sparkle"
+    statement: "A sparkle or wand icon never stands alone as the only indication that content is AI; it is always paired with a visible text label."
+    detect:
+      static: "Any sparkle icon in a Lacquer component has an adjacent visible text label or an aria-label naming the AI origin."

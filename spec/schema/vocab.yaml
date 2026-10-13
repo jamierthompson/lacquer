@@ -1,0 +1,148 @@
+# Lacquer controlled vocabularies.
+#
+# Every enum the component schema references lives here, once. The build loads
+# this file and injects the enums into component.schema.json at validation time,
+# so a new state or group is added here and nowhere else.
+
+version: 1
+
+kinds:
+  component:  A rendered, reusable UI unit with anatomy, states and an API.
+  pattern:    A composition of components that solves a recurring job (a settings page, an approval flow).
+  principle:  A rule set every component in a group obeys (the message state machine, live-region strategy).
+  method:     A way of working, not a thing on screen (latency patterns, disclosure conventions).
+
+catalogs:
+  core: Product-agnostic UI.
+  ai:   What AI-native and AI-augmented products add.
+
+# Catalog groups. Each entry lives at spec/catalog/<catalog>/<group>/<id>/.
+groups:
+  core:
+    layout: Primitives that position other things.
+    utilities: Invisible helpers (portal, focus trap, live region).
+    typography: Text and the elements that style it.
+    actions: Things you press.
+    inputs: Things you type or choose into, and the form that collects them.
+    selection: Pick-one / pick-many / show-hide controls that are not form inputs.
+    navigation: Getting from here to there.
+    data-display: Showing records, status and content.
+    feedback: Telling the user what the system is doing.
+    overlays: Layers above the page.
+    media: Images, icons, video, maps.
+  ai:
+    foundations: System-level principles every AI component consumes.
+    conversation: The chat surface.
+    generation: Making artifacts, variations and edits.
+    agentic: Plans, tools, approvals, long-running work.
+    trust: Labels, disclosure, uncertainty, provenance.
+    augmentation: AI features inside a classic product.
+    onboarding: First-run, empty and latency states.
+
+tiers:
+  1: The baseline. Covers the overwhelming majority of screens.
+  2: Add when the product needs it.
+  3: Specialised. Include only when a real screen demands it.
+
+atomic_levels: [primitive, atom, molecule, organism, template]
+
+maturity: [established, emerging, experimental]
+
+# Where an entry is in its life. Every entry starts as a draft. Only id, catalog,
+# group and status are required in a draft; the build lists everything else
+# that is missing without failing. Stable means released: complete to the
+# definition of done and signed off.
+status:
+  draft: Open for work and feedback. Anything may be missing.
+  stable: Released. Complete and signed off.
+  deprecated: Kept for reference; do not build new work on it.
+
+# The universal interaction-state matrix. Canonical ids, with other systems'
+# names as aliases. `base` states are the five every interactive component
+# must implement (LQ-STATE-01).
+states:
+  enabled:       { base: true,  meaning: The resting, interactive default. }
+  hover:         { base: true,  meaning: Pointer is over the target. }
+  focus-visible: { base: true,  meaning: Keyboard (or other non-pointer) focus. }
+  active:        { base: true,  meaning: Held down mid-interaction., aliases: [pressed] }
+  disabled:      { base: true,  meaning: Not available now. }
+  selected:      { meaning: Chosen and stays chosen., aliases: [checked] }
+  indeterminate: { meaning: Some, but not all, descendants are checked. }
+  expanded:      { meaning: A disclosure is open. }
+  read-only:     { meaning: Visible and selectable but not editable., aliases: [readonly] }
+  loading:       { meaning: An operation is in flight. }
+  invalid:       { meaning: Validation or operation failed., aliases: [error] }
+  success:       { meaning: Completed or validated. }
+  warning:       { meaning: Allowed, but with consequences. }
+  dragging:      { meaning: The item is being moved. }
+  drop-target:   { meaning: A valid destination while dragging. }
+  current:       { meaning: Where you are in a navigation set., aliases: [active-page] }
+  placeholder:   { meaning: Empty input showing a format hint. }
+  filled:        { meaning: The input holds a value. }
+  empty:         { meaning: The container has no content to show. }
+  skeleton:      { meaning: Content is loading and its shape is known. }
+  # AI lifecycle states (message and tool machines). Declared here so a
+  # component may list them; the machines themselves live in the principle specs.
+  idle: { ai: true }
+  submitted: { ai: true }
+  streaming: { ai: true }
+  awaiting-approval: { ai: true }
+  complete: { ai: true }
+  error: { ai: true }
+  cancelled: { ai: true }
+  input-streaming: { ai: true, aliases: [pending] }
+  input-available: { ai: true, aliases: [running] }
+  approval-requested: { ai: true }
+  approval-responded: { ai: true }
+  output-available: { ai: true, aliases: [completed] }
+  output-error: { ai: true }
+  output-denied: { ai: true, aliases: [denied] }
+
+# Token roles. A spec names the *role* it consumes, never a value. Bindings
+# (spec/bindings/*.yaml) map roles to a concrete system's names. Roles are
+# dotted paths; the first segment is the category.
+token_categories:
+  color: Backgrounds, foregrounds, borders, status, scrim. `color.<surface|fg|border|status>.<role>`
+  space: Insets and gaps. `space.<inset|gap>.<size>`
+  size: Control and icon dimensions. `size.<control|icon>.<size>`
+  radius: Corner rounding by role. `radius.<control|surface|pill>`
+  type: Text styles and families. `type.<role>.<size>`, `type.family.<mono|sans>`
+  shadow: Elevation. `shadow.<sm|md|lg>`
+  z: Stacking contexts. `z.<dropdown|sticky|modal|toast>`
+  motion: Durations and easings. `motion.<duration|easing>.<name>`
+  focus: Focus ring geometry. `focus.ring.<width|offset>`
+  breakpoint: Responsive thresholds.
+  opacity: Disabled and scrim opacities.
+  stroke: Border and divider widths.
+  # Roles the AI catalog adds.
+  line-height: Leading by role.
+  text-decoration: Link underline rules.
+  blur: Backdrop blur for scrims and glass surfaces.
+  shimmer: Skeleton and thinking-indicator animation parameters.
+  stream: Streaming caret and batching parameters.
+
+# Component-id aliases: other systems' names for catalog ids. Cross-references
+# (usage.reuses, pairs_well_with, instead) may use either side.
+component_aliases:
+  collapsible: disclosure
+  chip: tag
+  sheet: drawer
+  banner: alert
+  separator: divider
+  sidebar: sidebar-nav
+  split-pane: resizable-panels
+  input: text-input
+  kanban: kanban-board
+  # Referenced by AI entries but not yet in the catalog; the build reports
+  # them as gaps: iframe, audio-player, code-editor, filter-bar, highlight
+
+# Lacquer ships exactly one renderer. HTML is what every framework produces,
+# so an HTML reference is the one every framework can read and port. Examples
+# are fragments that consume the `html` binding's custom properties.
+renderers:
+  html: Plain HTML + CSS custom properties. The reference every framework can read.
+
+rule_levels:
+  MUST: Violation is a defect. Grader scores it as a failure.
+  SHOULD: Violation needs a stated reason. Grader scores it as a deduction.
+  MAY: Guidance. Grader reports it, no score impact.

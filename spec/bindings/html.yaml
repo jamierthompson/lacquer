@@ -1,0 +1,100 @@
+# Binding: token role -> CSS custom property.
+#
+# A spec names roles (`color.bg.primary`). A binding says what that role is
+# called in a real stack so examples can be written, linted and graded. This
+# is Lacquer's only shipped binding: plain CSS custom properties, which every
+# framework, build tool and design tool can consume. The property name is the
+# role with dots replaced by dashes and an `lq-` prefix, so it can be derived
+# mechanically and never collides with a consumer's own variables.
+#
+# A binding names properties, never values. `html.theme.css` beside this file
+# is a reference theme that gives every property a default so examples render;
+# a consumer overrides any or all of them. Nothing in spec/catalog changes when
+# the theme does.
+
+id: html
+renderer: html
+version: 1
+roles:
+  color.bg.surface:             { var: --lq-color-bg-surface }
+  color.bg.surface-secondary:   { var: --lq-color-bg-surface-secondary }
+  color.bg.surface-tertiary:    { var: --lq-color-bg-surface-tertiary }
+  color.bg.primary:             { var: --lq-color-bg-primary }
+  color.bg.primary-hover:       { var: --lq-color-bg-primary-hover }
+  color.bg.secondary:           { var: --lq-color-bg-secondary }
+  color.bg.secondary-hover:     { var: --lq-color-bg-secondary-hover }
+  color.bg.accent:              { var: --lq-color-bg-accent }
+  color.bg.destructive:         { var: --lq-color-bg-destructive }
+  color.bg.destructive-hover:   { var: --lq-color-bg-destructive-hover }
+  color.bg.selected:            { var: --lq-color-bg-selected }
+  color.bg.scrim:               { var: --lq-color-bg-scrim }
+  color.fg.default:             { var: --lq-color-fg-default }
+  color.fg.muted:               { var: --lq-color-fg-muted }
+  color.fg.on-primary:          { var: --lq-color-fg-on-primary }
+  color.fg.on-secondary:        { var: --lq-color-fg-on-secondary }
+  color.fg.on-destructive:      { var: --lq-color-fg-on-destructive }
+  color.fg.link:                { var: --lq-color-fg-link }
+  color.border.default:         { var: --lq-color-border-default }
+  color.border.subtle:          { var: --lq-color-border-subtle }
+  color.border.input:           { var: --lq-color-border-input }
+  color.border.focus:           { var: --lq-color-border-focus }
+  color.border.danger:          { var: --lq-color-border-danger }
+  color.status.pending:         { var: --lq-color-status-pending }
+  color.status.running:         { var: --lq-color-status-running }
+  color.status.success:         { var: --lq-color-status-success }
+  color.status.error:           { var: --lq-color-status-error }
+  color.status.warning:         { var: --lq-color-status-warning }
+  color.accent.ai:              { var: --lq-color-accent-ai }        # MUST alias a brand token (LQ-STYLE-01)
+
+  radius.control:               { var: --lq-radius-control }
+  radius.surface:               { var: --lq-radius-surface }
+  radius.pill:                  { var: --lq-radius-pill }
+  radius.sm:                    { var: --lq-radius-sm }
+  radius.md:                    { var: --lq-radius-md }
+  radius.lg:                    { var: --lq-radius-lg }
+
+  space.inset.control.sm:       { var: --lq-space-inset-control-sm }  # padding shorthand (block inline)
+  space.inset.control.md:       { var: --lq-space-inset-control-md }
+  space.inset.control.lg:       { var: --lq-space-inset-control-lg }
+  space.inset.sm:               { var: --lq-space-inset-sm }
+  space.inset.md:               { var: --lq-space-inset-md }
+  space.inset.lg:               { var: --lq-space-inset-lg }
+  space.gap.xs:                 { var: --lq-space-gap-xs }
+  space.gap.sm:                 { var: --lq-space-gap-sm }
+  space.gap.md:                 { var: --lq-space-gap-md }
+  space.gap.lg:                 { var: --lq-space-gap-lg }
+
+  size.control.xs:              { var: --lq-size-control-xs }
+  size.control.sm:              { var: --lq-size-control-sm }
+  size.control.md:              { var: --lq-size-control-md }
+  size.control.lg:              { var: --lq-size-control-lg }
+  size.icon.sm:                 { var: --lq-size-icon-sm }
+  size.icon.md:                 { var: --lq-size-icon-md }
+
+  type.label.sm:                { var: --lq-type-label-sm }           # `font` shorthand
+  type.label.md:                { var: --lq-type-label-md }
+  type.body.md:                 { var: --lq-type-body-md }
+  type.heading.md:              { var: --lq-type-heading-md }
+  type.family.mono:             { var: --lq-type-family-mono }
+  type.family.sans:             { var: --lq-type-family-sans }
+
+  shadow.sm:                    { var: --lq-shadow-sm }
+  shadow.md:                    { var: --lq-shadow-md }
+  shadow.lg:                    { var: --lq-shadow-lg }
+
+  z.dropdown:                   { var: --lq-z-dropdown }
+  z.modal:                      { var: --lq-z-modal }
+  z.toast:                      { var: --lq-z-toast }
+
+  motion.duration.fast:         { var: --lq-motion-duration-fast }
+  motion.duration.base:         { var: --lq-motion-duration-base }
+  motion.easing.standard:       { var: --lq-motion-easing-standard }
+
+  focus.ring.width:             { var: --lq-focus-ring-width }
+  focus.ring.offset:            { var: --lq-focus-ring-offset }
+
+  opacity.disabled:             { var: --lq-opacity-disabled }
+
+# Note on LQ-TOKEN-01: component CSS may only read these properties through
+# `var()`. A literal colour, length, duration or z-index in component CSS is
+# the violation; the values live in a theme, never in a component.

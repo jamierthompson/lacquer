@@ -1,0 +1,152 @@
+# Shared rules every catalog entry may cite. These are the cross-component
+# checks the grader runs on any screen; component-local rules live inside each
+# entry's YAML under rules.local. The AI-loop rules (LQ-WAIT, LQ-STREAM,
+# LQ-TOOL, LQ-GATE …) live in ai-loop.yaml; the build merges every file here
+# plus every local rule into spec/dist/rules.json: one catalog, one id space.
+#
+# Ids follow the existing convention: LQ-<AREA>-<NN>.
+
+version: 1
+rules:
+  - id: LQ-STATE-01
+    level: MUST
+    polarity: require
+    title: All five base states
+    statement: Every interactive component implements enabled, hover, focus-visible, active and disabled with a defined visual treatment, including in dark mode.
+    rationale: Most "the UI looks unfinished" complaints are missing states, not missing components.
+    detect:
+      static: For each interactive element, the stylesheet or class list defines treatments for :hover, :focus-visible, :active and [disabled] / [aria-disabled].
+      runtime: Drive each state and diff computed styles against the enabled state; each must differ in at least one property.
+    fix: Add the missing state using the component's token deltas (see its states[] treatment).
+    applies_to: ["*"]
+
+  - id: LQ-STATE-02
+    level: MUST
+    polarity: forbid
+    title: No state by colour alone
+    statement: No state is expressed by colour alone; every state has a second channel (icon, weight, border, position or text).
+    detect:
+      static: A state's class delta changes only color/background-color.
+      runtime: Grayscale the screenshot of each state and check it still differs from enabled.
+    fix: Add an icon, border, weight or text change alongside the colour change.
+    applies_to: ["*"]
+    source: wcag
+
+  - id: LQ-STATE-03
+    level: MUST
+    polarity: require
+    title: Every state reaches the accessibility tree
+    statement: Every visible state has an ARIA expression or an explicit "none" in the spec; selected, expanded, invalid, busy and current are never visual-only.
+    detect:
+      static: For each state the component declares, the matching attribute (aria-selected, aria-expanded, aria-invalid, aria-busy, aria-current, aria-checked) is present when the state is active.
+    fix: Set the attribute the APG pattern specifies; do not invent a new one.
+    applies_to: ["*"]
+    source: apg
+
+  - id: LQ-FOCUS-01
+    level: MUST
+    polarity: forbid
+    title: Never remove focus without replacing it
+    statement: "No `outline: none` / `outline-0` / `focus:outline-none` without a `:focus-visible` replacement that has ≥3:1 contrast against both the component and the page."
+    detect:
+      static: Class or style removes outline and no focus-visible ring class/rule exists on the same element.
+      runtime: Tab to the element; the focused and unfocused screenshots must differ at ≥3:1 along the element's edge.
+    fix: Use `focus-visible:ring-2 ring-ring ring-offset-2` (or the binding's equivalent) and keep `:focus` untouched.
+    applies_to: ["*"]
+    source: wcag
+
+  - id: LQ-SEM-01
+    level: MUST
+    polarity: require
+    title: Native element first
+    statement: Prefer the native element (button, a, select, details, input) until a product requirement makes it impossible; a div or span with a click handler and a role is a defect unless the spec names an exception.
+    detect:
+      static: div|span with onClick/onKeyDown and no native equivalent in the subtree.
+    fix: Replace with the native element; keep the styling.
+    applies_to: ["*"]
+    source: apg
+
+  - id: LQ-NAME-01
+    level: MUST
+    polarity: require
+    title: Every control has an accessible name
+    statement: Every interactive element has an accessible name from content, a label, aria-label or aria-labelledby; placeholder text and title attributes do not count.
+    detect:
+      static: Compute the accessible name per accname 1.2; empty is a failure.
+    fix: Add visible text, a <label>, or aria-label for icon-only controls.
+    applies_to: ["*"]
+    source: wcag
+
+  - id: LQ-TOKEN-01
+    level: MUST
+    polarity: forbid
+    title: No literal values
+    statement: "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`)."
+    rationale: Tokens are the primer; the component is the finish. A literal value breaks every theme at once.
+    detect:
+      static: "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+    fix: Replace with the role's custom property from the binding (see spec/bindings/html.yaml).
+    applies_to: ["*"]
+
+  - id: LQ-TOKEN-02
+    level: SHOULD
+    polarity: require
+    title: Consume only declared roles
+    statement: An implementation consumes only the token roles its spec declares under tokens.consumes, or roles declared by entries it reuses.
+    detect:
+      static: Map the custom properties (or utility classes) the implementation reads back to roles via the binding and diff against the spec.
+    fix: Either add the role to the spec (and justify it) or drop it from the code.
+    applies_to: ["*"]
+
+  - id: LQ-ANAT-01
+    level: SHOULD
+    polarity: require
+    title: Parts are addressable
+    statement: Every anatomy part renders with `data-slot="<part>"` so docs, tests and the grader can target it without classes.
+    detect:
+      static: For each anatomy part marked required, an element with that data-slot exists.
+    fix: Add data-slot to the part's root element.
+    applies_to: ["*"]
+
+  - id: LQ-MOTION-02
+    level: MUST
+    polarity: require
+    title: Reduced motion is honoured
+    statement: Any transition longer than 150 ms or any looping animation has a `prefers-reduced-motion` branch that removes movement (opacity-only is fine).
+    detect:
+      static: "Animation/transition utilities present without a motion-reduce: variant or media query."
+      runtime: Emulate prefers-reduced-motion and assert no transform-based animation is running.
+    fix: Add `motion-reduce:transition-none` / `motion-reduce:animate-none` or an equivalent media query.
+    applies_to: ["*"]
+    source: wcag
+
+  - id: LQ-LOAD-01
+    level: MUST
+    polarity: require
+    title: Three states for every list
+    statement: Every list, table and search result region has a designed loading (skeleton), empty and error state; "nothing yet" and "no matches" are distinguished.
+    detect:
+      static: The component accepts or renders a loading, empty and error branch.
+      runtime: Drive the data source to each condition and assert distinct rendered output.
+    fix: Add Skeleton, Empty State and an inline error with retry.
+    applies_to: ["group:data-display", "list-view", "table", "data-table", "combobox", "command-palette", "message-list", "conversation-history", "activity-log"]
+
+  - id: LQ-LAYER-01
+    level: MUST
+    polarity: forbid
+    title: No stacked modals
+    statement: A modal dialog never opens another modal dialog; use a step inside the same dialog, a drawer, or a non-modal popover.
+    detect:
+      runtime: Two elements with role=dialog and aria-modal=true are open at once.
+    fix: Flatten into a stepper inside one dialog, or convert the inner one to non-modal.
+    applies_to: ["dialog", "alert-dialog", "drawer"]
+
+  - id: LQ-COPY-01
+    level: SHOULD
+    polarity: require
+    title: Labels are verb-first and specific
+    statement: Action labels start with a verb and name the object ("Save changes", "Delete 3 files"); never "OK", "Yes", "Submit" or "Click here" when a specific label is possible.
+    detect:
+      static: Button/menu-item text matches a stoplist or lacks a verb.
+    fix: Rewrite as verb + object, sentence case, ≤3 words where possible.
+    applies_to: ["group:actions", "dialog", "alert-dialog", "approval-prompt", "hitl-gate"]
