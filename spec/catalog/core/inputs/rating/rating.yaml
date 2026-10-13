@@ -1,0 +1,94 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: rating
+name: Rating
+kind: component
+catalog: core
+group: inputs
+tier: 3
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: Captures or displays a score on a small discrete scale, usually stars.
+aliases:
+  - Rate
+  - RatingGroup
+  - Stars
+  - Rating indicators
+  - InputRating
+found_in:
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - Ark UI
+  - Spectrum
+  - Fluent 2
+  - Nuxt UI
+  - PrimeVue
+  - Apple HIG
+anatomy:
+  - part: icon-items
+    description: icon items
+  - part: half-icon-fill
+    description: half-icon fill
+  - part: label
+    description: label
+  - part: count-summary-text
+    description: count/summary text
+variants:
+  - axis: variant
+    values:
+      - input
+      - read-only display
+      - half-steps
+      - custom-icon
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: selected
+  - id: read-only
+accessibility:
+  apg:
+    pattern: Radio Group
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/radio/
+  notes: |-
+    ARIA: Input ratings are a radio group; display-only ratings are text such as '4.2 out of 5'.
+    Keyboard: Arrow keys move the score; Home/End set min/max.
+tokens:
+  consumes:
+    - color.fg.warning
+    - size.icon.md
+    - space.gap.2xs
+usage:
+  use_when:
+    - Reviews, feedback, quality scoring of generated output
+  avoid_when:
+    - A binary thumbs up/down is the real question
+  pairs_well_with:
+    - field
+    - stat
+    - toast
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/radio/
+  - https://ant.design/components/overview/
+  - https://mui.com/material-ui/all-components/

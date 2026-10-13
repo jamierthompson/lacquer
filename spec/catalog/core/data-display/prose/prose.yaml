@@ -1,0 +1,97 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: prose
+name: Prose
+kind: component
+catalog: core
+group: data-display
+tier: 2
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: A styled container that applies the type system to unknown rich content such as Markdown or CMS HTML.
+aliases:
+  - Markdown
+  - Rich text
+  - Typography container
+  - Article body
+  - Content
+found_in:
+  - USWDS
+  - Chakra UI
+  - Mantine
+  - Nuxt UI
+anatomy:
+  - part: container
+    description: container
+  - part: heading-styles
+    description: heading styles
+  - part: paragraph-rhythm
+    description: paragraph rhythm
+  - part: list-styles
+    description: list styles
+  - part: code-styles
+    description: code styles
+  - part: table-styles
+    description: table styles
+  - part: image-styles
+    description: image styles
+  - part: link-styles
+    description: link styles
+variants:
+  - axis: variant
+    values:
+      - default
+      - compact
+      - inverted
+      - constrained-measure
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: loading
+  - id: skeleton
+  - id: empty
+accessibility:
+  notes: |-
+    ARIA: Should render semantic HTML; sanitise untrusted input before rendering.
+    Keyboard: Inherited from the elements it contains.
+tokens:
+  consumes:
+    - type.body.md
+    - line-height.relaxed
+    - space.stack.md
+    - size.measure
+    - color.fg.default
+usage:
+  use_when:
+    - Docs, help centres, blog content, streamed model answers
+  avoid_when:
+    - Content is structured data you control — build real components
+  pairs_well_with:
+    - code-block
+    - toc
+    - blockquote
+    - table
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://designsystem.digital.gov/components/overview/
+  - https://chakra-ui.com/docs/components/concepts/overview

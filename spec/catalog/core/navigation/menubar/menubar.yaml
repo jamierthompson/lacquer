@@ -1,0 +1,93 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: menubar
+name: Menubar
+kind: component
+catalog: core
+group: navigation
+tier: 3
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: A horizontal bar of top-level menus, as in desktop applications.
+aliases:
+  - Menu bar
+  - Application menu
+  - MenuBar
+found_in:
+  - Radix
+  - shadcn/ui
+  - Base UI
+  - Mantine
+  - PrimeVue
+  - MUI
+  - Apple HIG
+anatomy:
+  - part: menubar
+    description: menubar
+  - part: top-level-menus
+    description: top-level menus
+  - part: menu-popovers
+    description: menu popovers
+  - part: items
+    description: items
+  - part: shortcut-hints
+    description: shortcut hints
+  - part: submenus
+    description: submenus
+variants:
+  - axis: variant
+    values:
+      - desktop
+      - compact
+  - axis: size
+    values:
+      - sm
+      - md
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: expanded
+  - id: selected
+accessibility:
+  apg:
+    pattern: Menu and Menubar
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/menubar/
+  notes: >-
+    ARIA: `role="menubar"` with `menuitem` children opening `role="menu"` popovers.
+
+    Keyboard: Left/Right move across top-level menus; Down opens; Up/Down move within; Escape closes one
+    level.
+tokens:
+  consumes:
+    - color.bg.surface
+    - type.label.sm
+    - shadow.overlay
+    - z.dropdown
+usage:
+  use_when:
+    - Desktop-class editors and IDE-like tools
+  avoid_when:
+    - Ordinary web apps — a toolbar plus overflow menu is friendlier
+  pairs_well_with:
+    - toolbar
+    - kbd
+    - dropdown-menu
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/menubar/
+  - https://www.radix-ui.com/primitives/docs/overview/introduction
+  - https://ui.shadcn.com/docs/components

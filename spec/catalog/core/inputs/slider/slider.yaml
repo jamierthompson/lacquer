@@ -1,0 +1,115 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: slider
+name: Slider
+kind: component
+catalog: core
+group: inputs
+tier: 2
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: Selects a value (or range) along a continuum by dragging a thumb.
+aliases:
+  - Range
+  - RangeSlider
+  - Track
+  - AngleSlider
+  - Knob
+found_in:
+  - Material 3
+  - Apple HIG
+  - Fluent 2
+  - Carbon
+  - Polaris
+  - Spectrum
+  - Atlassian
+  - USWDS
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - Radix
+  - shadcn/ui
+  - Base UI
+  - Ark UI
+  - React Aria
+  - Nuxt UI
+  - PrimeVue
+  - Open UI
+anatomy:
+  - part: track
+    description: track
+  - part: filled-range
+    description: filled range
+  - part: thumb
+    description: thumb(s)
+  - part: tick-marks
+    description: tick marks
+  - part: value-label
+    description: value label
+  - part: min-max-labels
+    description: min/max labels
+variants:
+  - axis: variant
+    values:
+      - single
+      - range
+      - stepped
+      - vertical
+      - with-input
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: dragging
+  - id: read-only
+accessibility:
+  apg:
+    pattern: Slider
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/slider/
+  notes: >-
+    ARIA: `role="slider"` per thumb with `aria-valuenow/min/max/text`; multi-thumb follows the Slider
+    (Multi-Thumb) pattern.
+
+    Keyboard: Arrow keys step; PageUp/PageDown large step; Home/End to bounds; thumbs must not cross without
+    handling.
+tokens:
+  consumes:
+    - radius.full
+    - color.bg.primary
+    - color.bg.subtle
+    - size.control.thumb
+    - focus.ring.width
+usage:
+  use_when:
+    - Approximate values where relative position is meaningful (volume, temperature, opacity)
+  avoid_when:
+    - An exact number matters — pair with or replace by a number input
+  pairs_well_with:
+    - number-input
+    - field
+    - tooltip
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/slider/
+  - https://m3.material.io/components
+  - https://developer.apple.com/design/human-interface-guidelines/components

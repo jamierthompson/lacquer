@@ -1,0 +1,89 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: icon
+name: Icon
+kind: component
+catalog: core
+group: media
+tier: 1
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: A vector glyph carrying meaning or decoration inside other components.
+aliases:
+  - Glyph
+  - SVG icon
+  - ThemeIcon
+  - Symbol
+  - Material Symbols
+found_in:
+  - Material 3
+  - Carbon
+  - Polaris
+  - Atlassian
+  - Primer
+  - USWDS
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - Fluent 2
+  - Nuxt UI
+  - PrimeVue
+  - Open UI
+anatomy:
+  - part: svg
+    description: svg
+  - part: viewbox
+    description: viewBox
+  - part: currentcolor-fill
+    description: currentColor fill
+  - part: optional-title
+    description: optional title
+variants:
+  - axis: variant
+    values:
+      - outline
+      - filled
+      - duotone
+      - decorative
+      - semantic
+  - axis: size
+    values:
+      - xs
+      - sm
+      - md
+      - lg
+      - xl
+states:
+  - id: enabled
+  - id: disabled
+accessibility:
+  notes: |-
+    ARIA: Decorative icons need `aria-hidden="true"`; meaningful ones need `role="img"` and a title or label.
+    Keyboard: None.
+tokens:
+  consumes:
+    - size.icon.md
+    - color.fg.default
+    - color.fg.muted
+    - stroke.width.icon
+usage:
+  use_when:
+    - Reinforcing labels, denoting status, compressing toolbars
+  avoid_when:
+    - The icon is the sole label for an uncommon action
+  pairs_well_with:
+    - icon-button
+    - button
+    - tag
+    - list-view
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://m3.material.io/components
+  - https://carbondesignsystem.com/components/overview/components/

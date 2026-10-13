@@ -1,0 +1,73 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: focus-trap
+name: Focus Trap
+kind: component
+catalog: core
+group: utilities
+tier: 1
+atomic_level: primitive
+maturity: established
+status: draft
+version: 0.1.0
+summary: Confines Tab order inside a region while it is open and restores focus when it closes.
+aliases:
+  - TrapFocus
+  - FocusScope
+  - FocusLock
+  - Focus manager
+found_in:
+  - Polaris
+  - React Aria
+  - Mantine
+  - Radix
+  - Base UI
+  - Headless UI
+  - PrimeVue
+  - Atlassian
+anatomy:
+  - part: sentinel-elements
+    description: sentinel elements
+  - part: focusable-node-query
+    description: focusable-node query
+  - part: restore-focus-reference
+    description: restore-focus reference
+  - part: inert-siblings
+    description: inert siblings
+variants:
+  - axis: variant
+    values:
+      - modal
+      - non-modal
+      - auto-focus-first
+      - restore-on-close
+states:
+  - id: enabled
+  - id: focus-visible
+accessibility:
+  notes: |-
+    ARIA: Pair with `aria-modal` and `inert` on the rest of the document.
+    Keyboard: Tab and Shift+Tab cycle within the region; Escape is handled by the owning component.
+usage:
+  use_when:
+    - Every modal dialog, drawer, lightbox and mobile nav
+  avoid_when:
+    - Non-modal overlays, where trapping strands the user
+  pairs_well_with:
+    - dialog
+    - drawer
+    - portal
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://github.com/Shopify/polaris/tree/main/polaris-react/src/components
+  - https://react-aria.adobe.com/llms.txt

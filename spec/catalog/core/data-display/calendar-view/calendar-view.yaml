@@ -1,0 +1,99 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: calendar-view
+name: Calendar View
+kind: component
+catalog: core
+group: data-display
+tier: 3
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Month, week or day grid displaying scheduled events.
+aliases:
+  - Scheduler
+  - Event calendar
+  - Agenda view
+  - Big calendar
+found_in:
+  - Ant Design
+  - PrimeVue
+anatomy:
+  - part: view-switcher
+    description: view switcher
+  - part: date-navigation
+    description: date navigation
+  - part: grid
+    description: grid
+  - part: event-chips
+    description: event chips
+  - part: all-day-row
+    description: all-day row
+  - part: time-gutter
+    description: time gutter
+  - part: now-indicator
+    description: now indicator
+variants:
+  - axis: variant
+    values:
+      - month
+      - week
+      - day
+      - agenda
+      - resource/timeline
+  - axis: size
+    values:
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: selected
+  - id: current
+  - id: loading
+  - id: empty
+  - id: dragging
+  - id: drop-target
+accessibility:
+  apg:
+    pattern: Grid
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/grid/
+  notes: >-
+    ARIA: `role="grid"`; events are labelled buttons; the current day uses `aria-current="date"`.
+
+    Keyboard: Arrow keys move between cells; Enter opens the event; drag-to-create needs a keyboard
+    equivalent.
+tokens:
+  consumes:
+    - color.border.subtle
+    - color.bg.selected
+    - type.body.sm
+    - radius.control
+    - space.inset.2xs
+usage:
+  use_when:
+    - Booking, scheduling, availability, shift planning
+  avoid_when:
+    - A simple date picker or list of upcoming items would do
+  pairs_well_with:
+    - calendar
+    - dialog
+    - tag
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/grid/
+  - https://ant.design/components/overview/
+  - https://primevue.dev/

@@ -1,0 +1,112 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: file-upload
+name: File Upload
+kind: component
+catalog: core
+group: inputs
+tier: 2
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Selects files by browsing or drag-and-drop, then shows per-file progress and results.
+aliases:
+  - DropZone
+  - Upload
+  - File input
+  - FileTrigger
+  - File uploader
+  - Attachment
+found_in:
+  - Carbon
+  - Polaris
+  - Ant Design
+  - Chakra UI
+  - Mantine
+  - Ark UI
+  - React Aria
+  - GOV.UK
+  - USWDS
+  - Spectrum
+  - Nuxt UI
+  - PrimeVue
+  - Open UI
+anatomy:
+  - part: drop-area
+    description: drop area
+  - part: browse-button
+    description: browse button
+  - part: hidden-file-input
+    description: hidden file input
+  - part: file-list
+    description: file list
+  - part: per-file-progress
+    description: per-file progress
+  - part: remove-button
+    description: remove button
+  - part: error-text
+    description: error text
+variants:
+  - axis: variant
+    values:
+      - button-only
+      - dropzone
+      - inline-list
+      - avatar/image
+      - paste-to-upload
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: drop-target
+  - id: dragging
+  - id: loading
+  - id: invalid
+  - id: success
+  - id: empty
+accessibility:
+  notes: >-
+    ARIA: Keep a real `input[type=file]` reachable; announce accepted types, size limits and upload results
+    politely.
+
+    Keyboard: The browse control must be focusable and activate with Enter/Space; drag-and-drop is never the
+    only path.
+tokens:
+  consumes:
+    - radius.surface
+    - color.border.dashed
+    - color.bg.subtle
+    - color.border.focus
+    - space.inset.lg
+usage:
+  use_when:
+    - Attachments, imports, avatars, document ingestion
+  avoid_when:
+    - A URL or paste would be simpler for the user
+  pairs_well_with:
+    - progress
+    - alert
+    - list-view
+    - textarea
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://carbondesignsystem.com/components/overview/components/
+  - https://github.com/Shopify/polaris/tree/main/polaris-react/src/components

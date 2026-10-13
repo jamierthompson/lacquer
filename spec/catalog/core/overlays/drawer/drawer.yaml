@@ -1,0 +1,120 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: drawer
+name: Drawer
+kind: component
+catalog: core
+group: overlays
+tier: 2
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Panel that slides in from a screen edge for secondary tasks or details.
+aliases:
+  - Sheet
+  - Side panel
+  - Slideover
+  - Side sheet
+  - Tray
+  - Off-canvas
+  - Bottom sheet
+found_in:
+  - Material 3
+  - Apple HIG
+  - Fluent 2
+  - Carbon
+  - Polaris
+  - Spectrum
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - shadcn/ui
+  - Base UI
+  - Ark UI
+  - Nuxt UI
+  - PrimeVue
+  - Bootstrap 5
+anatomy:
+  - part: scrim
+    description: scrim
+  - part: panel
+    description: panel
+  - part: handle-grabber
+    description: handle/grabber
+  - part: header
+    description: header
+  - part: close
+    description: close
+  - part: body
+    description: body
+  - part: footer-actions
+    description: footer actions
+  - part: resize-edge
+    description: resize edge
+variants:
+  - axis: variant
+    values:
+      - left
+      - right
+      - top
+      - bottom
+      - modal
+      - non-modal/inline
+      - resizable
+      - bottom-sheet-snap-points
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+      - full
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: expanded
+  - id: loading
+  - id: dragging
+accessibility:
+  apg:
+    pattern: Dialog (Modal)
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+  notes: |-
+    ARIA: Modal drawers are dialogs with `aria-modal`; non-modal drawers are `complementary` landmarks.
+    Keyboard: Escape closes modal drawers; focus is trapped when modal and restored on close.
+tokens:
+  consumes:
+    - shadow.lg
+    - z.modal
+    - color.bg.surface
+    - size.drawer.width
+    - motion.easing.emphasized
+    - radius.surface
+usage:
+  use_when:
+    - Detail views beside a list, filters, mobile navigation, settings
+  avoid_when:
+    - The task deserves its own URL
+  pairs_well_with:
+    - dialog
+    - sidebar-nav
+    - resizable-panels
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+  - https://m3.material.io/components
+  - https://developer.apple.com/design/human-interface-guidelines/components

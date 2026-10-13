@@ -1,0 +1,93 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: kanban-board
+name: Kanban Board
+kind: component
+catalog: core
+group: data-display
+tier: 3
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Columns of draggable cards representing items moving through stages.
+aliases:
+  - Task board
+  - Board view
+  - Swimlanes
+  - Pipeline view
+found_in:
+  - PrimeVue
+anatomy:
+  - part: board
+    description: board
+  - part: columns
+    description: columns
+  - part: column-headers
+    description: column headers with counts
+  - part: cards
+    description: cards
+  - part: drag-handles
+    description: drag handles
+  - part: drop-indicators
+    description: drop indicators
+  - part: add-card-affordance
+    description: add-card affordance
+  - part: wip-limits
+    description: WIP limits
+variants:
+  - axis: variant
+    values:
+      - simple
+      - swimlanes
+      - collapsible-columns
+      - virtualized
+  - axis: size
+    values:
+      - md
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: dragging
+  - id: drop-target
+  - id: loading
+  - id: empty
+  - id: selected
+accessibility:
+  notes: >-
+    ARIA: Each column is a labelled list; drag must have a keyboard alternative announced through a live
+    region.
+
+    Keyboard: Space picks up a card, Arrow keys move it, Space drops, Escape cancels.
+tokens:
+  consumes:
+    - color.bg.subtle
+    - radius.surface
+    - space.gap.md
+    - shadow.md
+    - color.border.focus
+usage:
+  use_when:
+    - Issue trackers, CRM pipelines, content workflows
+  avoid_when:
+    - Items have no meaningful stages
+  pairs_well_with:
+    - card
+    - sortable
+    - tag
+    - avatar
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://primevue.dev/

@@ -1,0 +1,73 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: code-inline
+name: Inline Code
+kind: component
+catalog: core
+group: typography
+tier: 2
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: Marks a short code token inside running text.
+aliases:
+  - Code
+  - InlineCode
+  - kbd-adjacent
+  - Mono
+found_in:
+  - Atlassian
+  - Chakra UI
+  - Mantine
+  - Polaris
+  - Spectrum
+  - shadcn/ui
+  - Carbon
+anatomy:
+  - part: mono-text
+    description: mono text
+  - part: subtle-background
+    description: subtle background
+  - part: padding
+    description: padding
+variants:
+  - axis: variant
+    values:
+      - default
+      - subtle
+      - danger
+  - axis: size
+    values:
+      - sm
+      - md
+states:
+  - id: enabled
+accessibility:
+  notes: |-
+    ARIA: Native `code`.
+    Keyboard: None.
+tokens:
+  consumes:
+    - type.code.sm
+    - color.bg.subtle
+    - radius.control
+    - space.inset.2xs
+    - color.fg.default
+usage:
+  use_when:
+    - File names, flags, identifiers inside a sentence
+  avoid_when:
+    - Multi-line snippets — use a code block
+  pairs_well_with:
+    - code-block
+    - prose
+    - kbd
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://atlassian.design/components
+  - https://chakra-ui.com/docs/components/concepts/overview

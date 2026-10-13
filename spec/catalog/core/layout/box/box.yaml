@@ -1,0 +1,70 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: box
+name: Box
+kind: component
+catalog: core
+group: layout
+tier: 2
+atomic_level: primitive
+maturity: established
+status: draft
+version: 0.1.0
+summary: Styled generic container that maps style props to design tokens; the escape hatch every other
+  primitive is built on.
+aliases:
+  - View
+  - Paper
+  - Surface
+  - Frame
+  - Primitive
+  - div
+found_in:
+  - Polaris
+  - Atlassian
+  - Chakra UI
+  - Mantine
+  - MUI
+anatomy:
+  - part: root-element
+    description: root element
+  - part: polymorphic-as-aschild-slot
+    description: polymorphic `as`/`asChild` slot
+variants:
+  - axis: variant
+    values:
+      - surface
+      - transparent
+      - bordered
+states:
+  - id: enabled
+accessibility:
+  notes: |-
+    ARIA: No implicit role; renders whatever element `as` specifies.
+    Keyboard: None (non-interactive by default).
+tokens:
+  consumes:
+    - space.inset.md
+    - radius.surface
+    - color.bg.surface
+    - color.border.subtle
+    - shadow.sm
+usage:
+  use_when:
+    - You need a one-off container that still consumes tokens
+    - Building a new component's root node
+  avoid_when:
+    - A semantic element (section, nav, ul) is the honest answer
+    - It would let arbitrary CSS bypass the token layer
+  pairs_well_with:
+    - stack
+    - flex
+    - grid
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://github.com/Shopify/polaris/tree/main/polaris-react/src/components
+  - https://atlassian.design/components

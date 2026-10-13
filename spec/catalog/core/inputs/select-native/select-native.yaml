@@ -1,0 +1,92 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: select-native
+name: Native Select
+kind: component
+catalog: core
+group: inputs
+tier: 2
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: The platform `select` element — the most robust way to pick one option from a short list.
+aliases:
+  - Select
+  - Dropdown
+  - Picker
+  - NativeSelect
+  - form-select
+found_in:
+  - GOV.UK
+  - USWDS
+  - Carbon
+  - shadcn/ui
+  - Chakra UI
+  - Mantine
+  - Bootstrap 5
+  - Primer
+  - Polaris
+anatomy:
+  - part: trigger
+    description: trigger
+  - part: chevron
+    description: chevron
+  - part: native-option-list
+    description: native option list
+  - part: optgroups
+    description: optgroups
+variants:
+  - axis: variant
+    values:
+      - default
+      - with-groups
+      - inline
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: invalid
+  - id: read-only
+  - id: placeholder
+  - id: filled
+accessibility:
+  notes: |-
+    ARIA: Native `select`; needs no ARIA. Mobile gets the OS picker for free.
+    Keyboard: Full platform behaviour including type-ahead; no custom code required.
+tokens:
+  consumes:
+    - radius.control
+    - size.control.md
+    - color.border.default
+    - type.body.md
+usage:
+  use_when:
+    - Under ~15 options, no search, no rich option content
+    - Robustness and mobile UX matter most
+  avoid_when:
+    - Options need icons, descriptions, multi-select or search
+  pairs_well_with:
+    - field
+    - label
+    - form
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://design-system.service.gov.uk/components/
+  - https://designsystem.digital.gov/components/overview/

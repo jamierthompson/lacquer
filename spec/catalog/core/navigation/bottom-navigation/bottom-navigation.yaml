@@ -1,0 +1,91 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: bottom-navigation
+name: Bottom Navigation
+kind: component
+catalog: core
+group: navigation
+tier: 3
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Fixed bar of 3–5 top-level destinations at the bottom of a mobile viewport.
+aliases:
+  - Tab bar
+  - Navigation bar
+  - BottomNavigation
+  - Bottom tabs
+found_in:
+  - Material 3
+  - Apple HIG
+  - MUI
+  - Spectrum
+anatomy:
+  - part: bar
+    description: bar
+  - part: items
+    description: items
+  - part: icons
+    description: icons
+  - part: labels
+    description: labels
+  - part: active-indicator
+    description: active indicator
+  - part: badges
+    description: badges
+variants:
+  - axis: variant
+    values:
+      - icons-only
+      - icons-with-labels
+      - with-fab-notch
+  - axis: size
+    values:
+      - md
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: current
+  - id: selected
+accessibility:
+  apg:
+    pattern: Landmarks
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/landmarks/
+  notes: |-
+    ARIA: `nav` with `aria-label`; items are links with `aria-current="page"`.
+    Keyboard: Standard tabbing; must remain reachable when a virtual keyboard is open.
+tokens:
+  consumes:
+    - color.bg.surface
+    - size.control.lg
+    - shadow.md
+    - z.sticky
+    - color.fg.accent
+usage:
+  use_when:
+    - Mobile apps with a small, stable set of destinations
+  avoid_when:
+    - More than five destinations
+    - Desktop layouts
+  pairs_well_with:
+    - fab
+    - badge
+    - app-header
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/landmarks/
+  - https://m3.material.io/components
+  - https://developer.apple.com/design/human-interface-guidelines/components

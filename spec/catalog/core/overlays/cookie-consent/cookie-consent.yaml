@@ -1,0 +1,89 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: cookie-consent
+name: Cookie Consent
+kind: component
+catalog: core
+group: overlays
+tier: 3
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Regional-compliance banner that requests and records consent for non-essential cookies.
+aliases:
+  - Cookie banner
+  - Consent manager
+  - Privacy banner
+  - GDPR banner
+found_in:
+  - GOV.UK
+anatomy:
+  - part: banner-or-dialog
+    description: banner or dialog
+  - part: explanation
+    description: explanation
+  - part: accept-all
+    description: accept-all
+  - part: reject-all
+    description: reject-all
+  - part: manage-preferences
+    description: manage preferences
+  - part: category-switches
+    description: category switches
+  - part: persistent-settings-link
+    description: persistent settings link
+variants:
+  - axis: variant
+    values:
+      - banner
+      - modal
+      - preference-centre
+  - axis: size
+    values:
+      - sm
+      - md
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: expanded
+  - id: success
+accessibility:
+  apg:
+    pattern: Dialog (Modal)
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+  notes: |-
+    ARIA: Announce on load without stealing focus unless it is genuinely modal; controls must be real buttons.
+    Keyboard: Fully operable by keyboard; Reject must be as easy to reach as Accept.
+tokens:
+  consumes:
+    - z.modal
+    - color.bg.surface
+    - shadow.lg
+    - space.inset.md
+    - radius.surface
+usage:
+  use_when:
+    - The product sets non-essential cookies in jurisdictions requiring consent
+  avoid_when:
+    - Only strictly necessary cookies are used
+  pairs_well_with:
+    - alert
+    - dialog
+    - switch
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+  - https://design-system.service.gov.uk/components/

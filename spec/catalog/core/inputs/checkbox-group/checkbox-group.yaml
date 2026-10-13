@@ -1,0 +1,97 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: checkbox-group
+name: Checkbox Group
+kind: component
+catalog: core
+group: inputs
+tier: 2
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: A labelled set of related checkboxes sharing one legend, description and error.
+aliases:
+  - ChoiceList
+  - CheckboxGroup
+  - Checkboxes
+  - Checkbox.Group
+found_in:
+  - Primer
+  - Base UI
+  - React Aria
+  - Spectrum
+  - Nuxt UI
+  - Polaris
+  - GOV.UK
+  - Chakra UI
+  - Mantine
+  - Ant Design
+anatomy:
+  - part: fieldset
+    description: fieldset
+  - part: legend
+    description: legend
+  - part: description
+    description: description
+  - part: checkbox-items
+    description: checkbox items
+  - part: select-all
+    description: select-all
+  - part: group-error
+    description: group error
+variants:
+  - axis: variant
+    values:
+      - vertical
+      - horizontal
+      - cards
+      - with-select-all
+  - axis: size
+    values:
+      - sm
+      - md
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: indeterminate
+  - id: invalid
+  - id: read-only
+accessibility:
+  apg:
+    pattern: Checkbox
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/
+  notes: |-
+    ARIA: `fieldset` + `legend`, or `role="group"` with `aria-labelledby` and `aria-describedby`.
+    Keyboard: Tab moves between checkboxes (they are not a radio group); Space toggles.
+tokens:
+  consumes:
+    - space.stack.sm
+    - type.label.md
+    - color.fg.danger
+usage:
+  use_when:
+    - Choose any number from a set
+  avoid_when:
+    - Exactly one choice is allowed — use a radio group
+  pairs_well_with:
+    - checkbox
+    - fieldset
+    - form-error-summary
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/
+  - https://primer.style/components
+  - https://base-ui.com/react/overview/quick-start

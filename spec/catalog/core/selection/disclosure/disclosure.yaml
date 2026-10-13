@@ -1,0 +1,99 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: disclosure
+name: Disclosure
+kind: component
+catalog: core
+group: selection
+tier: 2
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: A single show/hide toggle for one region of content.
+aliases:
+  - Collapsible
+  - Details
+  - Expander
+  - Show more
+  - Collapse
+found_in:
+  - Radix
+  - shadcn/ui
+  - Base UI
+  - Ark UI
+  - React Aria
+  - Headless UI
+  - GOV.UK
+  - Primer
+  - Polaris
+  - Mantine
+  - Ant Design
+  - Apple HIG
+  - Bootstrap 5
+  - Nuxt UI
+  - Open UI
+anatomy:
+  - part: trigger
+    description: trigger
+  - part: indicator
+    description: indicator
+  - part: content-region
+    description: content region
+variants:
+  - axis: variant
+    values:
+      - inline
+      - boxed
+      - summary-detail
+  - axis: size
+    values:
+      - sm
+      - md
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: expanded
+accessibility:
+  apg:
+    pattern: Disclosure
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
+  notes: >-
+    ARIA: `button` with `aria-expanded` and `aria-controls`; native `details`/`summary` is a valid
+    implementation.
+
+    Keyboard: Enter/Space toggles; content is in DOM order after the trigger.
+tokens:
+  consumes:
+    - motion.duration.base
+    - space.stack.sm
+    - color.fg.accent
+    - size.icon.sm
+usage:
+  use_when:
+    - Progressive disclosure of optional detail
+    - "'Show more' in long text or model output"
+  avoid_when:
+    - Several peers exist — use an accordion so state is coordinated
+  pairs_well_with:
+    - accordion
+    - prose
+    - card
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
+  - https://www.radix-ui.com/primitives/docs/overview/introduction
+  - https://ui.shadcn.com/docs/components

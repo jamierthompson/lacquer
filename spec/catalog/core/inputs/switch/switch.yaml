@@ -1,0 +1,111 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: switch
+name: Switch
+kind: component
+catalog: core
+group: inputs
+tier: 1
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: Immediate on/off control for a setting that takes effect without submitting.
+aliases:
+  - Toggle
+  - ToggleSwitch
+  - SettingToggle
+  - Toggles
+found_in:
+  - Material 3
+  - Apple HIG
+  - Fluent 2
+  - Carbon
+  - Polaris
+  - Spectrum
+  - Atlassian
+  - Primer
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - Radix
+  - shadcn/ui
+  - Base UI
+  - Ark UI
+  - React Aria
+  - Headless UI
+  - Nuxt UI
+  - PrimeVue
+  - Open UI
+anatomy:
+  - part: track
+    description: track
+  - part: thumb
+    description: thumb
+  - part: label
+    description: label
+  - part: optional-on-off-icons
+    description: optional on/off icons
+  - part: description
+    description: description
+variants:
+  - axis: variant
+    values:
+      - default
+      - with-icons
+      - label-left
+      - label-right
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: selected
+  - id: loading
+  - id: read-only
+accessibility:
+  apg:
+    pattern: Switch
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/switch/
+  notes: |-
+    ARIA: `role="switch"` with `aria-checked`, or a checkbox input with `role="switch"`.
+    Keyboard: Space toggles; Enter may toggle in some implementations but Space is required.
+tokens:
+  consumes:
+    - radius.full
+    - size.control.md
+    - color.bg.primary
+    - color.bg.subtle
+    - motion.duration.fast
+usage:
+  use_when:
+    - Settings that apply instantly
+    - Enabling a feature or a mode
+  avoid_when:
+    - The value is only saved on submit — use a checkbox
+  pairs_well_with:
+    - field
+    - label
+    - toast
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/switch/
+  - https://m3.material.io/components
+  - https://developer.apple.com/design/human-interface-guidelines/components

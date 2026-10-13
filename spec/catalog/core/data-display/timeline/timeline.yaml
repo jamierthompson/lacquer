@@ -1,0 +1,101 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: timeline
+name: Timeline
+kind: component
+catalog: core
+group: data-display
+tier: 3
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Chronological sequence of events along a vertical or horizontal axis.
+aliases:
+  - Activity feed
+  - History
+  - Audit log
+  - Event stream
+  - Feed
+found_in:
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - Primer
+  - Nuxt UI
+  - PrimeVue
+anatomy:
+  - part: axis-line
+    description: axis line
+  - part: markers-dots
+    description: markers/dots
+  - part: connectors
+    description: connectors
+  - part: event-content
+    description: event content
+  - part: timestamps
+    description: timestamps
+  - part: grouping-headers
+    description: grouping headers
+variants:
+  - axis: variant
+    values:
+      - vertical
+      - horizontal
+      - alternating
+      - with-icons
+      - compact
+  - axis: size
+    values:
+      - sm
+      - md
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: current
+  - id: loading
+  - id: skeleton
+  - id: empty
+accessibility:
+  apg:
+    pattern: Feed
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/feed/
+  notes: |-
+    ARIA: An ordered list; for infinite streams use `role="feed"` with `aria-busy` while loading.
+    Keyboard: Standard tabbing; feed pattern adds PageUp/PageDown between articles.
+tokens:
+  consumes:
+    - color.border.default
+    - size.icon.sm
+    - type.body.sm
+    - space.stack.md
+    - color.fg.muted
+usage:
+  use_when:
+    - Audit trails, order tracking, run histories, agent step traces
+  avoid_when:
+    - Events are unordered or lack meaningful times
+  pairs_well_with:
+    - status-indicator
+    - avatar
+    - disclosure
+    - virtual-list
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/feed/
+  - https://ant.design/components/overview/
+  - https://mui.com/material-ui/all-components/

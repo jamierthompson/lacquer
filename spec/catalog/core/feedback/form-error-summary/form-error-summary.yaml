@@ -1,0 +1,70 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: form-error-summary
+name: Error Summary
+kind: component
+catalog: core
+group: feedback
+tier: 2
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: A single block at the top of a form listing every validation failure with links to each field.
+aliases:
+  - Error summary
+  - Validation summary
+  - InlineError list
+  - Form errors
+found_in:
+  - GOV.UK
+  - USWDS
+  - Carbon
+  - Polaris
+anatomy:
+  - part: container
+    description: container
+  - part: heading
+    description: heading
+  - part: error-list
+    description: error list
+  - part: anchor-links
+    description: anchor links to fields
+  - part: count
+    description: count
+variants:
+  - axis: variant
+    values:
+      - error
+      - warning
+states:
+  - id: enabled
+  - id: invalid
+accessibility:
+  notes: |-
+    ARIA: `role="alert"` or a focused container with `tabindex="-1"`; move focus here on failed submit.
+    Keyboard: Each entry is a link that moves focus to the offending field.
+tokens:
+  consumes:
+    - color.bg.danger-subtle
+    - color.border.danger
+    - radius.surface
+    - space.inset.md
+    - type.label.md
+usage:
+  use_when:
+    - Forms longer than one screen
+    - Government or regulated services
+  avoid_when:
+    - A one-field form — inline errors suffice
+  pairs_well_with:
+    - form
+    - field
+    - alert
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://design-system.service.gov.uk/components/
+  - https://designsystem.digital.gov/components/overview/

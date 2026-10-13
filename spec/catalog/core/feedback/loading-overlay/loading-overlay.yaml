@@ -1,0 +1,73 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: loading-overlay
+name: Loading Overlay
+kind: component
+catalog: core
+group: feedback
+tier: 2
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: Dims and blocks a region while an operation completes.
+aliases:
+  - Backdrop
+  - BlockUI
+  - Busy overlay
+  - Loading mask
+  - Blanket
+found_in:
+  - Mantine
+  - MUI
+  - Ant Design
+  - PrimeVue
+  - Atlassian
+anatomy:
+  - part: scrim
+    description: scrim
+  - part: spinner-or-progress
+    description: spinner or progress
+  - part: message
+    description: message
+  - part: cancel-action
+    description: cancel action
+  - part: blocked-region
+    description: blocked region
+variants:
+  - axis: variant
+    values:
+      - region
+      - full-page
+      - transparent
+      - with-cancel
+states:
+  - id: loading
+  - id: enabled
+accessibility:
+  notes: |-
+    ARIA: Set `aria-busy="true"` on the blocked region and prevent focus from entering it (`inert`).
+    Keyboard: Focus must be blocked from the covered region; a cancel control stays reachable.
+tokens:
+  consumes:
+    - color.bg.scrim
+    - z.overlay
+    - motion.duration.fast
+    - color.fg.default
+usage:
+  use_when:
+    - Saving a form, refreshing a table, blocking double-submit
+  avoid_when:
+    - A button-level loading state would suffice
+  pairs_well_with:
+    - spinner
+    - progress
+    - form
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://mantine.dev/core/package/
+  - https://mui.com/material-ui/all-components/

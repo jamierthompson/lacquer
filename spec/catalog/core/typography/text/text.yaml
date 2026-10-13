@@ -1,0 +1,86 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: text
+name: Text
+kind: component
+catalog: core
+group: typography
+tier: 1
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: The general-purpose typographic primitive for body, label and caption copy.
+aliases:
+  - Typography
+  - Body
+  - Paragraph
+  - Span
+  - Label text
+found_in:
+  - Primer
+  - Atlassian
+  - Spectrum
+  - Chakra UI
+  - Mantine
+  - Polaris
+  - Ant Design
+  - MUI
+  - Fluent 2
+  - shadcn/ui
+  - Nuxt UI
+  - Open UI
+anatomy:
+  - part: text-node
+    description: text node
+  - part: optional-truncation
+    description: optional truncation
+  - part: optional-emphasis-marks
+    description: optional emphasis marks
+variants:
+  - axis: variant
+    values:
+      - body
+      - secondary
+      - caption
+      - code
+      - strong
+      - emphasis
+      - success
+      - danger
+  - axis: size
+    values:
+      - xs
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+accessibility:
+  notes: |-
+    ARIA: Semantic element chosen by `as`; colour alone must never carry meaning.
+    Keyboard: None.
+tokens:
+  consumes:
+    - type.body.md
+    - type.body.sm
+    - color.fg.default
+    - color.fg.muted
+    - line-height.body
+usage:
+  use_when:
+    - Any run of copy that should obey the type scale
+  avoid_when:
+    - The content is a heading, label or link with its own semantics
+  pairs_well_with:
+    - heading
+    - help-text
+    - truncate
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://primer.style/components
+  - https://atlassian.design/components

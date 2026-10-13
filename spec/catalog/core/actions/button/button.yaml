@@ -1,0 +1,384 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: button
+name: Button
+kind: component
+catalog: core
+group: actions
+tier: 1
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: Triggers an action in the current context; the single most-used interactive component in any product.
+aliases:
+  - Btn
+  - Pressable
+  - CTA
+  - UnstyledButton
+  - ActionButton
+found_in:
+  - Material 3
+  - Apple HIG
+  - Fluent 2
+  - Carbon
+  - Polaris
+  - Spectrum
+  - Atlassian
+  - Primer
+  - GOV.UK
+  - USWDS
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - Radix
+  - shadcn/ui
+  - Base UI
+  - Ark UI
+  - React Aria
+  - Headless UI
+  - Bootstrap 5
+  - Nuxt UI
+  - PrimeVue
+  - Open UI
+anatomy:
+  - part: root
+    element: button
+    description: The native button. Carries every state attribute.
+  - part: leading-icon
+    slot: true
+    required: false
+    description: Optional icon before the label; decorative (aria-hidden).
+  - part: label
+    description: Visible text. Required unless the button is icon-only, in which case use Icon Button instead.
+  - part: trailing-icon
+    slot: true
+    required: false
+    description: Optional icon after the label; usually a chevron or external-link glyph.
+  - part: spinner
+    required: false
+    description: Replaces the leading icon while loading. Width is reserved so the label does not shift.
+  - part: focus-ring
+    description: Rendered by the focus-visible treatment, not a DOM node, but it is a part the grader looks for.
+variants:
+  - axis: emphasis
+    values:
+      - primary
+      - secondary
+      - tertiary
+      - outline
+      - ghost
+      - link
+      - destructive
+    default: secondary
+    guidance: One primary per view. Destructive is an emphasis, not a colour; it still obeys every state rule.
+  - axis: size
+    values:
+      - xs
+      - sm
+      - md
+      - lg
+    default: md
+    guidance: Size changes height, inset and label style together; never one without the others.
+modifiers:
+  - full-width
+states:
+  - id: enabled
+    treatment: Base tokens for the chosen emphasis.
+    a11y: Default semantics.
+  - id: hover
+    treatment: Background one step (color.bg.*-hover). Never move the element. Transition motion.duration.fast.
+    a11y: none — hover is not available to keyboard or touch and must never be the only cue.
+  - id: focus-visible
+    treatment: 2px ring in color.border.focus with focus.ring.offset, ≥3:1 against component and page. Use
+      :focus-visible, not :focus.
+    a11y: Implicit. Never outline none without a replacement (LQ-FOCUS-01).
+  - id: active
+    treatment: Darken one step past hover or inset the surface; ~50ms so it feels immediate.
+    a11y: none (transient).
+  - id: disabled
+    treatment: opacity.disabled, pointer-events none, hover/active responses removed. Keep legible.
+    a11y: '`disabled` removes it from tab order. Prefer `aria-disabled="true"` (soft-disable) for anything a user
+      might reasonably try, so the reason can be discovered.'
+  - id: loading
+    treatment: In-place spinner that preserves width; label opacity reduced; re-submission blocked.
+    a11y: aria-busy="true"; announce start and finish politely from the surrounding region, not the button.
+  - id: selected
+    required: false
+    treatment: Persistent color.bg.selected plus a weight or border change. Only for toggle usage — see Toggle Button.
+    a11y: aria-pressed="true".
+api:
+  props:
+    - name: emphasis
+      type: enum(primary|secondary|tertiary|outline|ghost|link|destructive)
+      default: secondary
+      description: Visual weight. Called `variant` in most libraries; Lacquer calls the axis by what it controls.
+    - name: size
+      type: enum(xs|sm|md|lg)
+      default: md
+    - name: loading
+      type: boolean
+      default: false
+      maps_to: aria-busy
+      description: Shows the spinner, blocks activation, keeps width.
+    - name: disabled
+      type: boolean
+      default: false
+      maps_to: disabled | aria-disabled
+    - name: softDisabled
+      type: boolean
+      default: false
+      maps_to: aria-disabled
+      description: Keeps the button focusable so a tooltip can explain why it is unavailable.
+    - name: fullWidth
+      type: boolean
+      default: false
+    - name: type
+      type: enum(button|submit|reset)
+      default: button
+      description: Default is `button`, not `submit`, so a button inside a form never submits by accident.
+  slots:
+    - leading-icon
+    - children
+    - trailing-icon
+  events:
+    - name: press
+      description: Fired on click, Enter and Space. Not fired while loading or disabled.
+  composition: >
+    Icons are children, not props (`<Button><Icon/>Save</Button>`), so any icon set works and the label stays
+    in the accessible name. Emphasis and size are props because they are closed sets the system owns. There is
+    no `color` prop: destructive is an emphasis.
+accessibility:
+  apg:
+    pattern: Button
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/button/
+  role: button (implicit from the native element)
+  name: From the label content. Icon-only buttons are a different component (icon-button) and require aria-label.
+  aria:
+    - attr: aria-disabled
+      when: softDisabled
+      value: "true"
+    - attr: aria-pressed
+      when: used as a toggle
+      value: true | false
+    - attr: aria-busy
+      when: loading
+      value: "true"
+  keyboard:
+    - key: Tab
+      action: Moves focus to the button. Disabled (hard) buttons are skipped; soft-disabled are not.
+    - key: Enter
+      action: Activates.
+    - key: Space
+      action: Activates on key-up.
+  focus: Focus stays on the button after activation unless the action moves it deliberately (opening a dialog
+    moves focus into the dialog).
+  notes: A `div` with role="button" needs tabindex, Enter and Space handling and is still worse than the native
+    element. The spec names no exception.
+tokens:
+  consumes:
+    - color.bg.primary
+    - color.bg.primary-hover
+    - color.fg.on-primary
+    - color.bg.secondary
+    - color.bg.secondary-hover
+    - color.fg.on-secondary
+    - color.bg.destructive
+    - color.bg.destructive-hover
+    - color.fg.on-destructive
+    - color.border.input
+    - color.border.focus
+    - color.fg.link
+    - radius.control
+    - space.inset.control.sm
+    - space.inset.control.md
+    - space.inset.control.lg
+    - size.control.xs
+    - size.control.sm
+    - size.control.md
+    - size.control.lg
+    - size.icon.md
+    - type.label.sm
+    - type.label.md
+    - focus.ring.width
+    - focus.ring.offset
+    - motion.duration.fast
+    - opacity.disabled
+content:
+  label: Verb first, then the object — "Save changes", "Delete 3 files". Sentence case. Three words or fewer
+    when possible.
+  voice: Say what happens, not what the user should do. "Send" not "Click to send".
+  limits: Never "OK", "Yes", "No", "Submit", "Click here" when a specific verb is possible. Never ellipsis
+    unless the button opens a dialog that asks for more input ("Export…").
+  strings:
+    loading: Loading
+usage:
+  use_when:
+    - Submitting, saving, opening a dialog, running an operation.
+    - The action happens in the current context and does not change the URL.
+  avoid_when:
+    - The action navigates to a URL — that is a Link, even if it looks like a button.
+    - The control has no visible label — that is an Icon Button.
+    - The control stays pressed — that is a Toggle Button.
+    - More than one primary button is visible in a view.
+  instead:
+    - when: It navigates
+      use: link
+    - when: It has no text label
+      use: icon-button
+    - when: It toggles and stays on
+      use: toggle-button
+    - when: It opens a menu of related actions
+      use: split-button
+  pairs_well_with:
+    - button-group
+    - dialog
+    - form
+    - toast
+  exemplars:
+    - GOV.UK Button — one primary per page, enforced in guidance; the clearest statement of emphasis
+      discipline.
+    - React Aria Button — press events unify mouse, touch, keyboard and screen-reader activation.
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-TOKEN-02
+    - LQ-ANAT-01
+    - LQ-COPY-01
+  local:
+    - id: LQ-BUTTON-01
+      level: MUST
+      polarity: forbid
+      title: Never a div with onClick
+      statement: A button is a native `<button>`; a `div`, `span` or `a` without `href` carrying a click handler is
+        a defect.
+      rationale: Keyboard activation, focus order, form submission and the accessible role all come free from the
+        element; recreating them is never complete.
+      detect:
+        static: div|span[onClick] without role=button, or any element with role=button that is not <button>.
+        runtime: Press Enter and Space on the focused control; both must activate.
+      fix: Replace with `<button type="button">` and keep the classes.
+      source: apg
+    - id: LQ-BUTTON-02
+      level: MUST
+      polarity: require
+      title: Loading keeps width and blocks re-press
+      statement: While loading, the button keeps its enabled width, shows an in-place spinner, sets aria-busy="true"
+        and ignores further presses.
+      detect:
+        static: loading branch renders a spinner inside the button and sets aria-busy.
+        runtime: Measure width before and during loading; press twice; the handler fires once.
+      fix: Reserve the icon slot for the spinner and gate the press handler on `loading`.
+    - id: LQ-BUTTON-03
+      level: MUST
+      polarity: forbid
+      title: One primary per view
+      statement: A view (page, dialog, drawer, card) shows at most one primary-emphasis button.
+      detect:
+        static: Count [data-emphasis="primary"] within each dialog/main/section landmark.
+      fix: Demote the others to secondary or tertiary; if two actions are equally important, neither is primary.
+    - id: LQ-BUTTON-04
+      level: SHOULD
+      polarity: forbid
+      title: No navigation disguised as a button
+      statement: A button never calls router.push / location.assign as its only effect; a Link styled as a button
+        does that.
+      detect:
+        static: press handler body is a navigation call.
+      fix: Use `<Link emphasis="primary">` (link rendered with button styles) so middle-click, copy-link and
+        prefetch work.
+    - id: LQ-BUTTON-05
+      level: MUST
+      polarity: forbid
+      title: Icon-only needs a name
+      statement: A button whose only child is an icon has no accessible name and is a defect; use icon-button with
+        aria-label.
+      detect:
+        static: Accessible name computes to empty.
+      fix: Switch to icon-button, or add visible text.
+      source: wcag
+    - id: LQ-BUTTON-06
+      level: SHOULD
+      polarity: forbid
+      title: No disabled submit as validation
+      statement: Do not hard-disable a submit button to signal an invalid form; let the user press it and show the
+        errors (LQ-ERR-01 pattern). Soft-disable with an explanation is acceptable for truly unavailable
+        actions.
+      detect:
+        static: submit button `disabled` bound to form validity.
+      fix: Keep the button enabled; validate on submit; focus the first invalid field.
+examples:
+  good:
+    - id: emphasis-ladder
+      title: All seven emphases at md
+      renderer: html
+      file: examples/html/emphasis-ladder.html
+      demonstrates:
+        - variant:emphasis=*
+    - id: loading-submit
+      title: Submit that keeps its width while loading
+      renderer: html
+      file: examples/html/loading-submit.html
+      demonstrates:
+        - state:loading
+        - rule:LQ-BUTTON-02
+    - id: soft-disabled-with-reason
+      title: Soft-disabled button that explains itself
+      renderer: html
+      file: examples/html/soft-disabled-with-reason.html
+      demonstrates:
+        - state:disabled
+        - rule:LQ-STATE-03
+    - id: destructive-in-dialog-footer
+      title: Destructive confirm with a secondary cancel
+      renderer: html
+      file: examples/html/destructive-in-dialog-footer.html
+      demonstrates:
+        - variant:emphasis=destructive
+        - rule:LQ-BUTTON-03
+        - rule:LQ-COPY-01
+  anti:
+    - id: div-as-button
+      title: A div pretending to be a button
+      renderer: html
+      file: examples/anti/div-as-button.html
+      violates:
+        - LQ-BUTTON-01
+        - LQ-SEM-01
+        - LQ-NAME-01
+    - id: literal-purple-and-no-focus
+      title: Literal palette values and a removed focus ring
+      renderer: html
+      file: examples/anti/literal-purple-no-focus.html
+      violates:
+        - LQ-TOKEN-01
+        - LQ-FOCUS-01
+        - LQ-STYLE-01
+    - id: spinner-reflow
+      title: Loading state that swaps the label for a spinner and reflows
+      renderer: html
+      file: examples/anti/spinner-reflow.html
+      violates:
+        - LQ-BUTTON-02
+implementations:
+  - renderer: html
+    file: examples/html/button.html
+    status: reference
+grading:
+  weight: 1
+  notes: Buttons are everywhere, so a button defect is multiplied. The grader reports the worst instance per
+    rule, not every instance.
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/button/
+  - https://design-system.service.gov.uk/components/button/
+  - https://react-spectrum.adobe.com/react-aria/Button.html
+  - https://m3.material.io/components
+  - https://developer.apple.com/design/human-interface-guidelines/components

@@ -1,0 +1,98 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: segmented-control
+name: Segmented Control
+kind: component
+catalog: core
+group: selection
+tier: 2
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: Compact set of mutually exclusive options shown as joined segments.
+aliases:
+  - Segmented buttons
+  - SelectButton
+  - Segment Group
+  - Content switcher
+  - Toggle group single
+found_in:
+  - Material 3
+  - Apple HIG
+  - Spectrum
+  - Primer
+  - Carbon
+  - Chakra UI
+  - Mantine
+  - Ant Design
+  - Ark UI
+  - PrimeVue
+anatomy:
+  - part: track
+    description: track
+  - part: segments
+    description: segments
+  - part: selected-indicator
+    description: selected indicator
+  - part: icons-labels
+    description: icons/labels
+variants:
+  - axis: variant
+    values:
+      - single-select
+      - multi-select
+      - icon-only
+      - full-width
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: selected
+accessibility:
+  apg:
+    pattern: Radio Group
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/radio/
+  notes: >-
+    ARIA: `role="radiogroup"` with radio segments (single-select), or a labelled group of toggle buttons
+    (multi).
+
+    Keyboard: One tab stop; Arrow keys move and select; Home/End jump.
+tokens:
+  consumes:
+    - radius.control
+    - color.bg.subtle
+    - color.bg.surface
+    - shadow.sm
+    - motion.duration.fast
+usage:
+  use_when:
+    - 2–5 short, equally weighted view or filter options
+  avoid_when:
+    - Labels are long or the option count varies — use tabs or a select
+  pairs_well_with:
+    - toolbar
+    - data-table
+    - tabs
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/radio/
+  - https://m3.material.io/components
+  - https://developer.apple.com/design/human-interface-guidelines/components

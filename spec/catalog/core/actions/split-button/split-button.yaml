@@ -1,0 +1,92 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: split-button
+name: Split Button
+kind: component
+catalog: core
+group: actions
+tier: 3
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: A default action plus an attached trigger that reveals related alternative actions.
+aliases:
+  - Menu button
+  - Dropdown.Button
+  - SplitButton
+  - Action + menu
+found_in:
+  - Material 3
+  - PrimeVue
+  - Fluent 2
+  - Carbon
+  - Ant Design
+anatomy:
+  - part: primary-action
+    description: primary action
+  - part: divider
+    description: divider
+  - part: disclosure-trigger
+    description: disclosure trigger
+  - part: menu-popover
+    description: menu popover
+  - part: menu-items
+    description: menu items
+variants:
+  - axis: variant
+    values:
+      - primary
+      - secondary
+      - icon-only-trigger
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: expanded
+  - id: loading
+accessibility:
+  apg:
+    pattern: Menu Button
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/
+  notes: >-
+    ARIA: Two separate buttons; the trigger carries `aria-haspopup="menu"` and `aria-expanded`.
+
+    Keyboard: Enter/Space on the primary runs it; Down Arrow or Enter on the trigger opens the menu; Escape
+    closes.
+tokens:
+  consumes:
+    - radius.control
+    - color.border.default
+    - shadow.overlay
+    - z.dropdown
+usage:
+  use_when:
+    - One action dominates but variants exist (Save / Save as…)
+  avoid_when:
+    - No action is obviously the default — use a plain menu
+  pairs_well_with:
+    - dropdown-menu
+    - button
+    - toolbar
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/
+  - https://m3.material.io/components
+  - https://primevue.dev/

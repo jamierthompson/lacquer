@@ -1,0 +1,93 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: scroll-area
+name: Scroll Area
+kind: component
+catalog: core
+group: layout
+tier: 2
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: Scroll container with styled, cross-browser scrollbars and preserved keyboard scrolling.
+aliases:
+  - Scrollable
+  - Scroller
+  - Scroll view
+  - Viewport
+found_in:
+  - Radix
+  - shadcn/ui
+  - Chakra UI
+  - Mantine
+  - Base UI
+  - Ark UI
+  - Nuxt UI
+  - PrimeVue
+  - Apple HIG
+anatomy:
+  - part: root
+    description: root
+  - part: viewport
+    description: viewport
+  - part: content
+    description: content
+  - part: vertical-scrollbar
+    description: vertical scrollbar
+  - part: horizontal-scrollbar
+    description: horizontal scrollbar
+  - part: thumb
+    description: thumb
+  - part: corner
+    description: corner
+variants:
+  - axis: variant
+    values:
+      - auto-hide
+      - always-visible
+      - horizontal
+      - vertical
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+modes:
+  - id: scrolling
+  - id: overflowing
+accessibility:
+  notes: |-
+    ARIA: Scrollable region needs `tabindex="0"` plus an accessible name so keyboard users can reach it.
+    Keyboard: Arrow keys / PageUp / PageDown / Home / End scroll the viewport when focused.
+tokens:
+  consumes:
+    - color.bg.scrollbar
+    - radius.pill
+    - space.inset.xs
+    - size.scrollbar
+usage:
+  use_when:
+    - Chat transcripts, long menus, side panels
+    - Native scrollbars clash with the visual design
+  avoid_when:
+    - The page itself should scroll — nested scroll traps frustrate users
+  pairs_well_with:
+    - virtual-list
+    - sidebar-nav
+    - dropdown-menu
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.radix-ui.com/primitives/docs/overview/introduction
+  - https://ui.shadcn.com/docs/components

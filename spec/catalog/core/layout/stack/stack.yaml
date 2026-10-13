@@ -1,0 +1,73 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: stack
+name: Stack
+kind: component
+catalog: core
+group: layout
+tier: 1
+atomic_level: primitive
+maturity: established
+status: draft
+version: 0.1.0
+summary: One-dimensional layout that spaces children along a single axis with a token-valued gap.
+aliases:
+  - VStack
+  - HStack
+  - BlockStack
+  - InlineStack
+  - Group
+  - Stacks
+found_in:
+  - Polaris
+  - Atlassian
+  - Primer
+  - Chakra UI
+  - Mantine
+  - MUI
+  - Bootstrap 5
+anatomy:
+  - part: container
+    description: container
+  - part: children
+    description: children
+  - part: gap
+    description: gap
+  - part: optional-divider-slot
+    description: optional divider slot
+variants:
+  - axis: variant
+    values:
+      - vertical
+      - horizontal
+      - with-dividers
+states:
+  - id: enabled
+accessibility:
+  notes: |-
+    ARIA: None; layout only.
+    Keyboard: None.
+tokens:
+  consumes:
+    - space.gap.xs
+    - space.gap.sm
+    - space.gap.md
+    - space.gap.lg
+usage:
+  use_when:
+    - Any time children need consistent rhythm
+    - Replacing ad-hoc margin utilities
+  avoid_when:
+    - Two-dimensional alignment is required — use grid
+  pairs_well_with:
+    - box
+    - divider
+    - flex
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://github.com/Shopify/polaris/tree/main/polaris-react/src/components
+  - https://atlassian.design/components

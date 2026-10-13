@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Button — Lacquer reference implementation</title>
+  <!--
+    Reference implementation for the html renderer.
+    Spec: spec/catalog/core/actions/button/button.yaml
+
+    The markup pattern is:
+
+      <button type="button" data-lacquer="button" data-emphasis="primary" data-size="md">
+        <span data-slot="leading-icon" aria-hidden="true">…</span>   optional
+        <span data-slot="label">Save changes</span>
+        <span data-slot="trailing-icon" aria-hidden="true">…</span>  optional
+      </button>
+
+    States are attributes on the native element, so they reach the
+    accessibility tree for free:
+      hard-disabled   disabled
+      soft-disabled   aria-disabled="true"  (stays focusable; add aria-describedby for the reason)
+      loading         aria-busy="true" aria-disabled="true" + a [data-slot="spinner"] before the label
+      selected        aria-pressed="true"   (toggle usage only — see toggle-button)
+
+    This page shows the full state and variant matrix. The examples beside it
+    are fragments an agent copies.
+  -->
+  <link rel="stylesheet" href="../../../../../../bindings/html.theme.css" />
+  <link rel="stylesheet" href="button.css" />
+  <style>
+    /* Page chrome only. Not part of the component. */
+    body { margin: 0; padding: var(--lq-space-inset-lg); background: var(--lq-color-bg-surface); color: var(--lq-color-fg-default); font: var(--lq-type-body-md); }
+    h1 { font: var(--lq-type-heading-md); margin: 0 0 var(--lq-space-gap-lg); }
+    h2 { font: var(--lq-type-label-md); color: var(--lq-color-fg-muted); margin: var(--lq-space-gap-lg) 0 var(--lq-space-gap-sm); }
+    .row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--lq-space-gap-sm); }
+  </style>
+</head>
+<body>
+  <h1>Button</h1>
+
+  <h2>Emphasis</h2>
+  <div class="row">
+    <button type="button" data-lacquer="button" data-emphasis="primary"><span data-slot="label">Save changes</span></button>
+    <button type="button" data-lacquer="button" data-emphasis="secondary"><span data-slot="label">Duplicate</span></button>
+    <button type="button" data-lacquer="button" data-emphasis="tertiary"><span data-slot="label">Rename</span></button>
+    <button type="button" data-lacquer="button" data-emphasis="outline"><span data-slot="label">Export…</span></button>
+    <button type="button" data-lacquer="button" data-emphasis="ghost"><span data-slot="label">Dismiss</span></button>
+    <button type="button" data-lacquer="button" data-emphasis="link"><span data-slot="label">View history</span></button>
+    <button type="button" data-lacquer="button" data-emphasis="destructive"><span data-slot="label">Delete project</span></button>
+  </div>
+
+  <h2>Size</h2>
+  <div class="row">
+    <button type="button" data-lacquer="button" data-emphasis="secondary" data-size="xs"><span data-slot="label">Extra small</span></button>
+    <button type="button" data-lacquer="button" data-emphasis="secondary" data-size="sm"><span data-slot="label">Small</span></button>
+    <button type="button" data-lacquer="button" data-emphasis="secondary" data-size="md"><span data-slot="label">Medium</span></button>
+    <button type="button" data-lacquer="button" data-emphasis="secondary" data-size="lg"><span data-slot="label">Large</span></button>
+  </div>
+
+  <h2>States</h2>
+  <div class="row">
+    <button type="button" data-lacquer="button" data-emphasis="primary"><span data-slot="label">Enabled</span></button>
+    <button type="button" data-lacquer="button" data-emphasis="primary" disabled><span data-slot="label">Disabled</span></button>
+    <button type="button" data-lacquer="button" data-emphasis="primary" aria-disabled="true" aria-describedby="why"><span data-slot="label">Soft-disabled</span></button>
+    <span id="why" style="color: var(--lq-color-fg-muted)">stays focusable; the reason is discoverable</span>
+    <button type="button" data-lacquer="button" data-emphasis="primary" aria-busy="true" aria-disabled="true">
+      <span data-slot="spinner" aria-hidden="true"></span>
+      <span data-slot="label">Loading</span>
+    </button>
+  </div>
+  <p style="color: var(--lq-color-fg-muted)">Hover, focus-visible and active are live: use the pointer and the keyboard.</p>
+
+  <h2>With icons</h2>
+  <div class="row">
+    <button type="button" data-lacquer="button" data-emphasis="secondary">
+      <svg data-slot="leading-icon" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3v10M3 8h10" /></svg>
+      <span data-slot="label">Add item</span>
+    </button>
+    <button type="button" data-lacquer="button" data-emphasis="outline">
+      <span data-slot="label">Open settings</span>
+      <svg data-slot="trailing-icon" aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3l5 5-5 5" /></svg>
+    </button>
+  </div>
+
+  <h2>Full width</h2>
+  <button type="button" data-lacquer="button" data-emphasis="primary" data-full-width><span data-slot="label">Continue</span></button>
+</body>
+</html>

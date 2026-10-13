@@ -1,0 +1,98 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: gallery-lightbox
+name: Gallery / Lightbox
+kind: component
+catalog: core
+group: media
+tier: 3
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Grid of media that opens into a full-screen viewer with navigation and zoom.
+aliases:
+  - Lightbox
+  - Image viewer
+  - Media gallery
+  - Photo grid
+  - Compare
+found_in:
+  - PrimeVue
+  - Ant Design
+  - Nuxt UI
+anatomy:
+  - part: thumbnail-grid
+    description: thumbnail grid
+  - part: overlay
+    description: overlay
+  - part: full-size-media
+    description: full-size media
+  - part: previous-next
+    description: previous/next
+  - part: counter
+    description: counter
+  - part: zoom-controls
+    description: zoom controls
+  - part: close
+    description: close
+  - part: caption
+    description: caption
+variants:
+  - axis: variant
+    values:
+      - grid
+      - masonry
+      - single-image-zoom
+      - with-thumbstrip
+  - axis: size
+    values:
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: loading
+  - id: selected
+  - id: dragging
+  - id: expanded
+accessibility:
+  apg:
+    pattern: Dialog (Modal)
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+  notes: |-
+    ARIA: The viewer is a modal dialog with a focus trap; the current item is announced as 'n of m'.
+    Keyboard: Enter opens; Left/Right navigate; +/- zoom; Escape closes and returns focus to the thumbnail.
+tokens:
+  consumes:
+    - color.bg.scrim
+    - z.modal
+    - space.gap.sm
+    - radius.surface
+    - motion.duration.base
+usage:
+  use_when:
+    - Photo libraries, design assets, generated image sets
+  avoid_when:
+    - A single image inline would do
+  pairs_well_with:
+    - image
+    - dialog
+    - carousel
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+  - https://primevue.dev/
+  - https://ant.design/components/overview/

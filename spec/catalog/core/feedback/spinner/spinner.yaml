@@ -1,0 +1,88 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: spinner
+name: Spinner
+kind: component
+catalog: core
+group: feedback
+tier: 1
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: Indeterminate activity indicator for short waits.
+aliases:
+  - Loader
+  - Loading indicator
+  - ProgressSpinner
+  - Activity indicator
+  - Busy indicator
+  - Spin
+found_in:
+  - Material 3
+  - Carbon
+  - Polaris
+  - Spectrum
+  - Atlassian
+  - Primer
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - shadcn/ui
+  - Fluent 2
+  - Nuxt UI
+  - PrimeVue
+  - Bootstrap 5
+  - Apple HIG
+anatomy:
+  - part: animated-glyph
+    description: animated glyph
+  - part: optional-label
+    description: optional label
+  - part: size-variants
+    description: size variants
+variants:
+  - axis: variant
+    values:
+      - inline
+      - centred
+      - in-button
+      - with-label
+      - overlay
+  - axis: size
+    values:
+      - xs
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: loading
+accessibility:
+  notes: |-
+    ARIA: `role="status"` with an accessible name such as 'Loading'; set `aria-busy` on the region it covers.
+    Keyboard: Not focusable; focus must not be lost while it is shown.
+tokens:
+  consumes:
+    - size.icon.md
+    - color.fg.accent
+    - motion.duration.spin
+    - stroke.width.icon
+usage:
+  use_when:
+    - Waits under about one second where layout is unknown
+  avoid_when:
+    - The shape of the incoming content is known — a skeleton reduces perceived wait
+  pairs_well_with:
+    - button
+    - skeleton
+    - loading-overlay
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://m3.material.io/components
+  - https://carbondesignsystem.com/components/overview/components/

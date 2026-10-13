@@ -1,0 +1,86 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: close-button
+name: Close Button
+kind: component
+catalog: core
+group: actions
+tier: 2
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: The standard dismiss affordance for overlays, banners and removable items.
+aliases:
+  - Dismiss
+  - CloseButton
+  - X button
+  - btn-close
+found_in:
+  - Chakra UI
+  - Mantine
+  - Spectrum
+  - Bootstrap 5
+  - Fluent 2
+anatomy:
+  - part: hit-area
+    description: hit area
+  - part: close-icon
+    description: ×/close icon
+  - part: focus-ring
+    description: focus ring
+variants:
+  - axis: variant
+    values:
+      - subtle
+      - filled
+      - inverse
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+accessibility:
+  apg:
+    pattern: Button
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/button/
+  notes: |-
+    ARIA: `button` with `aria-label="Close"` (or a more specific name).
+    Keyboard: Enter/Space closes; Escape must close the container too.
+tokens:
+  consumes:
+    - radius.control
+    - size.control.sm
+    - color.fg.muted
+    - focus.ring.width
+usage:
+  use_when:
+    - Dialogs, drawers, dismissible banners, removable tags
+  avoid_when:
+    - Dismissing would lose unsaved work with no confirmation
+  pairs_well_with:
+    - dialog
+    - alert
+    - tag
+    - toast
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/button/
+  - https://chakra-ui.com/docs/components/concepts/overview
+  - https://mantine.dev/core/package/

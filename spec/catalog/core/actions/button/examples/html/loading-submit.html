@@ -1,0 +1,15 @@
+<!--
+  id: loading-submit — a submit button captured mid-request (LQ-BUTTON-02).
+  Width is preserved because the spinner takes the leading-icon slot and the
+  label stays in the DOM. aria-busy is set; aria-disabled blocks a second
+  press. The submit handler must also gate on the loading state: attributes
+  stop pointer and keyboard activation, but not a programmatic re-submit.
+  Progress is announced from the surrounding live region, not the button.
+-->
+<form style="display: flex; align-items: center; gap: var(--lq-space-gap-sm)">
+  <button type="submit" data-lacquer="button" data-emphasis="primary" aria-busy="true" aria-disabled="true">
+    <span data-slot="spinner" aria-hidden="true"></span>
+    <span data-slot="label">Send invite</span>
+  </button>
+  <span aria-live="polite" style="color: var(--lq-color-fg-muted)">Sending…</span>
+</form>

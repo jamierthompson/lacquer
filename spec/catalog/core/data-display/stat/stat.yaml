@@ -1,0 +1,100 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: stat
+name: Stat
+kind: component
+catalog: core
+group: data-display
+tier: 2
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: A single headline metric with label, value and optional trend delta.
+aliases:
+  - KPI
+  - Metric
+  - Statistic
+  - MetricText
+  - Big number
+  - Scorecard
+found_in:
+  - Ant Design
+  - Chakra UI
+  - Atlassian
+  - Nuxt UI
+anatomy:
+  - part: label
+    description: label
+  - part: value
+    description: value
+  - part: unit
+    description: unit
+  - part: delta-trend-indicator
+    description: delta/trend indicator
+  - part: comparison-text
+    description: comparison text
+  - part: sparkline-slot
+    description: sparkline slot
+  - part: help-tooltip
+    description: help tooltip
+variants:
+  - axis: variant
+    values:
+      - plain
+      - with-trend
+      - with-sparkline
+      - in-card
+      - compact
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: loading
+  - id: skeleton
+  - id: empty
+  - id: invalid
+accessibility:
+  notes: >-
+    ARIA: Value and label must be programmatically associated; the trend direction needs text, not just an
+    arrow colour.
+
+    Keyboard: None unless the tile links to a detail view.
+tokens:
+  consumes:
+    - type.display.md
+    - type.label.sm
+    - color.fg.muted
+    - color.fg.success
+    - color.fg.danger
+    - space.stack.xs
+usage:
+  use_when:
+    - Dashboards, usage summaries, billing pages
+  avoid_when:
+    - The number needs context a chart would give better
+  pairs_well_with:
+    - card
+    - chart
+    - grid
+    - skeleton
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://ant.design/components/overview/
+  - https://chakra-ui.com/docs/components/concepts/overview

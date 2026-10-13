@@ -1,0 +1,93 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: tag-input
+name: Tag Input
+kind: component
+catalog: core
+group: inputs
+tier: 2
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: Free-form entry that converts typed text into removable tokens on Enter or comma.
+aliases:
+  - TagsInput
+  - TokenField
+  - PillsInput
+  - InputTags
+  - TextInputWithTokens
+  - Chips input
+found_in:
+  - Mantine
+  - Chakra UI
+  - Ark UI
+  - Nuxt UI
+  - PrimeVue
+  - Primer
+  - Spectrum
+  - React Aria
+  - Apple HIG
+anatomy:
+  - part: token-list
+    description: token list
+  - part: remove-button-per
+    description: remove button per token
+  - part: text-input
+    description: text input
+  - part: validation-hint
+    description: validation hint
+variants:
+  - axis: variant
+    values:
+      - free-form
+      - restricted
+      - with-suggestions
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: invalid
+  - id: filled
+  - id: empty
+accessibility:
+  notes: >-
+    ARIA: Tokens are a labelled list; each remove button says what it removes; announce additions politely.
+
+    Keyboard: Enter/comma commits; Backspace on empty input deletes the last token; Arrow keys move between
+    tokens.
+tokens:
+  consumes:
+    - radius.pill
+    - space.gap.2xs
+    - color.bg.subtle
+    - size.control.md
+usage:
+  use_when:
+    - Email recipients, labels, keywords
+  avoid_when:
+    - Values must come from a controlled vocabulary — use multi-select
+  pairs_well_with:
+    - tag
+    - combobox
+    - field
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://mantine.dev/core/package/
+  - https://chakra-ui.com/docs/components/concepts/overview

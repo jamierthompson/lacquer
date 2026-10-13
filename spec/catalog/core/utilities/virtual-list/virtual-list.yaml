@@ -1,0 +1,80 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: virtual-list
+name: Virtual List
+kind: component
+catalog: core
+group: utilities
+tier: 2
+atomic_level: primitive
+maturity: established
+status: draft
+version: 0.1.0
+summary: Renders only visible rows of a large collection, with optional infinite loading.
+aliases:
+  - Virtualizer
+  - VirtualScroller
+  - Windowing
+  - Infinite scroll
+  - Lazy list
+found_in:
+  - React Aria
+  - Fluent 2
+  - PrimeVue
+  - MUI
+  - Ant Design
+anatomy:
+  - part: scroll-container
+    description: scroll container
+  - part: spacer-elements
+    description: spacer elements
+  - part: rendered-window
+    description: rendered window
+  - part: item-measurement-cache
+    description: item measurement cache
+  - part: sentinel-loader
+    description: sentinel/loader
+  - part: scroll-restoration
+    description: scroll restoration
+variants:
+  - axis: variant
+    values:
+      - fixed-height
+      - variable-height
+      - grid
+      - infinite
+      - bidirectional
+states:
+  - id: enabled
+  - id: loading
+  - id: empty
+  - id: skeleton
+accessibility:
+  notes: >-
+    ARIA: Expose `aria-setsize` and `aria-posinset` (or `aria-rowcount`) so assistive tech knows the true
+    total.
+
+    Keyboard: Keyboard navigation must move through all items, not only rendered ones; Home/End reach true
+    bounds.
+tokens:
+  consumes:
+    - size.control.row
+    - space.gap.2xs
+usage:
+  use_when:
+    - Thousands of rows, long chat transcripts, log viewers
+  avoid_when:
+    - Under a few hundred simple rows — complexity outweighs the gain
+  pairs_well_with:
+    - list-view
+    - data-table
+    - scroll-area
+    - tree-view
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://react-aria.adobe.com/llms.txt
+  - https://fluent2.microsoft.design/components/web/react

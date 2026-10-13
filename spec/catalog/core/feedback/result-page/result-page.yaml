@@ -1,0 +1,81 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: result-page
+name: Result Page
+kind: component
+catalog: core
+group: feedback
+tier: 2
+atomic_level: template
+maturity: established
+status: draft
+version: 0.1.0
+summary: Full-page outcome screen for success, error, empty, offline or permission states.
+aliases:
+  - Status page
+  - Result
+  - 404 page
+  - Error page
+  - Success screen
+  - Confirmation panel
+found_in:
+  - Ant Design
+  - GOV.UK
+  - Polaris
+  - USWDS
+anatomy:
+  - part: illustration-or-status
+    description: illustration or status icon
+  - part: heading
+    description: heading
+  - part: explanation
+    description: explanation
+  - part: error-code-id
+    description: error code/id
+  - part: primary-action
+    description: primary action
+  - part: secondary-action
+    description: secondary action
+  - part: support-link
+    description: support link
+variants:
+  - axis: variant
+    values:
+      - success
+      - error
+      - "404"
+      - "500"
+      - "403"
+      - offline
+      - maintenance
+states:
+  - id: enabled
+  - id: success
+  - id: invalid
+  - id: empty
+accessibility:
+  notes: |-
+    ARIA: Page title and `h1` must state the outcome; move focus to the heading on route change.
+    Keyboard: Actions are ordinary focusable controls.
+tokens:
+  consumes:
+    - space.inset.lg
+    - type.heading.md
+    - color.fg.muted
+    - size.illustration.lg
+usage:
+  use_when:
+    - Checkout confirmation, unrecoverable errors, offline mode
+  avoid_when:
+    - The user could stay in context — use an inline alert
+  pairs_well_with:
+    - empty-state
+    - alert
+    - button
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://ant.design/components/overview/
+  - https://design-system.service.gov.uk/components/

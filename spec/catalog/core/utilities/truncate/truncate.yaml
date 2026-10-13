@@ -1,0 +1,72 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: truncate
+name: Truncate
+kind: component
+catalog: core
+group: utilities
+tier: 2
+atomic_level: primitive
+maturity: established
+status: draft
+version: 0.1.0
+summary: Clips overflowing text to one or more lines with an ellipsis and a way to see the full value.
+aliases:
+  - Ellipsis
+  - LineClamp
+  - Spoiler
+  - Text overflow
+  - OverflowList
+found_in:
+  - Primer
+  - Polaris
+  - Mantine
+  - Chakra UI
+  - Bootstrap 5
+anatomy:
+  - part: clamped-text
+    description: clamped text
+  - part: ellipsis
+    description: ellipsis
+  - part: tooltip-or-expand
+    description: tooltip or expand affordance
+  - part: title-attribute
+    description: title attribute
+variants:
+  - axis: variant
+    values:
+      - single-line
+      - multi-line clamp
+      - middle-truncate
+      - with-tooltip
+      - expandable
+states:
+  - id: enabled
+  - id: expanded
+accessibility:
+  notes: >-
+    ARIA: The full text must remain available via tooltip, expansion or `title`; never truncate in the
+    accessibility tree only.
+
+    Keyboard: An expand affordance is a focusable disclosure.
+tokens:
+  consumes:
+    - type.body.md
+    - size.line-clamp
+usage:
+  use_when:
+    - Table cells, file names, chat titles, long identifiers
+  avoid_when:
+    - The truncated portion is the distinguishing part — middle-truncate instead
+  pairs_well_with:
+    - tooltip
+    - table
+    - list-view
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://primer.style/components
+  - https://github.com/Shopify/polaris/tree/main/polaris-react/src/components

@@ -1,0 +1,97 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: input-group
+name: Input Group
+kind: component
+catalog: core
+group: inputs
+tier: 2
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: Attaches add-ons, icons or buttons directly to an input's edges.
+aliases:
+  - Connected
+  - InputAddon
+  - Adornment
+  - IconField
+  - Input prefix/suffix
+  - FieldGroup
+found_in:
+  - Bootstrap 5
+  - shadcn/ui
+  - Polaris
+  - USWDS
+  - PrimeVue
+  - Nuxt UI
+  - Chakra UI
+  - Mantine
+anatomy:
+  - part: leading-add-on
+    description: leading add-on
+  - part: control
+    description: control
+  - part: trailing-add-on
+    description: trailing add-on
+  - part: attached-button
+    description: attached button
+  - part: shared-border
+    description: shared border
+variants:
+  - axis: variant
+    values:
+      - prefix
+      - suffix
+      - both
+      - with-button
+      - with-select
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: invalid
+  - id: read-only
+  - id: filled
+accessibility:
+  notes: >-
+    ARIA: Add-ons that are text must be referenced by `aria-describedby`; attached buttons need their own
+    labels.
+
+    Keyboard: Each interactive add-on is its own tab stop after the input.
+tokens:
+  consumes:
+    - radius.control
+    - color.bg.subtle
+    - color.border.default
+    - size.control.md
+usage:
+  use_when:
+    - Currency symbols, units, domains, search-with-button, copyable fields
+  avoid_when:
+    - The add-on carries meaning a screen reader would miss without wiring
+  pairs_well_with:
+    - text-input
+    - button
+    - select-native
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://getbootstrap.com/docs/5.3/components/
+  - https://ui.shadcn.com/docs/components

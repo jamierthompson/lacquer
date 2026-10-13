@@ -1,0 +1,85 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: map-embed
+name: Map Embed
+kind: component
+catalog: core
+group: media
+tier: 3
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Embeds an interactive map with markers and a non-map fallback.
+aliases:
+  - Map
+  - Location view
+  - Geo embed
+  - MapView
+found_in: []
+anatomy:
+  - part: map-canvas
+    description: map canvas
+  - part: markers
+    description: markers
+  - part: popups
+    description: popups
+  - part: zoom-controls
+    description: zoom controls
+  - part: attribution
+    description: attribution
+  - part: address-fallback-list
+    description: address fallback list
+variants:
+  - axis: variant
+    values:
+      - static
+      - interactive
+      - with-search
+      - with-clusters
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: loading
+  - id: invalid
+  - id: empty
+  - id: dragging
+accessibility:
+  notes: |-
+    ARIA: Interactive maps must have a keyboard-operable alternative such as a list of locations.
+    Keyboard: Arrow keys pan and +/- zoom when the canvas is focused; markers reachable in the fallback list.
+tokens:
+  consumes:
+    - radius.surface
+    - color.border.subtle
+    - shadow.sm
+    - z.overlay
+usage:
+  use_when:
+    - Store locators, delivery tracking, geographic data
+  avoid_when:
+    - A plain address and a link to a maps app would be enough
+  pairs_well_with:
+    - card
+    - list-view
+    - empty-state
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/landmarks/

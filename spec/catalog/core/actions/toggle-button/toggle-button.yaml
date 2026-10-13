@@ -1,0 +1,92 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: toggle-button
+name: Toggle Button
+kind: component
+catalog: core
+group: actions
+tier: 2
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: A two-state button that stays pressed to represent an on/off formatting or filter state.
+aliases:
+  - Toggle
+  - ToggleButton
+  - Pressed button
+  - Sticky button
+found_in:
+  - Radix
+  - shadcn/ui
+  - Base UI
+  - Ark UI
+  - React Aria
+  - MUI
+  - PrimeVue
+  - Material 3
+  - Fluent 2
+anatomy:
+  - part: container
+    description: container
+  - part: icon-or-label
+    description: icon or label
+  - part: pressed-background
+    description: pressed background
+  - part: focus-ring
+    description: focus ring
+variants:
+  - axis: variant
+    values:
+      - ghost
+      - outline
+      - filled
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: selected
+accessibility:
+  apg:
+    pattern: Button
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/button/
+  notes: |-
+    ARIA: `button` with `aria-pressed="true|false"`. Do not use `aria-checked` here.
+    Keyboard: Enter or Space toggles.
+tokens:
+  consumes:
+    - radius.control
+    - color.bg.selected
+    - color.fg.accent
+    - focus.ring.width
+    - motion.duration.fast
+usage:
+  use_when:
+    - Bold/italic in an editor, map layer on/off, view density
+  avoid_when:
+    - The setting is a persisted preference — use a Switch
+  pairs_well_with:
+    - toggle-group
+    - toolbar
+    - rich-text-editor
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/button/
+  - https://www.radix-ui.com/primitives/docs/overview/introduction
+  - https://ui.shadcn.com/docs/components

@@ -1,0 +1,75 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: container
+name: Container
+kind: component
+catalog: core
+group: layout
+tier: 2
+atomic_level: primitive
+maturity: established
+status: draft
+version: 0.1.0
+summary: Centered content well that caps measure and applies responsive page gutters.
+aliases:
+  - Page
+  - Wrapper
+  - Content well
+  - grid-container
+found_in:
+  - Chakra UI
+  - Mantine
+  - MUI
+  - Bootstrap 5
+  - Nuxt UI
+  - USWDS
+  - Carbon
+anatomy:
+  - part: outer-full-bleed-element
+    description: outer full-bleed element
+  - part: max-width-inner
+    description: max-width inner
+  - part: horizontal-gutters
+    description: horizontal gutters
+variants:
+  - axis: variant
+    values:
+      - narrow
+      - default
+      - wide
+      - fluid
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+      - xl
+      - full
+states:
+  - id: enabled
+accessibility:
+  notes: |-
+    ARIA: None; often wraps a `main` landmark.
+    Keyboard: None.
+tokens:
+  consumes:
+    - size.container.md
+    - space.inset.page
+    - breakpoint.md
+usage:
+  use_when:
+    - Every page shell
+    - Long-form reading columns needing a 60–80ch measure
+  avoid_when:
+    - Inside an already-constrained region — double gutters result
+  pairs_well_with:
+    - app-header
+    - footer
+    - prose
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://chakra-ui.com/docs/components/concepts/overview
+  - https://mantine.dev/core/package/

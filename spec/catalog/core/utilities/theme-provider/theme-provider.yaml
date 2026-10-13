@@ -1,0 +1,82 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: theme-provider
+name: Theme Provider
+kind: component
+catalog: core
+group: utilities
+tier: 1
+atomic_level: primitive
+maturity: established
+status: draft
+version: 0.1.0
+summary: Supplies token values and colour scheme to the tree, and exposes the light/dark/system toggle.
+aliases:
+  - ColorModeProvider
+  - AppProvider
+  - ConfigProvider
+  - ThemeProvider
+  - DirectionProvider
+found_in:
+  - Polaris
+  - Atlassian
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - Fluent 2
+  - Nuxt UI
+  - PrimeVue
+  - Radix
+anatomy:
+  - part: provider
+    description: provider
+  - part: token-css-variables
+    description: token CSS variables
+  - part: colour-scheme-attribute
+    description: colour-scheme attribute
+  - part: toggle-control
+    description: toggle control
+  - part: storage-adapter
+    description: storage adapter
+variants:
+  - axis: variant
+    values:
+      - light
+      - dark
+      - system
+      - high-contrast
+      - brand-scoped
+      - rtl
+states:
+  - id: enabled
+accessibility:
+  notes: >-
+    ARIA: Set `color-scheme` so form controls and scrollbars follow; the toggle is a labelled button or radio
+    group.
+
+    Keyboard: The toggle is an ordinary control; the choice must persist across sessions.
+tokens:
+  consumes:
+    - color.bg.canvas
+    - color.fg.default
+    - radius.*
+    - space.*
+    - type.*
+usage:
+  use_when:
+    - Always — this is where the token layer physically enters the app
+  avoid_when:
+    - Never; but avoid multiple competing providers in one tree
+  pairs_well_with:
+    - box
+    - icon
+    - chart
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://github.com/Shopify/polaris/tree/main/polaris-react/src/components
+  - https://atlassian.design/components

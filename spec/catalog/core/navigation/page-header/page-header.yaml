@@ -1,0 +1,96 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: page-header
+name: Page Header
+kind: component
+catalog: core
+group: navigation
+tier: 2
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: "The title block of a page: breadcrumbs, heading, status, metadata and page-level actions."
+aliases:
+  - PageHeader
+  - Page
+  - Page title
+  - Section header
+  - Masthead (page)
+found_in:
+  - Primer
+  - Polaris
+  - Atlassian
+  - Ant Design
+  - Nuxt UI
+  - Carbon
+anatomy:
+  - part: breadcrumb-slot
+    description: breadcrumb slot
+  - part: back-action
+    description: back action
+  - part: title
+    description: title
+  - part: subtitle
+    description: subtitle
+  - part: status-badges
+    description: status badges
+  - part: action-row
+    description: action row
+  - part: tabs-slot
+    description: tabs slot
+variants:
+  - axis: variant
+    values:
+      - simple
+      - with-breadcrumb
+      - with-tabs
+      - with-avatar
+      - sticky
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: loading
+  - id: skeleton
+accessibility:
+  notes: |-
+    ARIA: Contains the page's single `h1`; the action row is a labelled group.
+    Keyboard: Standard tabbing; a sticky variant must not trap focus behind it.
+tokens:
+  consumes:
+    - type.heading.lg
+    - space.stack.md
+    - color.border.subtle
+    - space.inset.page
+usage:
+  use_when:
+    - Every detail and index page in an application
+  avoid_when:
+    - Inside a modal, where the dialog title already does this job
+  pairs_well_with:
+    - breadcrumb
+    - heading
+    - button-group
+    - tabs
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://primer.style/components
+  - https://github.com/Shopify/polaris/tree/main/polaris-react/src/components

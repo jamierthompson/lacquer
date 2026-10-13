@@ -1,0 +1,119 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: popover
+name: Popover
+kind: component
+catalog: core
+group: overlays
+tier: 1
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: Non-modal floating panel anchored to a trigger, holding rich interactive content.
+aliases:
+  - Inline dialog
+  - Popup
+  - Flyout
+  - Floating panel
+  - Overlay panel
+  - Toggletip
+found_in:
+  - Fluent 2
+  - Carbon
+  - Polaris
+  - Spectrum
+  - Atlassian
+  - Primer
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - Radix
+  - shadcn/ui
+  - Base UI
+  - Ark UI
+  - React Aria
+  - Headless UI
+  - Nuxt UI
+  - PrimeVue
+  - Bootstrap 5
+  - Open UI
+anatomy:
+  - part: trigger
+    description: trigger
+  - part: positioned-container
+    description: positioned container
+  - part: arrow
+    description: arrow
+  - part: header
+    description: header
+  - part: body
+    description: body
+  - part: footer-actions
+    description: footer actions
+  - part: close
+    description: close
+variants:
+  - axis: variant
+    values:
+      - click
+      - hover
+      - with-arrow
+      - with-form
+      - nested
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: expanded
+accessibility:
+  apg:
+    pattern: Dialog (Modal)
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+  notes: >-
+    ARIA: `role="dialog"` (non-modal) with `aria-labelledby`; the trigger carries `aria-expanded` and
+    `aria-controls`.
+
+    Keyboard: Enter/Space opens; Tab moves into the content; Escape closes and restores focus to the trigger.
+tokens:
+  consumes:
+    - radius.surface
+    - shadow.overlay
+    - z.popover
+    - color.bg.surface
+    - space.inset.md
+    - motion.duration.fast
+usage:
+  use_when:
+    - Filters, quick edits, help content with links, column settings
+  avoid_when:
+    - Content is purely descriptive — use a tooltip
+    - The task is long — use a drawer
+  pairs_well_with:
+    - button
+    - portal
+    - dropdown-menu
+    - form
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+  - https://fluent2.microsoft.design/components/web/react
+  - https://carbondesignsystem.com/components/overview/components/

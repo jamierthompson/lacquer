@@ -1,0 +1,63 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: aspect-ratio
+name: Aspect Ratio
+kind: component
+catalog: core
+group: layout
+tier: 2
+atomic_level: primitive
+maturity: established
+status: draft
+version: 0.1.0
+summary: Reserves a fixed width-to-height box so media loads without layout shift.
+aliases:
+  - Ratio
+  - Embed responsive
+found_in:
+  - Radix
+  - shadcn/ui
+  - Chakra UI
+  - Mantine
+  - Bootstrap 5
+anatomy:
+  - part: ratio-box
+    description: ratio box
+  - part: absolutely-positioned-child
+    description: absolutely positioned child
+variants:
+  - axis: variant
+    values:
+      - 1:1
+      - 4:3
+      - 16:9
+      - custom
+states:
+  - id: enabled
+  - id: loading
+  - id: skeleton
+accessibility:
+  notes: |-
+    ARIA: None.
+    Keyboard: None.
+tokens:
+  consumes:
+    - radius.surface
+    - color.bg.subtle
+usage:
+  use_when:
+    - Video embeds, thumbnails, image grids
+    - Cumulative Layout Shift matters
+  avoid_when:
+    - Intrinsic media dimensions are already known and set
+  pairs_well_with:
+    - image
+    - video-player
+    - card
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.radix-ui.com/primitives/docs/overview/introduction
+  - https://ui.shadcn.com/docs/components

@@ -1,0 +1,94 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: pin-input
+name: PIN Input
+kind: component
+catalog: core
+group: inputs
+tier: 2
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: Fixed-length code entry split across single-character boxes.
+aliases:
+  - OTP Input
+  - InputOTP
+  - OneTimePasswordField
+  - Digit entry views
+  - Verification code
+found_in:
+  - shadcn/ui
+  - Chakra UI
+  - Mantine
+  - Ark UI
+  - Radix
+  - Base UI
+  - Nuxt UI
+  - PrimeVue
+  - Apple HIG
+anatomy:
+  - part: group
+    description: group
+  - part: character-cells
+    description: character cells
+  - part: hidden-aggregate-input
+    description: hidden aggregate input
+  - part: separator
+    description: separator
+variants:
+  - axis: variant
+    values:
+      - numeric
+      - alphanumeric
+      - masked
+      - with-separator
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: invalid
+  - id: filled
+  - id: loading
+accessibility:
+  notes: >-
+    ARIA: Group is labelled; use `autocomplete="one-time-code"` and expose the whole value, not one cell at a
+    time.
+
+    Keyboard: Typing advances; Backspace moves back; paste fills every cell; Arrow keys move between cells.
+tokens:
+  consumes:
+    - radius.control
+    - size.control.lg
+    - type.body.lg
+    - color.border.focus
+    - space.gap.xs
+usage:
+  use_when:
+    - 2FA codes, email verification, short PINs
+  avoid_when:
+    - Variable-length secrets
+  pairs_well_with:
+    - field
+    - form
+    - alert
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://ui.shadcn.com/docs/components
+  - https://chakra-ui.com/docs/components/concepts/overview

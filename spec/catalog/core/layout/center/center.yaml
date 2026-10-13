@@ -1,0 +1,54 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: center
+name: Center
+kind: component
+catalog: core
+group: layout
+tier: 3
+atomic_level: primitive
+maturity: established
+status: draft
+version: 0.1.0
+summary: Centers a single child on both axes within the available space.
+aliases:
+  - Place
+  - AbsoluteCenter
+  - Middle
+found_in:
+  - Chakra UI
+  - Mantine
+anatomy:
+  - part: centering-container
+    description: centering container
+  - part: child
+    description: child
+variants:
+  - axis: variant
+    values:
+      - flex
+      - absolute
+states:
+  - id: enabled
+accessibility:
+  notes: |-
+    ARIA: None.
+    Keyboard: None.
+tokens:
+  consumes:
+    - space.inset.lg
+usage:
+  use_when:
+    - Empty states, spinners, single-CTA screens
+  avoid_when:
+    - More than one child needs independent alignment
+  pairs_well_with:
+    - spinner
+    - empty-state
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://chakra-ui.com/docs/components/concepts/overview
+  - https://mantine.dev/core/package/

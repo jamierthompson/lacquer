@@ -1,0 +1,108 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: chart
+name: Chart
+kind: component
+catalog: core
+group: data-display
+tier: 2
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: A wrapper that gives visualisations consistent tokens, titles, legends, tooltips and accessible fallbacks.
+aliases:
+  - Graph
+  - Data visualization
+  - Plot
+  - Chart container
+  - Sparkline
+found_in:
+  - Carbon
+  - Apple HIG
+  - USWDS
+  - Ant Design
+  - MUI
+  - Mantine
+  - shadcn/ui
+  - Fluent 2
+  - PrimeVue
+anatomy:
+  - part: title
+    description: title
+  - part: subtitle
+    description: subtitle
+  - part: plot-area
+    description: plot area
+  - part: axes
+    description: axes
+  - part: legend
+    description: legend
+  - part: tooltip
+    description: tooltip
+  - part: data-table-fallback
+    description: data table fallback
+  - part: empty-and-error
+    description: empty and error states
+variants:
+  - axis: variant
+    values:
+      - line
+      - bar
+      - area
+      - pie/donut
+      - scatter
+      - sparkline
+      - stacked
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: loading
+  - id: skeleton
+  - id: empty
+  - id: invalid
+accessibility:
+  notes: >-
+    ARIA: Provide `role="img"` with a summary plus an accessible data table alternative; never rely on colour
+    alone.
+
+    Keyboard: Series and points should be reachable, or an equivalent table must be provided.
+tokens:
+  consumes:
+    - color.chart.categorical
+    - type.body.sm
+    - color.fg.muted
+    - space.inset.md
+    - radius.surface
+usage:
+  use_when:
+    - Dashboards, analytics, usage and cost reporting
+  avoid_when:
+    - Two or three numbers — use Stat components
+  pairs_well_with:
+    - stat
+    - card
+    - empty-state
+    - tooltip
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://carbondesignsystem.com/components/overview/components/
+  - https://developer.apple.com/design/human-interface-guidelines/components

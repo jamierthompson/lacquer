@@ -1,0 +1,98 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: listbox
+name: Listbox
+kind: component
+catalog: core
+group: selection
+tier: 2
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: A focusable list of options where selection is the point, without a text input.
+aliases:
+  - OptionList
+  - ListBox
+  - List view
+  - Select list
+  - Option list
+found_in:
+  - React Aria
+  - Chakra UI
+  - Ark UI
+  - Polaris
+  - Headless UI
+  - Nuxt UI
+  - Spectrum
+  - PrimeVue
+  - Mantine
+anatomy:
+  - part: list-container
+    description: list container
+  - part: options
+    description: options
+  - part: option-groups
+    description: option groups
+  - part: selection-indicator
+    description: selection indicator
+  - part: empty-state
+    description: empty state
+variants:
+  - axis: variant
+    values:
+      - single-select
+      - multi-select
+      - with-sections
+      - virtualized
+  - axis: size
+    values:
+      - sm
+      - md
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: selected
+  - id: empty
+  - id: loading
+accessibility:
+  apg:
+    pattern: Listbox
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/listbox/
+  notes: >-
+    ARIA: `role="listbox"` with `role="option"` children and `aria-selected`; `aria-multiselectable` when
+    relevant.
+
+    Keyboard: Up/Down move; Home/End jump; type-ahead; Space toggles in multi-select; Shift+Arrow extends.
+tokens:
+  consumes:
+    - color.bg.selected
+    - radius.control
+    - space.inset.sm
+    - type.body.md
+usage:
+  use_when:
+    - Transfer lists, side-by-side pickers, always-visible option sets
+  avoid_when:
+    - Options navigate somewhere — that is a menu or nav list
+  pairs_well_with:
+    - select
+    - combobox
+    - virtual-list
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/listbox/
+  - https://react-aria.adobe.com/llms.txt
+  - https://chakra-ui.com/docs/components/concepts/overview

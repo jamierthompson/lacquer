@@ -1,0 +1,93 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: rich-text-editor
+name: Rich Text Editor
+kind: component
+catalog: core
+group: inputs
+tier: 3
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Formatted content authoring with a toolbar and a contenteditable surface.
+aliases:
+  - WYSIWYG
+  - Editor
+  - TextEditor
+  - Prose editor
+found_in:
+  - Chakra UI
+  - Mantine
+  - Nuxt UI
+  - PrimeVue
+anatomy:
+  - part: toolbar
+    description: toolbar
+  - part: editable-surface
+    description: editable surface
+  - part: bubble-slash-menus
+    description: bubble/slash menus
+  - part: link-dialog
+    description: link dialog
+  - part: character-count
+    description: character count
+  - part: status-bar
+    description: status bar
+variants:
+  - axis: variant
+    values:
+      - minimal
+      - full
+      - markdown-shortcuts
+      - collaborative
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: read-only
+  - id: loading
+  - id: invalid
+  - id: placeholder
+  - id: filled
+accessibility:
+  notes: |-
+    ARIA: `role="textbox"` with `aria-multiline="true"`; the toolbar follows the Toolbar pattern.
+    Keyboard: Standard editing plus documented shortcuts; the toolbar must be reachable and escapable.
+tokens:
+  consumes:
+    - radius.surface
+    - color.border.default
+    - type.body.md
+    - space.inset.md
+    - shadow.sm
+usage:
+  use_when:
+    - Long-form authoring, comments with formatting, documentation
+  avoid_when:
+    - Plain text or markdown is sufficient — the accessibility cost is high
+  pairs_well_with:
+    - toolbar
+    - toggle-button
+    - prose
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://chakra-ui.com/docs/components/concepts/overview
+  - https://mantine.dev/core/package/

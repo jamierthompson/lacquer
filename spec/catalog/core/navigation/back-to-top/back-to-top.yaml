@@ -1,0 +1,81 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: back-to-top
+name: Back to Top
+kind: component
+catalog: core
+group: navigation
+tier: 3
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: Floating control that returns the viewport to the top of a long page.
+aliases:
+  - ScrollTop
+  - BackTop
+  - FloatButton.BackTop
+  - Scroll to top
+found_in:
+  - Ant Design
+  - PrimeVue
+anatomy:
+  - part: floating-button
+    description: floating button
+  - part: icon
+    description: icon
+  - part: appearance-threshold
+    description: appearance threshold
+variants:
+  - axis: variant
+    values:
+      - icon
+      - with-label
+      - docked
+  - axis: size
+    values:
+      - sm
+      - md
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+modes:
+  - id: hidden
+accessibility:
+  apg:
+    pattern: Button
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/button/
+  notes: |-
+    ARIA: Labelled button that moves focus to the top landmark, not just the scroll position.
+    Keyboard: Reachable by Tab once visible; Enter/Space scrolls and moves focus.
+tokens:
+  consumes:
+    - radius.full
+    - shadow.md
+    - z.sticky
+    - motion.duration.base
+usage:
+  use_when:
+    - Very long documents, search results, chat transcripts
+  avoid_when:
+    - Short pages or when it covers content
+  pairs_well_with:
+    - scroll-area
+    - icon-button
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/button/
+  - https://ant.design/components/overview/
+  - https://primevue.dev/

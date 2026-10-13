@@ -1,0 +1,68 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: flex
+name: Flex
+kind: component
+catalog: core
+group: layout
+tier: 2
+atomic_level: primitive
+maturity: established
+status: draft
+version: 0.1.0
+summary: Flexbox container exposing direction, wrap, align and justify as token-aware props.
+aliases:
+  - Inline
+  - Space
+  - Row
+  - Group
+  - Wrap
+found_in:
+  - Atlassian
+  - Chakra UI
+  - Mantine
+  - Ant Design
+  - Polaris
+  - Open UI
+anatomy:
+  - part: container
+    description: container
+  - part: items
+    description: items
+  - part: gap
+    description: gap
+variants:
+  - axis: variant
+    values:
+      - row
+      - column
+      - wrap
+      - inline
+states:
+  - id: enabled
+accessibility:
+  notes: |-
+    ARIA: None; layout only.
+    Keyboard: None.
+tokens:
+  consumes:
+    - space.gap.sm
+    - space.gap.md
+usage:
+  use_when:
+    - Alignment matters as much as spacing
+    - Toolbar-like rows of mixed content
+  avoid_when:
+    - A plain Stack would do — Flex has more knobs to get wrong
+  pairs_well_with:
+    - stack
+    - spacer
+    - divider
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://atlassian.design/components
+  - https://chakra-ui.com/docs/components/concepts/overview

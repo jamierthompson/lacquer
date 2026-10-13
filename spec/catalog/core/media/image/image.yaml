@@ -1,0 +1,107 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: image
+name: Image
+kind: component
+catalog: core
+group: media
+tier: 2
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: Displays a raster or vector image with sizing, fitting and loading behaviour.
+aliases:
+  - Img
+  - Thumbnail
+  - Picture
+  - Image views
+  - BackgroundImage
+found_in:
+  - Fluent 2
+  - Polaris
+  - Atlassian
+  - Ant Design
+  - Chakra UI
+  - Mantine
+  - Nuxt UI
+  - Apple HIG
+  - Bootstrap 5
+  - Open UI
+anatomy:
+  - part: img-element
+    description: img element
+  - part: aspect-box
+    description: aspect box
+  - part: placeholder-blur
+    description: placeholder/blur
+  - part: fallback
+    description: fallback
+  - part: caption
+    description: caption
+  - part: srcset
+    description: srcset
+variants:
+  - axis: variant
+    values:
+      - cover
+      - contain
+      - rounded
+      - circle
+      - thumbnail
+      - with-caption
+      - zoomable
+  - axis: size
+    values:
+      - xs
+      - sm
+      - md
+      - lg
+      - full
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: loading
+  - id: skeleton
+  - id: invalid
+  - id: empty
+accessibility:
+  notes: >-
+    ARIA: `alt=""` for decorative images; a real description otherwise; captions belong in
+    `figure`/`figcaption`.
+
+    Keyboard: None unless it opens a lightbox.
+tokens:
+  consumes:
+    - radius.surface
+    - color.bg.subtle
+    - shadow.sm
+    - size.thumbnail.md
+usage:
+  use_when:
+    - Any pictorial content, avatars aside
+    - Rendering generated images
+  avoid_when:
+    - An icon would communicate faster
+  pairs_well_with:
+    - aspect-ratio
+    - gallery-lightbox
+    - card
+    - skeleton
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://fluent2.microsoft.design/components/web/react
+  - https://github.com/Shopify/polaris/tree/main/polaris-react/src/components

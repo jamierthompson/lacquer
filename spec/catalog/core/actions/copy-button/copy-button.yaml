@@ -1,0 +1,88 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: copy-button
+name: Copy Button
+kind: component
+catalog: core
+group: actions
+tier: 2
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: Copies a value to the clipboard and confirms it inline.
+aliases:
+  - CopyButton
+  - Clipboard
+  - Copy to clipboard
+  - CopySnippet
+found_in:
+  - Mantine
+  - Chakra UI
+  - Ark UI
+  - Carbon
+anatomy:
+  - part: trigger
+    description: trigger
+  - part: icon
+    description: icon (copy → check)
+  - part: confirmation-tooltip
+    description: confirmation tooltip or label
+  - part: hidden-live-region
+    description: hidden live region
+variants:
+  - axis: variant
+    values:
+      - icon-only
+      - with-label
+      - inside-code-block
+  - axis: size
+    values:
+      - sm
+      - md
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: success
+  - id: invalid
+accessibility:
+  apg:
+    pattern: Button
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/button/
+  notes: |-
+    ARIA: `button` with an accessible name; announce the result through a polite live region.
+    Keyboard: Enter/Space copies; focus stays on the trigger.
+tokens:
+  consumes:
+    - radius.control
+    - color.fg.success
+    - motion.duration.base
+    - size.icon.sm
+usage:
+  use_when:
+    - Code blocks, API keys, share links, model output
+  avoid_when:
+    - Clipboard access is blocked (insecure context) with no fallback
+  pairs_well_with:
+    - code-block
+    - tooltip
+    - toast
+    - clipboard
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/button/
+  - https://mantine.dev/core/package/
+  - https://chakra-ui.com/docs/components/concepts/overview

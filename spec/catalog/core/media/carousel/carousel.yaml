@@ -1,0 +1,108 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: carousel
+name: Carousel
+kind: component
+catalog: core
+group: media
+tier: 3
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Cycles through a set of slides in one region, manually or automatically.
+aliases:
+  - Slider
+  - Slideshow
+  - Image rotator
+  - Gallery strip
+  - Swiper
+found_in:
+  - Material 3
+  - Fluent 2
+  - Ant Design
+  - Chakra UI
+  - shadcn/ui
+  - Ark UI
+  - Nuxt UI
+  - PrimeVue
+  - Bootstrap 5
+  - Open UI
+anatomy:
+  - part: viewport
+    description: viewport
+  - part: slides
+    description: slides
+  - part: previous-next
+    description: previous/next
+  - part: pagination-dots
+    description: pagination dots
+  - part: play-pause
+    description: play/pause
+  - part: live-region
+    description: live region
+  - part: counter
+    description: counter
+variants:
+  - axis: variant
+    values:
+      - single-slide
+      - multi-item
+      - auto-play
+      - peek
+      - thumbnail-nav
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: current
+  - id: dragging
+  - id: loading
+modes:
+  - id: paused
+accessibility:
+  apg:
+    pattern: Carousel
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/carousel/
+  notes: >-
+    ARIA: `role="group"` with `aria-roledescription="carousel"`; slides labelled 'n of m'; auto-rotation needs
+    a pause control.
+
+    Keyboard: Left/Right move between slides; Tab reaches controls; auto-rotation stops on hover and focus.
+tokens:
+  consumes:
+    - radius.surface
+    - space.gap.md
+    - motion.duration.base
+    - shadow.sm
+    - size.control.md
+usage:
+  use_when:
+    - Product galleries, onboarding tours, constrained mobile space
+  avoid_when:
+    - Content matters — carousels are consistently under-engaged with
+  pairs_well_with:
+    - image
+    - gallery-lightbox
+    - pagination
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/carousel/
+  - https://m3.material.io/components
+  - https://fluent2.microsoft.design/components/web/react

@@ -1,0 +1,99 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: code-block
+name: Code Block
+kind: component
+catalog: core
+group: data-display
+tier: 2
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: Multi-line, syntax-highlighted code with copy, language label and optional line numbers.
+aliases:
+  - Code snippet
+  - CodeBlock
+  - Syntax highlighter
+  - Pre
+  - Fenced code
+found_in:
+  - Carbon
+  - Chakra UI
+  - Mantine
+  - Atlassian
+anatomy:
+  - part: container
+    description: container
+  - part: language-label
+    description: language label
+  - part: copy-button
+    description: copy button
+  - part: scroll-region
+    description: scroll region
+  - part: line-numbers
+    description: line numbers
+  - part: highlighted-lines
+    description: highlighted lines
+  - part: expand-collapse
+    description: expand/collapse
+  - part: filename-header
+    description: filename header
+variants:
+  - axis: variant
+    values:
+      - inline-scroll
+      - wrapped
+      - with-line-numbers
+      - diff
+      - terminal
+      - collapsible
+  - axis: size
+    values:
+      - sm
+      - md
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: loading
+  - id: skeleton
+  - id: empty
+  - id: success
+accessibility:
+  notes: |-
+    ARIA: `pre`+`code`; the scroll container needs `tabindex="0"` and a name; announce copy results politely.
+    Keyboard: Tab into the scroll region; Arrow keys scroll; the copy button is a separate stop.
+tokens:
+  consumes:
+    - type.code.sm
+    - color.bg.code
+    - radius.surface
+    - space.inset.md
+    - color.border.subtle
+usage:
+  use_when:
+    - Documentation, API examples, any AI product that returns code
+  avoid_when:
+    - A single token belongs inline
+  pairs_well_with:
+    - copy-button
+    - tabs
+    - prose
+    - scroll-area
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://carbondesignsystem.com/components/overview/components/
+  - https://chakra-ui.com/docs/components/concepts/overview

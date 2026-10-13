@@ -1,0 +1,91 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: avatar-group
+name: Avatar Group
+kind: component
+catalog: core
+group: data-display
+tier: 2
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: Overlapping avatars summarising a set of people, with an overflow counter.
+aliases:
+  - AvatarStack
+  - Avatar.Group
+  - Facepile
+  - AvatarGroup
+found_in:
+  - Spectrum
+  - Atlassian
+  - Primer
+  - Chakra UI
+  - Mantine
+  - MUI
+  - Nuxt UI
+  - Fluent 2
+anatomy:
+  - part: stack-container
+    description: stack container
+  - part: avatars
+    description: avatars
+  - part: overlap-offset
+    description: overlap offset
+  - part: overflow-counter
+    description: overflow counter
+  - part: tooltip-popover-list
+    description: tooltip/popover list
+variants:
+  - axis: variant
+    values:
+      - stacked
+      - spaced
+      - with-overflow-menu
+  - axis: size
+    values:
+      - xs
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: expanded
+  - id: loading
+accessibility:
+  notes: |-
+    ARIA: A labelled list; the overflow item announces how many more, e.g. '+4 more'.
+    Keyboard: If the overflow opens a list, it follows the Menu Button or Popover pattern.
+tokens:
+  consumes:
+    - size.avatar.sm
+    - space.gap.negative
+    - color.border.surface
+    - radius.full
+usage:
+  use_when:
+    - Collaborators, assignees, attendees, participants in a thread
+  avoid_when:
+    - Names matter more than faces — list them
+  pairs_well_with:
+    - avatar
+    - tooltip
+    - popover
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://opensource.adobe.com/spectrum-design-data/components
+  - https://atlassian.design/components

@@ -1,0 +1,105 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: link
+name: Link
+kind: component
+catalog: core
+group: typography
+tier: 1
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: Navigates to another location; the only control that changes the URL.
+aliases:
+  - Anchor
+  - a
+  - NavLink
+  - TextLink
+found_in:
+  - Carbon
+  - Polaris
+  - Spectrum
+  - Atlassian
+  - Primer
+  - GOV.UK
+  - USWDS
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - Fluent 2
+  - React Aria
+  - Nuxt UI
+  - Bootstrap 5
+anatomy:
+  - part: label
+    description: label
+  - part: optional-leading-trailing-icon
+    description: optional leading/trailing icon
+  - part: external-indicator
+    description: external indicator
+  - part: underline
+    description: underline
+variants:
+  - axis: variant
+    values:
+      - default
+      - subtle
+      - inverse
+      - standalone
+      - inline
+      - external
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: current
+modes:
+  - id: visited
+accessibility:
+  apg:
+    pattern: Link
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/link/
+  notes: |-
+    ARIA: Native `a[href]`. Only use `role="link"` when you cannot use an anchor.
+    Keyboard: Tab to focus; Enter activates. Never bind Space to a link.
+tokens:
+  consumes:
+    - color.fg.link
+    - color.fg.link-hover
+    - focus.ring.color
+    - type.body.md
+    - text-decoration.link
+usage:
+  use_when:
+    - The action is navigation
+    - The target should be openable in a new tab
+  avoid_when:
+    - The action mutates state — use a Button
+  pairs_well_with:
+    - button
+    - breadcrumb
+    - prose
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/link/
+  - https://carbondesignsystem.com/components/overview/components/
+  - https://github.com/Shopify/polaris/tree/main/polaris-react/src/components

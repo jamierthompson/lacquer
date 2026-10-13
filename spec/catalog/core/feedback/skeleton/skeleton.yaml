@@ -1,0 +1,89 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: skeleton
+name: Skeleton
+kind: component
+catalog: core
+group: feedback
+tier: 1
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: Grey placeholder shapes that mirror the layout of content still loading.
+aliases:
+  - Shimmer
+  - Placeholder
+  - SkeletonText
+  - Ghost loader
+  - Placeholders
+  - Content loader
+found_in:
+  - Carbon
+  - Polaris
+  - Atlassian
+  - Primer
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - shadcn/ui
+  - Fluent 2
+  - Nuxt UI
+  - PrimeVue
+  - Bootstrap 5
+  - Open UI
+anatomy:
+  - part: shape-primitives
+    description: shape primitives (text, circle, rect)
+  - part: shimmer-animation
+    description: shimmer animation
+  - part: layout-mirror
+    description: layout mirror
+variants:
+  - axis: variant
+    values:
+      - text
+      - circle
+      - rectangle
+      - card
+      - table-row
+      - pulse
+      - wave
+      - static
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: skeleton
+  - id: loading
+accessibility:
+  notes: |-
+    ARIA: Wrap in `aria-busy="true"` and `aria-hidden` the shapes; announce completion once, not per shape.
+    Keyboard: Not focusable.
+tokens:
+  consumes:
+    - color.bg.subtle
+    - radius.control
+    - motion.duration.shimmer
+    - size.skeleton.line
+usage:
+  use_when:
+    - "Loading known layouts: cards, tables, profile headers, streamed responses"
+  avoid_when:
+    - The final layout is unpredictable — a skeleton that lies causes a jarring shift
+  pairs_well_with:
+    - card
+    - list-view
+    - data-table
+    - spinner
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://carbondesignsystem.com/components/overview/components/
+  - https://github.com/Shopify/polaris/tree/main/polaris-react/src/components

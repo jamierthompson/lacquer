@@ -1,0 +1,73 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: scrim
+name: Scrim
+kind: component
+catalog: core
+group: overlays
+tier: 2
+atomic_level: primitive
+maturity: established
+status: draft
+version: 0.1.0
+summary: The dimming layer behind a modal surface that signals the rest of the UI is unavailable.
+aliases:
+  - Backdrop
+  - Blanket
+  - Overlay
+  - Modal background
+  - Shade
+found_in:
+  - Material 3
+  - Atlassian
+  - MUI
+  - Mantine
+  - Chakra UI
+  - Ant Design
+anatomy:
+  - part: full-viewport-layer
+    description: full-viewport layer
+  - part: opacity
+    description: opacity
+  - part: optional-blur
+    description: optional blur
+  - part: click-to-dismiss-handler
+    description: click-to-dismiss handler
+variants:
+  - axis: variant
+    values:
+      - dim
+      - blur
+      - transparent
+      - inverse
+states:
+  - id: enabled
+modes:
+  - id: hidden
+accessibility:
+  notes: |-
+    ARIA: `aria-hidden` itself; it must be paired with making the content beneath `inert`.
+    Keyboard: Not focusable; clicking it may dismiss, but Escape must also work.
+tokens:
+  consumes:
+    - color.bg.scrim
+    - z.overlay
+    - motion.duration.fast
+    - blur.overlay
+usage:
+  use_when:
+    - Behind every modal dialog, drawer and lightbox
+  avoid_when:
+    - Non-modal popovers and tooltips
+  pairs_well_with:
+    - dialog
+    - drawer
+    - gallery-lightbox
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://m3.material.io/components
+  - https://atlassian.design/components

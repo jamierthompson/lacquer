@@ -1,0 +1,62 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: bleed
+name: Bleed
+kind: component
+catalog: core
+group: layout
+tier: 3
+atomic_level: primitive
+maturity: established
+status: draft
+version: 0.1.0
+summary: Negates parent padding so a child can run edge to edge.
+aliases:
+  - FullBleed
+  - NegativeMargin
+  - Edge-to-edge
+found_in:
+  - Polaris
+  - Atlassian
+  - Chakra UI
+anatomy:
+  - part: negative-margin-wrapper
+    description: negative-margin wrapper
+variants:
+  - axis: variant
+    values:
+      - horizontal
+      - vertical
+      - all
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+accessibility:
+  notes: |-
+    ARIA: None.
+    Keyboard: None.
+tokens:
+  consumes:
+    - space.inset.md
+    - space.inset.lg
+usage:
+  use_when:
+    - Card media that must touch the card edge
+    - Full-width table inside a padded panel
+  avoid_when:
+    - You can simply move the padding to the correct element
+  pairs_well_with:
+    - card
+    - image
+    - table
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://github.com/Shopify/polaris/tree/main/polaris-react/src/components
+  - https://atlassian.design/components

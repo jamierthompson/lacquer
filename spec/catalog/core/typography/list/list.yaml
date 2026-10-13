@@ -1,0 +1,80 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: list
+name: List
+kind: component
+catalog: core
+group: typography
+tier: 2
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: Ordered or unordered prose list with token-controlled markers and spacing.
+aliases:
+  - ul/ol
+  - Bulleted list
+  - Icon list
+  - Typography list
+found_in:
+  - Carbon
+  - Polaris
+  - Mantine
+  - Chakra UI
+  - USWDS
+  - GOV.UK
+  - Bootstrap 5
+  - Open UI
+anatomy:
+  - part: list-root
+    description: list root
+  - part: list-items
+    description: list items
+  - part: marker
+    description: marker
+  - part: nested-list
+    description: nested list
+variants:
+  - axis: variant
+    values:
+      - unordered
+      - ordered
+      - unstyled
+      - icon
+      - inline
+      - description
+  - axis: size
+    values:
+      - sm
+      - md
+states:
+  - id: enabled
+accessibility:
+  notes: >-
+    ARIA: Native `ul`/`ol`/`li`; do not strip list semantics with `list-style:none` alone in Safari without
+    `role="list"`.
+
+    Keyboard: None.
+tokens:
+  consumes:
+    - space.stack.xs
+    - space.inset.list
+    - type.body.md
+    - color.fg.default
+usage:
+  use_when:
+    - Enumerations inside prose or model output
+  avoid_when:
+    - Items are interactive rows — use List View or Menu
+  pairs_well_with:
+    - prose
+    - list-view
+    - paragraph
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://carbondesignsystem.com/components/overview/components/
+  - https://github.com/Shopify/polaris/tree/main/polaris-react/src/components

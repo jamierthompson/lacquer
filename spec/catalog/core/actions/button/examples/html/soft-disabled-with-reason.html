@@ -1,0 +1,11 @@
+<!--
+  id: soft-disabled-with-reason — aria-disabled instead of disabled (LQ-STATE-03).
+  The button stays in the tab order, so a keyboard or screen-reader user can
+  reach it and hear why it is unavailable through aria-describedby.
+-->
+<div style="display: flex; align-items: center; gap: var(--lq-space-gap-sm)">
+  <button type="button" data-lacquer="button" data-emphasis="primary" aria-disabled="true" aria-describedby="publish-reason">
+    <span data-slot="label">Publish</span>
+  </button>
+  <span id="publish-reason" style="color: var(--lq-color-fg-muted)">Add a title before publishing.</span>
+</div>

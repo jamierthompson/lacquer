@@ -1,0 +1,25 @@
+<!--
+  ANTI-EXAMPLE — violates LQ-TOKEN-01, LQ-FOCUS-01, LQ-STYLE-01.
+  A grader fixture: this file must FAIL. Do not copy.
+
+  What is wrong:
+   - #7c3aed, #6d28d9, 12px, and the violet shadow are literal palette and
+     geometry values; nothing reads a binding property, so the button ignores
+     the consumer's theme and dark mode.
+   - Violet-as-AI-signal is the "AI purple" default (LQ-STYLE-01).
+   - outline: none on :focus with no :focus-visible replacement removes
+     keyboard focus entirely.
+-->
+<style>
+  .generate {
+    border: 0;
+    border-radius: 12px;
+    padding: 10px 20px;
+    background: #7c3aed;
+    color: #fff;
+    box-shadow: 0 10px 15px -3px rgb(139 92 246 / 0.4);
+  }
+  .generate:hover { background: #6d28d9; }
+  .generate:focus { outline: none; }
+</style>
+<button type="button" class="generate">✨ Generate</button>

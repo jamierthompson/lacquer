@@ -1,0 +1,102 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: alert-dialog
+name: Alert Dialog
+kind: component
+catalog: core
+group: overlays
+tier: 2
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: A dialog that interrupts to confirm a consequential or destructive action.
+aliases:
+  - Confirm dialog
+  - ConfirmationDialog
+  - Action sheet (confirm)
+  - Popconfirm
+  - ConfirmDialog
+found_in:
+  - Radix
+  - shadcn/ui
+  - Base UI
+  - Spectrum
+  - Primer
+  - Ant Design
+  - Chakra UI
+  - Atlassian
+  - PrimeVue
+  - Apple HIG
+  - Nuxt UI
+anatomy:
+  - part: scrim
+    description: scrim
+  - part: container
+    description: container
+  - part: title-stating
+    description: title stating the consequence
+  - part: description
+    description: description
+  - part: cancel
+    description: cancel
+  - part: confirm
+    description: confirm
+  - part: optional-typed-confirmation
+    description: optional typed confirmation
+variants:
+  - axis: variant
+    values:
+      - destructive
+      - neutral
+      - with-typed-confirmation
+  - axis: size
+    values:
+      - sm
+      - md
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: loading
+accessibility:
+  apg:
+    pattern: Alert and Message Dialogs
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/
+  notes: |-
+    ARIA: `role="alertdialog"` with `aria-describedby` pointing at the consequence text.
+    Keyboard: Focus lands on the least destructive action; Escape cancels; Enter must not default to Delete.
+tokens:
+  consumes:
+    - radius.surface
+    - shadow.lg
+    - z.modal
+    - color.bg.danger
+    - color.fg.on-danger
+    - space.inset.lg
+usage:
+  use_when:
+    - Deleting, revoking, overwriting, spending money
+  avoid_when:
+    - The action is undoable — offer undo in a toast instead, which is faster and kinder
+  pairs_well_with:
+    - dialog
+    - toast
+    - button
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/
+  - https://www.radix-ui.com/primitives/docs/overview/introduction
+  - https://ui.shadcn.com/docs/components

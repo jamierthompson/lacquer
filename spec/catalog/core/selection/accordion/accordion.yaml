@@ -1,0 +1,111 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: accordion
+name: Accordion
+kind: component
+catalog: core
+group: selection
+tier: 2
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: A stack of headed sections that expand and collapse to manage vertical density.
+aliases:
+  - Collapse
+  - Expander
+  - Disclosure group
+  - Sections
+found_in:
+  - Material 3
+  - Fluent 2
+  - Carbon
+  - Spectrum
+  - GOV.UK
+  - USWDS
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - Radix
+  - shadcn/ui
+  - Base UI
+  - Ark UI
+  - Bootstrap 5
+  - Nuxt UI
+  - PrimeVue
+  - Open UI
+anatomy:
+  - part: item
+    description: item
+  - part: header-button
+    description: header button
+  - part: chevron-indicator
+    description: chevron indicator
+  - part: panel
+    description: panel
+  - part: divider
+    description: divider
+variants:
+  - axis: variant
+    values:
+      - single
+      - multiple
+      - bordered
+      - separated
+      - flush
+      - with-subtitle
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: expanded
+  - id: current
+accessibility:
+  apg:
+    pattern: Accordion
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/accordion/
+  notes: >-
+    ARIA: Header is a `button` inside a heading with `aria-expanded` and `aria-controls`; panel
+    `role="region"` labelled by the header.
+
+    Keyboard: Tab between headers; Enter/Space toggles; optional Up/Down, Home/End move between headers.
+tokens:
+  consumes:
+    - color.border.subtle
+    - space.inset.md
+    - motion.duration.base
+    - type.label.lg
+    - radius.surface
+usage:
+  use_when:
+    - FAQs, settings groups, long forms, collapsible reasoning traces
+  avoid_when:
+    - Users need to compare sections side by side
+    - Hiding content that everyone needs
+  pairs_well_with:
+    - disclosure
+    - card
+    - badge
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/accordion/
+  - https://m3.material.io/components
+  - https://fluent2.microsoft.design/components/web/react

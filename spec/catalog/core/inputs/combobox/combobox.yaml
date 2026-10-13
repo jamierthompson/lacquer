@@ -1,0 +1,126 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: combobox
+name: Combobox
+kind: component
+catalog: core
+group: inputs
+tier: 2
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Text input joined to a filtered option list, allowing typing plus selection.
+aliases:
+  - Autocomplete
+  - Typeahead
+  - InputMenu
+  - Combo box
+  - SelectMenu searchable
+found_in:
+  - Base UI
+  - Ark UI
+  - React Aria
+  - Headless UI
+  - shadcn/ui
+  - Chakra UI
+  - Mantine
+  - Ant Design
+  - MUI
+  - Fluent 2
+  - Spectrum
+  - Carbon
+  - USWDS
+  - Polaris
+  - Primer
+  - Apple HIG
+  - Nuxt UI
+  - PrimeVue
+  - Open UI
+anatomy:
+  - part: input
+    description: input
+  - part: listbox-popover
+    description: listbox popover
+  - part: options
+    description: options
+  - part: empty-state
+    description: empty state
+  - part: loading-indicator
+    description: loading indicator
+  - part: clear-button
+    description: clear button
+  - part: create-option
+    description: create option
+variants:
+  - axis: variant
+    values:
+      - autocomplete
+      - free-solo
+      - async
+      - grouped
+      - with-create
+      - multi
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: expanded
+  - id: selected
+  - id: loading
+  - id: invalid
+  - id: empty
+  - id: placeholder
+  - id: filled
+accessibility:
+  apg:
+    pattern: Combobox
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/combobox/
+  notes: >-
+    ARIA: `role="combobox"` with `aria-expanded`, `aria-controls`, `aria-autocomplete`,
+    `aria-activedescendant`.
+
+    Keyboard: Down/Up move through options without losing the caret; Enter selects; Escape closes then clears;
+    Home/End in text.
+tokens:
+  consumes:
+    - radius.control
+    - shadow.overlay
+    - z.dropdown
+    - color.bg.selected
+    - size.control.md
+    - motion.duration.fast
+usage:
+  use_when:
+    - More than ~15 options
+    - Users know the value they want
+    - Remote-searched entities
+  avoid_when:
+    - A short static list — a Select is less to get wrong
+  pairs_well_with:
+    - tag-input
+    - field
+    - empty-state
+    - spinner
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/combobox/
+  - https://base-ui.com/react/overview/quick-start
+  - https://ark-ui.com/docs/components/accordion

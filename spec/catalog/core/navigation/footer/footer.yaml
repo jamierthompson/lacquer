@@ -1,0 +1,83 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: footer
+name: Footer
+kind: component
+catalog: core
+group: navigation
+tier: 2
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Site-wide closing region with secondary navigation, legal links and contact information.
+aliases:
+  - Site footer
+  - FooterColumns
+  - Layout.Footer
+  - FooterHelp
+found_in:
+  - GOV.UK
+  - USWDS
+  - Polaris
+  - Nuxt UI
+  - Ant Design
+  - Mantine
+anatomy:
+  - part: contentinfo-landmark
+    description: contentinfo landmark
+  - part: link-columns
+    description: link columns
+  - part: legal-row
+    description: legal row
+  - part: locale-selector
+    description: locale selector
+  - part: social-links
+    description: social links
+  - part: back-to-top
+    description: back-to-top
+variants:
+  - axis: variant
+    values:
+      - minimal
+      - columns
+      - with-newsletter
+      - app-footer
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+accessibility:
+  apg:
+    pattern: Landmarks
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/landmarks/
+  notes: |-
+    ARIA: `footer` mapped to `role="contentinfo"` at the page level; internal nav gets `nav[aria-label]`.
+    Keyboard: Standard link tabbing; must come last in DOM order.
+tokens:
+  consumes:
+    - color.bg.subtle
+    - type.body.sm
+    - space.inset.page
+    - space.gap.lg
+    - color.fg.muted
+usage:
+  use_when:
+    - Public-facing sites and any product with legal obligations
+  avoid_when:
+    - Full-height app shells where it would compete with content
+  pairs_well_with:
+    - container
+    - link
+    - app-header
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/landmarks/
+  - https://design-system.service.gov.uk/components/
+  - https://designsystem.digital.gov/components/overview/

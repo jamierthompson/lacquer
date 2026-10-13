@@ -1,0 +1,84 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: button-group
+name: Button Group
+kind: component
+catalog: core
+group: actions
+tier: 2
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: Visually joins related buttons into one unit and defines their order of importance.
+aliases:
+  - ButtonGroup
+  - Action group
+  - Space.Compact
+  - Segmented buttons
+  - Btn-group
+found_in:
+  - Material 3
+  - Polaris
+  - Spectrum
+  - Primer
+  - USWDS
+  - MUI
+  - shadcn/ui
+  - Bootstrap 5
+  - Chakra UI
+  - Mantine
+anatomy:
+  - part: group-container
+    description: group container
+  - part: child-buttons
+    description: child buttons
+  - part: shared-borders
+    description: shared borders
+  - part: overflow-menu
+    description: overflow menu
+variants:
+  - axis: variant
+    values:
+      - attached
+      - spaced
+      - vertical
+      - with-overflow
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: disabled
+accessibility:
+  apg:
+    pattern: Toolbar
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/
+  notes: |-
+    ARIA: `role="group"` with `aria-label`; use Toolbar semantics if arrow-key navigation is provided.
+    Keyboard: Tab reaches each button by default; Toolbar pattern uses roving tabindex instead.
+tokens:
+  consumes:
+    - radius.control
+    - space.gap.xs
+    - color.border.default
+usage:
+  use_when:
+    - Save / Save and continue / Cancel rows
+    - Paired primary and secondary actions
+  avoid_when:
+    - The buttons are mutually exclusive options — use Segmented Control
+  pairs_well_with:
+    - button
+    - split-button
+    - toolbar
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/
+  - https://m3.material.io/components
+  - https://github.com/Shopify/polaris/tree/main/polaris-react/src/components

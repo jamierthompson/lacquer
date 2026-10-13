@@ -1,0 +1,64 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: slot
+name: Slot
+kind: component
+catalog: core
+group: utilities
+tier: 2
+atomic_level: primitive
+maturity: established
+status: draft
+version: 0.1.0
+summary: Composition primitive that merges a component's behaviour and props onto a child element.
+aliases:
+  - asChild
+  - Slot
+  - useRender
+  - Polymorphic as
+  - render prop
+  - Pressable
+found_in:
+  - Radix
+  - Base UI
+  - Ark UI
+  - Atlassian
+  - Chakra UI
+anatomy:
+  - part: slot-wrapper
+    description: slot wrapper
+  - part: prop-merge-strategy
+    description: prop merge strategy
+  - part: ref-forwarding
+    description: ref forwarding
+  - part: event-composition
+    description: event composition
+variants:
+  - axis: variant
+    values:
+      - asChild
+      - as-prop
+      - render-function
+states:
+  - id: enabled
+accessibility:
+  notes: |-
+    ARIA: Must forward ARIA attributes and refs, or the merged element loses its semantics.
+    Keyboard: Inherits from the element it renders as.
+usage:
+  use_when:
+    - Rendering a Button as a Link, or a trigger as an arbitrary element
+  avoid_when:
+    - It would produce invalid nesting such as a button inside a button
+  pairs_well_with:
+    - button
+    - link
+    - box
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.radix-ui.com/primitives/docs/overview/introduction
+  - https://base-ui.com/react/overview/quick-start

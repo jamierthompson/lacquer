@@ -1,0 +1,107 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: icon-button
+name: Icon Button
+kind: component
+catalog: core
+group: actions
+tier: 1
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: A button whose entire label is an icon, used where space is tight and the meaning is conventional.
+aliases:
+  - ActionIcon
+  - IconButton
+  - Action button
+  - Square button
+  - Toolbar button
+found_in:
+  - Material 3
+  - Fluent 2
+  - Carbon
+  - Spectrum
+  - Mantine
+  - Chakra UI
+  - MUI
+  - Primer
+  - Polaris
+  - Ant Design
+  - shadcn/ui
+  - Nuxt UI
+  - PrimeVue
+anatomy:
+  - part: hit-area
+    description: hit area
+  - part: icon
+    description: icon
+  - part: focus-ring
+    description: focus ring
+  - part: optional-badge
+    description: optional badge
+  - part: accessible-name
+    description: accessible name
+variants:
+  - axis: variant
+    values:
+      - ghost
+      - outline
+      - filled
+      - tonal
+      - danger
+      - round
+      - square
+  - axis: size
+    values:
+      - xs
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: selected
+  - id: loading
+accessibility:
+  apg:
+    pattern: Button
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/button/
+  notes: |-
+    ARIA: Requires `aria-label` or visually-hidden text; icon must be `aria-hidden`.
+    Keyboard: Tab, then Enter or Space.
+tokens:
+  consumes:
+    - radius.control
+    - size.control.md
+    - size.icon.md
+    - color.fg.default
+    - color.bg.subtle
+    - focus.ring.width
+usage:
+  use_when:
+    - Toolbars, table row actions, close affordances, message actions
+  avoid_when:
+    - The icon's meaning is not universally understood — add a text label
+  pairs_well_with:
+    - tooltip
+    - toolbar
+    - table
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/button/
+  - https://m3.material.io/components
+  - https://fluent2.microsoft.design/components/web/react

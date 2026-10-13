@@ -1,0 +1,98 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: search-input
+name: Search Input
+kind: component
+catalog: core
+group: inputs
+tier: 2
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: Text entry specialised for querying, with search icon, clear affordance and optional suggestions.
+aliases:
+  - SearchField
+  - SearchBox
+  - Search
+  - Input.Search
+  - Search fields
+found_in:
+  - Carbon
+  - Material 3
+  - USWDS
+  - Spectrum
+  - React Aria
+  - Fluent 2
+  - Apple HIG
+  - Ant Design
+  - Polaris
+anatomy:
+  - part: search-icon
+    description: search icon
+  - part: input
+    description: input
+  - part: clear-button
+    description: clear button
+  - part: submit-button
+    description: submit button
+  - part: suggestion-list
+    description: suggestion list
+variants:
+  - axis: variant
+    values:
+      - inline
+      - expandable
+      - with-button
+      - with-scope-filter
+      - global
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: loading
+  - id: placeholder
+  - id: filled
+  - id: empty
+accessibility:
+  notes: |-
+    ARIA: `input[type=search]` inside `role="search"`; suggestions use the Combobox pattern.
+    Keyboard: Enter submits; Escape clears; Down Arrow enters the suggestion list when present.
+tokens:
+  consumes:
+    - radius.pill
+    - size.control.md
+    - color.bg.subtle
+    - color.fg.muted
+    - size.icon.sm
+usage:
+  use_when:
+    - Any list, table or corpus over about twenty items
+  avoid_when:
+    - Filtering a handful of options — use visible filter chips
+  pairs_well_with:
+    - combobox
+    - command-palette
+    - empty-state
+    - data-table
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://carbondesignsystem.com/components/overview/components/
+  - https://m3.material.io/components

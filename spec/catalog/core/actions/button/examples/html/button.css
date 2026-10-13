@@ -1,0 +1,176 @@
+/*
+ * Button — reference implementation for the html renderer.
+ * Spec:    spec/catalog/core/actions/button/button.yaml
+ * Binding: spec/bindings/html.yaml
+ *
+ * Every value below is read through a binding custom property; the token
+ * lint (LQ-TOKEN-01/02) maps `var(--lq-…)` back to roles and fails on any
+ * literal. The root carries data-lacquer="button" so the grader can detect
+ * the component without classes, data-slot on every part (LQ-ANAT-01), and
+ * data-emphasis so LQ-BUTTON-03 can count primaries in a view.
+ */
+
+[data-lacquer="button"] {
+  /* anatomy: root — always the native <button> (LQ-BUTTON-01) */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--lq-space-gap-sm);
+  white-space: nowrap;
+  user-select: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: var(--lq-radius-control);
+  font: var(--lq-type-label-md);
+  block-size: var(--lq-size-control-md);
+  padding: var(--lq-space-inset-control-md);
+  transition:
+    background-color var(--lq-motion-duration-fast) var(--lq-motion-easing-standard),
+    border-color var(--lq-motion-duration-fast) var(--lq-motion-easing-standard),
+    color var(--lq-motion-duration-fast) var(--lq-motion-easing-standard);
+}
+
+/* --- states ------------------------------------------------------------- */
+
+/* focus-visible: a ring, never outline:none without one (LQ-FOCUS-01) */
+[data-lacquer="button"]:focus-visible {
+  outline: var(--lq-focus-ring-width) solid var(--lq-color-border-focus);
+  outline-offset: var(--lq-focus-ring-offset);
+}
+
+/* active: a position delta, so the state is not colour alone (LQ-STATE-02) */
+[data-lacquer="button"]:active {
+  translate: 0 1px;
+}
+
+/* disabled (hard) and soft-disabled / loading (aria-disabled) */
+[data-lacquer="button"]:disabled,
+[data-lacquer="button"][aria-disabled="true"] {
+  pointer-events: none;
+  opacity: var(--lq-opacity-disabled);
+}
+
+/* loading: the spinner occupies the leading-icon slot so width is kept (LQ-BUTTON-02) */
+[data-lacquer="button"][aria-busy="true"] {
+  cursor: progress;
+}
+[data-lacquer="button"][aria-busy="true"] > [data-slot="label"] {
+  opacity: 0.7;
+}
+
+/* --- emphasis (variant axis) -------------------------------------------- */
+
+[data-lacquer="button"][data-emphasis="primary"] {
+  background-color: var(--lq-color-bg-primary);
+  color: var(--lq-color-fg-on-primary);
+  box-shadow: var(--lq-shadow-sm);
+}
+[data-lacquer="button"][data-emphasis="primary"]:hover {
+  background-color: var(--lq-color-bg-primary-hover);
+}
+
+[data-lacquer="button"][data-emphasis="secondary"] {
+  background-color: var(--lq-color-bg-secondary);
+  color: var(--lq-color-fg-on-secondary);
+}
+[data-lacquer="button"][data-emphasis="secondary"]:hover {
+  background-color: var(--lq-color-bg-secondary-hover);
+}
+
+[data-lacquer="button"][data-emphasis="tertiary"],
+[data-lacquer="button"][data-emphasis="ghost"] {
+  background-color: transparent;
+  color: var(--lq-color-fg-default);
+}
+[data-lacquer="button"][data-emphasis="tertiary"]:hover,
+[data-lacquer="button"][data-emphasis="ghost"]:hover {
+  background-color: var(--lq-color-bg-accent);
+}
+
+[data-lacquer="button"][data-emphasis="outline"] {
+  background-color: var(--lq-color-bg-surface);
+  color: var(--lq-color-fg-default);
+  border-color: var(--lq-color-border-input);
+}
+[data-lacquer="button"][data-emphasis="outline"]:hover {
+  background-color: var(--lq-color-bg-accent);
+}
+
+[data-lacquer="button"][data-emphasis="link"] {
+  background-color: transparent;
+  color: var(--lq-color-fg-link);
+  text-underline-offset: 4px;
+}
+[data-lacquer="button"][data-emphasis="link"]:hover {
+  text-decoration: underline; /* hover adds a second channel, not just colour */
+}
+
+[data-lacquer="button"][data-emphasis="destructive"] {
+  background-color: var(--lq-color-bg-destructive);
+  color: var(--lq-color-fg-on-destructive);
+  box-shadow: var(--lq-shadow-sm);
+}
+[data-lacquer="button"][data-emphasis="destructive"]:hover {
+  background-color: var(--lq-color-bg-destructive-hover);
+}
+
+/* --- size (variant axis): height, inset and label style move together ----- */
+
+[data-lacquer="button"][data-size="xs"] {
+  block-size: var(--lq-size-control-xs);
+  padding: var(--lq-space-inset-control-sm);
+  font: var(--lq-type-label-sm);
+}
+[data-lacquer="button"][data-size="sm"] {
+  block-size: var(--lq-size-control-sm);
+  padding: var(--lq-space-inset-control-sm);
+  font: var(--lq-type-label-md);
+}
+[data-lacquer="button"][data-size="lg"] {
+  block-size: var(--lq-size-control-lg);
+  padding: var(--lq-space-inset-control-lg);
+  font: var(--lq-type-label-md);
+}
+
+/* --- modifiers ------------------------------------------------------------ */
+
+[data-lacquer="button"][data-full-width] {
+  inline-size: 100%;
+}
+
+/* --- parts ---------------------------------------------------------------- */
+
+[data-lacquer="button"] > [data-slot="leading-icon"],
+[data-lacquer="button"] > [data-slot="trailing-icon"] {
+  inline-size: var(--lq-size-icon-md);
+  block-size: var(--lq-size-icon-md);
+  flex: none;
+}
+
+[data-lacquer="button"] > [data-slot="spinner"] {
+  inline-size: var(--lq-size-icon-md);
+  block-size: var(--lq-size-icon-md);
+  flex: none;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: var(--lq-radius-pill);
+  animation: lq-button-spin 1s linear infinite;
+}
+
+[data-lacquer="button"] > [data-slot="label"] {
+  display: contents;
+}
+
+@keyframes lq-button-spin {
+  to { rotate: 1turn; }
+}
+
+/* reduced motion: no transitions, no spin (LQ-MOTION-02) */
+@media (prefers-reduced-motion: reduce) {
+  [data-lacquer="button"] {
+    transition: none;
+  }
+  [data-lacquer="button"] > [data-slot="spinner"] {
+    animation: none;
+  }
+}

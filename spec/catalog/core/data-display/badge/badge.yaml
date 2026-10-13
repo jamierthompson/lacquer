@@ -1,0 +1,95 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: badge
+name: Badge
+kind: component
+catalog: core
+group: data-display
+tier: 1
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: A small count or status marker attached to another element.
+aliases:
+  - CounterLabel
+  - Pill
+  - Notification dot
+  - Chip (static)
+  - Lozenge
+  - Counter
+found_in:
+  - Material 3
+  - Polaris
+  - Spectrum
+  - Atlassian
+  - Primer
+  - GOV.UK
+  - USWDS
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - shadcn/ui
+  - Fluent 2
+  - Nuxt UI
+  - PrimeVue
+  - Bootstrap 5
+  - Open UI
+anatomy:
+  - part: container
+    description: container
+  - part: label-or-count
+    description: label or count
+  - part: dot-variant
+    description: dot variant
+  - part: anchor-offset
+    description: anchor/offset
+variants:
+  - axis: variant
+    values:
+      - neutral
+      - info
+      - success
+      - warning
+      - danger
+      - dot
+      - count
+      - outline
+  - axis: size
+    values:
+      - sm
+      - md
+states:
+  - id: enabled
+accessibility:
+  notes: >-
+    ARIA: Not interactive; the count must be included in the host control's accessible name (e.g. 'Inbox, 3
+    unread').
+
+    Keyboard: None.
+tokens:
+  consumes:
+    - radius.pill
+    - type.label.sm
+    - color.bg.danger
+    - color.fg.on-danger
+    - space.inset.2xs
+usage:
+  use_when:
+    - Unread counts, status on a row, version markers
+  avoid_when:
+    - The badge is the only carrier of critical information
+  pairs_well_with:
+    - avatar
+    - tabs
+    - icon-button
+    - list-view
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://m3.material.io/components
+  - https://github.com/Shopify/polaris/tree/main/polaris-react/src/components

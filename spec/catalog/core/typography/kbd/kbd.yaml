@@ -1,0 +1,73 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: kbd
+name: Kbd
+kind: component
+catalog: core
+group: typography
+tier: 2
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: Renders a keyboard key or chord, and doubles as the shortcut hint on menus and buttons.
+aliases:
+  - KeyboardKey
+  - KeybindingHint
+  - Shortcut
+  - Hotkey
+found_in:
+  - Chakra UI
+  - Mantine
+  - shadcn/ui
+  - Nuxt UI
+  - Polaris
+  - Primer
+anatomy:
+  - part: key-cap
+    description: key cap
+  - part: modifier-separator
+    description: modifier separator
+  - part: group-of-caps
+    description: group of caps
+variants:
+  - axis: variant
+    values:
+      - single-key
+      - chord
+      - subtle
+      - outline
+  - axis: size
+    values:
+      - sm
+      - md
+states:
+  - id: enabled
+accessibility:
+  notes: |-
+    ARIA: Native `kbd`; include the platform-correct modifier names in the text.
+    Keyboard: Decorative — the shortcut itself must be bound elsewhere.
+tokens:
+  consumes:
+    - type.code.sm
+    - color.bg.subtle
+    - color.border.default
+    - radius.control
+    - shadow.sm
+usage:
+  use_when:
+    - Command palettes, menu items, empty states teaching shortcuts
+  avoid_when:
+    - The shortcut is not actually implemented
+  pairs_well_with:
+    - command-palette
+    - dropdown-menu
+    - tooltip
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://chakra-ui.com/docs/components/concepts/overview
+  - https://mantine.dev/core/package/

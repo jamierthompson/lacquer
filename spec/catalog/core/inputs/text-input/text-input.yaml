@@ -1,0 +1,120 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: text-input
+name: Text Input
+kind: component
+catalog: core
+group: inputs
+tier: 1
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: Single-line free-text entry, optionally with prefix, suffix or inline actions.
+aliases:
+  - TextField
+  - Input
+  - InputText
+  - TextBox
+  - Text fields
+found_in:
+  - Material 3
+  - Apple HIG
+  - Fluent 2
+  - Carbon
+  - Polaris
+  - Spectrum
+  - Atlassian
+  - Primer
+  - GOV.UK
+  - USWDS
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - shadcn/ui
+  - Base UI
+  - React Aria
+  - Headless UI
+  - Bootstrap 5
+  - Nuxt UI
+  - PrimeVue
+  - Open UI
+anatomy:
+  - part: container
+    description: container
+  - part: prefix-adornment
+    description: prefix/adornment
+  - part: input-element
+    description: input element
+  - part: suffix
+    description: suffix
+  - part: clear-button
+    description: clear button
+  - part: focus-ring
+    description: focus ring
+variants:
+  - axis: variant
+    values:
+      - outlined
+      - filled
+      - underlined
+      - borderless
+      - with-prefix
+      - with-suffix
+      - clearable
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: invalid
+  - id: success
+  - id: warning
+  - id: read-only
+  - id: placeholder
+  - id: filled
+  - id: loading
+accessibility:
+  notes: |-
+    ARIA: Native `input`; `type` drives mobile keyboards; `aria-invalid` and `aria-describedby` for errors.
+    Keyboard: Standard text editing; Escape may clear when a clear button exists.
+tokens:
+  consumes:
+    - radius.control
+    - space.inset.control.md
+    - color.bg.surface
+    - color.border.default
+    - color.border.focus
+    - type.body.md
+    - size.control.md
+usage:
+  use_when:
+    - Names, emails, URLs, short free text
+  avoid_when:
+    - The value comes from a known set — use Select or Combobox
+  pairs_well_with:
+    - field
+    - label
+    - help-text
+    - input-group
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://m3.material.io/components
+  - https://developer.apple.com/design/human-interface-guidelines/components

@@ -1,0 +1,74 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: skip-link
+name: Skip Link
+kind: component
+catalog: core
+group: navigation
+tier: 1
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: The first focusable element on a page, letting keyboard users jump past repeated navigation.
+aliases:
+  - Skip to content
+  - SkipNav
+  - Bypass block
+  - Skip navigation
+found_in:
+  - GOV.UK
+  - Chakra UI
+  - Carbon
+  - USWDS
+anatomy:
+  - part: visually-hidden-link
+    description: visually hidden link
+  - part: visible-on-focus-styling
+    description: visible-on-focus styling
+  - part: target-region
+    description: target region with tabindex=-1
+variants:
+  - axis: variant
+    values:
+      - single
+      - multiple targets
+  - axis: size
+    values:
+      - md
+states:
+  - id: enabled
+  - id: focus-visible
+accessibility:
+  notes: |-
+    ARIA: An anchor to `#main`; the target needs `tabindex="-1"` so focus actually lands there.
+    Keyboard: First Tab press reveals it; Enter jumps to the main region.
+tokens:
+  consumes:
+    - color.bg.primary
+    - color.fg.on-primary
+    - z.sticky
+    - radius.control
+    - focus.ring.width
+usage:
+  use_when:
+    - Every page with repeated navigation — this is a WCAG 2.4.1 requirement
+  avoid_when:
+    - Never omit it on a multi-page product
+  pairs_well_with:
+    - app-header
+    - visually-hidden
+    - container
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://design-system.service.gov.uk/components/
+  - https://chakra-ui.com/docs/components/concepts/overview

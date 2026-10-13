@@ -1,0 +1,101 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: color-picker
+name: Color Picker
+kind: component
+catalog: core
+group: inputs
+tier: 3
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Selects a colour through an area, sliders, swatches and a text field.
+aliases:
+  - ColorInput
+  - Color well
+  - SwatchPicker
+  - ColorArea/ColorSlider/ColorWheel
+found_in:
+  - Ant Design
+  - Mantine
+  - Chakra UI
+  - Ark UI
+  - React Aria
+  - Fluent 2
+  - Spectrum
+  - Nuxt UI
+  - PrimeVue
+  - Apple HIG
+anatomy:
+  - part: saturation-area
+    description: saturation area
+  - part: hue-slider
+    description: hue slider
+  - part: alpha-slider
+    description: alpha slider
+  - part: eyedropper
+    description: eyedropper
+  - part: hex-rgb-field
+    description: hex/rgb field
+  - part: swatch-grid
+    description: swatch grid
+  - part: preview
+    description: preview
+variants:
+  - axis: variant
+    values:
+      - swatches-only
+      - full
+      - compact
+      - with-alpha
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: expanded
+  - id: dragging
+  - id: invalid
+accessibility:
+  apg:
+    pattern: Slider
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/slider/
+  notes: |-
+    ARIA: Each slider/area exposes `aria-valuetext` in a human-readable colour description, not raw numbers.
+    Keyboard: Arrow keys move within the area and along sliders; Home/End jump to bounds.
+tokens:
+  consumes:
+    - radius.control
+    - shadow.overlay
+    - size.control.md
+    - color.border.default
+usage:
+  use_when:
+    - Theming, design tools, labels and calendars
+  avoid_when:
+    - A small fixed palette is enough — use swatches or a radio group
+  pairs_well_with:
+    - popover
+    - field
+    - tag
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/slider/
+  - https://ant.design/components/overview/
+  - https://mantine.dev/core/package/

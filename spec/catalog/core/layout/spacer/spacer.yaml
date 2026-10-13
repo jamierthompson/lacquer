@@ -1,0 +1,59 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: spacer
+name: Spacer
+kind: component
+catalog: core
+group: layout
+tier: 3
+atomic_level: primitive
+maturity: established
+status: draft
+version: 0.1.0
+summary: Flexible or fixed empty element that pushes siblings apart when a gap cannot express the intent.
+aliases:
+  - Space
+  - Gap
+  - Filler
+found_in:
+  - Mantine
+  - Ant Design
+  - Chakra UI
+anatomy:
+  - part: empty-flexible-element
+    description: empty flexible element
+variants:
+  - axis: variant
+    values:
+      - flexible
+      - fixed
+  - axis: size
+    values:
+      - xs
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+accessibility:
+  notes: |-
+    ARIA: Presentational; must never receive focus.
+    Keyboard: None.
+tokens:
+  consumes:
+    - space.gap.md
+usage:
+  use_when:
+    - Pushing an action to the far end of a toolbar row
+  avoid_when:
+    - A gap token or `margin-inline-start:auto` is clearer
+  pairs_well_with:
+    - flex
+    - toolbar
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://mantine.dev/core/package/
+  - https://ant.design/components/overview/

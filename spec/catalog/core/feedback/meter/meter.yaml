@@ -1,0 +1,84 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: meter
+name: Meter
+kind: component
+catalog: core
+group: feedback
+tier: 3
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: Displays a static measurement inside a known range, such as quota or storage used.
+aliases:
+  - Gauge
+  - MeterGroup
+  - Usage bar
+  - Capacity indicator
+found_in:
+  - Base UI
+  - Spectrum
+  - Apple HIG
+  - PrimeVue
+  - Open UI
+anatomy:
+  - part: track
+    description: track
+  - part: fill
+    description: fill
+  - part: threshold-markers
+    description: threshold markers
+  - part: value-label
+    description: value label
+  - part: legend
+    description: legend
+variants:
+  - axis: variant
+    values:
+      - linear
+      - circular
+      - segmented
+      - with-thresholds
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: success
+  - id: warning
+  - id: invalid
+accessibility:
+  apg:
+    pattern: Meter
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/meter/
+  notes: |-
+    ARIA: `role="meter"` with `aria-valuenow/min/max` and `aria-valuetext`; distinct from progressbar.
+    Keyboard: Not focusable.
+tokens:
+  consumes:
+    - radius.pill
+    - color.bg.success
+    - color.bg.warning
+    - color.bg.danger
+    - size.progress.height
+usage:
+  use_when:
+    - Storage, credits, rate limits, password strength, token budgets
+  avoid_when:
+    - The value is progress toward completion — use Progress
+  pairs_well_with:
+    - stat
+    - alert
+    - card
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/meter/
+  - https://base-ui.com/react/overview/quick-start
+  - https://opensource.adobe.com/spectrum-design-data/components

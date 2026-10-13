@@ -1,0 +1,87 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: toggle-group
+name: Toggle Group
+kind: component
+catalog: core
+group: selection
+tier: 2
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: A set of toggle buttons behaving as one control, single- or multi-select.
+aliases:
+  - ToggleButtonGroup
+  - ToggleGroup
+  - Segmented buttons multi
+  - Filter group
+found_in:
+  - Radix
+  - shadcn/ui
+  - Base UI
+  - Ark UI
+  - React Aria
+  - MUI
+anatomy:
+  - part: group-container
+    description: group container
+  - part: toggle-items
+    description: toggle items
+  - part: pressed-indicator
+    description: pressed indicator
+variants:
+  - axis: variant
+    values:
+      - single
+      - multiple
+      - outline
+      - ghost
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: selected
+accessibility:
+  apg:
+    pattern: Toolbar
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/
+  notes: |-
+    ARIA: Group with `aria-label`; items use `aria-pressed` (multi) or radio semantics (single).
+    Keyboard: Roving tabindex; Arrow keys move; Space/Enter toggles.
+tokens:
+  consumes:
+    - radius.control
+    - color.bg.selected
+    - space.gap.2xs
+    - focus.ring.width
+usage:
+  use_when:
+    - Text alignment, view density, layer toggles
+  avoid_when:
+    - Options are navigational or the selection loads new content
+  pairs_well_with:
+    - toolbar
+    - toggle-button
+    - segmented-control
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/
+  - https://www.radix-ui.com/primitives/docs/overview/introduction
+  - https://ui.shadcn.com/docs/components

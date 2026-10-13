@@ -1,0 +1,103 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: multi-select
+name: Multi Select
+kind: component
+catalog: core
+group: inputs
+tier: 2
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Combobox variant that accumulates several values, usually shown as removable tokens.
+aliases:
+  - MultiSelect
+  - TagPicker
+  - SelectPanel
+  - Select multiple
+  - Checkbox dropdown
+found_in:
+  - Carbon
+  - Mantine
+  - Ant Design
+  - Fluent 2
+  - Primer
+  - Chakra UI
+  - Nuxt UI
+anatomy:
+  - part: token-row
+    description: token row
+  - part: input
+    description: input
+  - part: listbox-with-checkboxes
+    description: listbox with checkboxes
+  - part: select-all
+    description: select-all
+  - part: clear-all
+    description: clear-all
+  - part: overflow-counter
+    description: overflow counter
+variants:
+  - axis: variant
+    values:
+      - tokens
+      - checkbox-list
+      - with-select-all
+      - async
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: expanded
+  - id: selected
+  - id: indeterminate
+  - id: loading
+  - id: empty
+  - id: invalid
+accessibility:
+  apg:
+    pattern: Listbox
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/listbox/
+  notes: >-
+    ARIA: `aria-multiselectable="true"` on the listbox; each token's remove button is separately labelled.
+
+    Keyboard: Backspace removes the last token; Space toggles the active option; the list stays open between
+    selections.
+tokens:
+  consumes:
+    - radius.control
+    - space.gap.2xs
+    - color.bg.selected
+    - shadow.overlay
+    - z.dropdown
+usage:
+  use_when:
+    - Filters, tags, audience pickers, permission sets
+  avoid_when:
+    - Under ~7 options — a checkbox group is more scannable
+  pairs_well_with:
+    - tag
+    - combobox
+    - checkbox-group
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/listbox/
+  - https://carbondesignsystem.com/components/overview/components/
+  - https://mantine.dev/core/package/

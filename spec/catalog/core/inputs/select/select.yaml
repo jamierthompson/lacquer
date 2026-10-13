@@ -1,0 +1,120 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: select
+name: Select
+kind: component
+catalog: core
+group: inputs
+tier: 1
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: Custom single-choice picker built from a button trigger and a listbox popover.
+aliases:
+  - Dropdown
+  - Picker
+  - Combobox (non-typeahead)
+  - SelectMenu
+  - Listbox select
+found_in:
+  - Radix
+  - Base UI
+  - Ark UI
+  - React Aria
+  - Headless UI
+  - shadcn/ui
+  - Chakra UI
+  - Mantine
+  - Ant Design
+  - MUI
+  - Fluent 2
+  - Spectrum
+  - Carbon
+  - Atlassian
+  - Nuxt UI
+  - PrimeVue
+anatomy:
+  - part: trigger
+    description: trigger
+  - part: value-display
+    description: value display
+  - part: chevron
+    description: chevron
+  - part: popover
+    description: popover
+  - part: listbox
+    description: listbox
+  - part: option
+    description: option
+  - part: group-label
+    description: group label
+  - part: check-indicator
+    description: check indicator
+variants:
+  - axis: variant
+    values:
+      - default
+      - with-icons
+      - with-descriptions
+      - grouped
+      - searchable
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: expanded
+  - id: selected
+  - id: invalid
+  - id: placeholder
+  - id: loading
+  - id: read-only
+accessibility:
+  apg:
+    pattern: Listbox
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/listbox/
+  notes: >-
+    ARIA: Trigger has `aria-haspopup="listbox"`, `aria-expanded`; list is `role="listbox"` with
+    `aria-activedescendant` or roving focus.
+
+    Keyboard: Space/Enter/Down opens; Up/Down move; type-ahead jumps; Enter selects; Escape closes and
+    restores focus.
+tokens:
+  consumes:
+    - radius.control
+    - shadow.overlay
+    - z.dropdown
+    - color.bg.surface
+    - color.bg.selected
+    - size.control.md
+usage:
+  use_when:
+    - Options need icons, descriptions or custom rendering
+  avoid_when:
+    - A native select would work — it is cheaper and more robust
+  pairs_well_with:
+    - field
+    - combobox
+    - popover
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/listbox/
+  - https://www.radix-ui.com/primitives/docs/overview/introduction
+  - https://base-ui.com/react/overview/quick-start

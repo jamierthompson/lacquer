@@ -1,0 +1,96 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: tour
+name: Tour
+kind: component
+catalog: core
+group: overlays
+tier: 3
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Sequenced spotlight walkthrough that highlights elements and explains them in order.
+aliases:
+  - Coach mark
+  - Product tour
+  - Spotlight
+  - Onboarding tour
+  - TeachingPopover
+  - Walkthrough
+found_in:
+  - Ant Design
+  - Ark UI
+  - Spectrum
+  - Atlassian
+  - Fluent 2
+anatomy:
+  - part: spotlight-mask
+    description: spotlight mask
+  - part: anchored-popover
+    description: anchored popover
+  - part: step-counter
+    description: step counter
+  - part: next-back
+    description: next/back
+  - part: skip
+    description: skip
+  - part: progress-dots
+    description: progress dots
+variants:
+  - axis: variant
+    values:
+      - single-coach-mark
+      - multi-step
+      - beacon-triggered
+  - axis: size
+    values:
+      - sm
+      - md
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: current
+  - id: expanded
+accessibility:
+  apg:
+    pattern: Dialog (Modal)
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+  notes: >-
+    ARIA: Each step is a labelled dialog describing the highlighted element; skipping must always be
+    available.
+
+    Keyboard: Tab within the step; Enter advances; Escape exits the tour entirely.
+tokens:
+  consumes:
+    - z.modal
+    - color.bg.scrim
+    - shadow.overlay
+    - radius.surface
+    - motion.duration.base
+usage:
+  use_when:
+    - Introducing a genuinely novel interaction model
+  avoid_when:
+    - The UI needs a tour to be usable at all — fix the UI
+  pairs_well_with:
+    - popover
+    - dialog
+    - stepper
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+  - https://ant.design/components/overview/
+  - https://ark-ui.com/docs/components/accordion

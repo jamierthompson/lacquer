@@ -1,0 +1,116 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: radio-group
+name: Radio Group
+kind: component
+catalog: core
+group: inputs
+tier: 1
+atomic_level: molecule
+maturity: established
+status: draft
+version: 0.1.0
+summary: Mutually exclusive choice among a small visible set.
+aliases:
+  - Radio
+  - RadioButton
+  - Radios
+  - ChoiceList single
+  - Option group
+found_in:
+  - Material 3
+  - Fluent 2
+  - Carbon
+  - Polaris
+  - Spectrum
+  - Atlassian
+  - Primer
+  - GOV.UK
+  - USWDS
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - Radix
+  - shadcn/ui
+  - Base UI
+  - Ark UI
+  - React Aria
+  - Headless UI
+  - Bootstrap 5
+  - Nuxt UI
+  - PrimeVue
+  - Open UI
+anatomy:
+  - part: fieldset
+    description: fieldset
+  - part: legend
+    description: legend
+  - part: radio-items
+    description: radio items
+  - part: labels
+    description: labels
+  - part: descriptions
+    description: descriptions
+  - part: group-error
+    description: group error
+variants:
+  - axis: variant
+    values:
+      - vertical
+      - horizontal
+      - cards
+      - with-description
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: selected
+  - id: invalid
+  - id: read-only
+accessibility:
+  apg:
+    pattern: Radio Group
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/radio/
+  notes: |-
+    ARIA: `role="radiogroup"` (or fieldset) with `aria-labelledby`; exactly one `aria-checked="true"`.
+    Keyboard: One tab stop for the group; Arrow keys move and select; Space selects the focused radio.
+tokens:
+  consumes:
+    - radius.full
+    - size.control.sm
+    - color.bg.primary
+    - color.border.default
+    - space.stack.sm
+usage:
+  use_when:
+    - 2–7 visible mutually exclusive options
+  avoid_when:
+    - More than ~7 options — use a select
+    - Options are not mutually exclusive
+  pairs_well_with:
+    - fieldset
+    - field
+    - segmented-control
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/radio/
+  - https://m3.material.io/components
+  - https://fluent2.microsoft.design/components/web/react

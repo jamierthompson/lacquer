@@ -1,0 +1,115 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: checkbox
+name: Checkbox
+kind: component
+catalog: core
+group: inputs
+tier: 1
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: Independent binary choice, with a third indeterminate state for parent rows.
+aliases:
+  - Check
+  - Tickbox
+  - Checkboxes
+  - Choice
+found_in:
+  - Material 3
+  - Fluent 2
+  - Carbon
+  - Polaris
+  - Spectrum
+  - Atlassian
+  - Primer
+  - GOV.UK
+  - USWDS
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - Radix
+  - shadcn/ui
+  - Base UI
+  - Ark UI
+  - React Aria
+  - Headless UI
+  - Bootstrap 5
+  - Nuxt UI
+  - PrimeVue
+  - Open UI
+anatomy:
+  - part: control-box
+    description: control box
+  - part: checkmark-dash-glyph
+    description: checkmark/dash glyph
+  - part: label
+    description: label
+  - part: description
+    description: description
+  - part: error-text
+    description: error text
+variants:
+  - axis: variant
+    values:
+      - default
+      - card
+      - button
+      - with-description
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: selected
+  - id: indeterminate
+  - id: invalid
+  - id: read-only
+accessibility:
+  apg:
+    pattern: Checkbox
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/
+  notes: >-
+    ARIA: Native `input[type=checkbox]`; indeterminate is a DOM property plus `aria-checked="mixed"` on custom
+    widgets.
+
+    Keyboard: Space toggles. Enter must not toggle a checkbox.
+tokens:
+  consumes:
+    - radius.control
+    - size.control.sm
+    - color.bg.primary
+    - color.border.default
+    - focus.ring.width
+usage:
+  use_when:
+    - Opt-ins, multi-select lists, table row selection
+  avoid_when:
+    - The change applies instantly to a setting — use a Switch
+  pairs_well_with:
+    - checkbox-group
+    - field
+    - data-table
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/
+  - https://m3.material.io/components
+  - https://fluent2.microsoft.design/components/web/react

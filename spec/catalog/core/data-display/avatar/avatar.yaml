@@ -1,0 +1,108 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: avatar
+name: Avatar
+kind: component
+catalog: core
+group: data-display
+tier: 1
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: Represents a person, team, model or entity with an image, initials or icon.
+aliases:
+  - Persona
+  - UserAvatar
+  - Profile image
+  - Thumbnail (person)
+  - Gravatar
+found_in:
+  - Polaris
+  - Spectrum
+  - Atlassian
+  - Primer
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - Radix
+  - shadcn/ui
+  - Base UI
+  - Ark UI
+  - Fluent 2
+  - Nuxt UI
+  - PrimeVue
+  - Open UI
+anatomy:
+  - part: shape
+    description: shape
+  - part: image
+    description: image
+  - part: initials-fallback
+    description: initials fallback
+  - part: icon-fallback
+    description: icon fallback
+  - part: presence-indicator
+    description: presence indicator
+  - part: ring
+    description: ring
+variants:
+  - axis: variant
+    values:
+      - circle
+      - square/rounded
+      - with-presence
+      - with-ring
+      - placeholder
+  - axis: size
+    values:
+      - xs
+      - sm
+      - md
+      - lg
+      - xl
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: loading
+  - id: skeleton
+  - id: empty
+accessibility:
+  notes: |-
+    ARIA: Decorative avatars are `aria-hidden`; meaningful ones carry the person's name as alt text.
+    Keyboard: None unless it triggers a menu.
+tokens:
+  consumes:
+    - radius.full
+    - size.avatar.md
+    - color.bg.subtle
+    - type.label.sm
+    - color.border.default
+usage:
+  use_when:
+    - Comments, message turns, member lists, account menus
+  avoid_when:
+    - Identity is irrelevant to the task
+  pairs_well_with:
+    - avatar-group
+    - status-indicator
+    - list-view
+    - dropdown-menu
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://github.com/Shopify/polaris/tree/main/polaris-react/src/components
+  - https://opensource.adobe.com/spectrum-design-data/components

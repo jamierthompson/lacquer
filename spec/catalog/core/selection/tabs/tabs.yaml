@@ -1,0 +1,118 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: tabs
+name: Tabs
+kind: component
+catalog: core
+group: selection
+tier: 1
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Switches between sibling panels of content within the same context.
+aliases:
+  - TabList
+  - UnderlineNav
+  - Tab views
+  - Navs & tabs
+  - Content switcher
+found_in:
+  - Material 3
+  - Apple HIG
+  - Fluent 2
+  - Carbon
+  - Polaris
+  - Spectrum
+  - Atlassian
+  - Primer
+  - GOV.UK
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - Radix
+  - shadcn/ui
+  - Base UI
+  - Ark UI
+  - React Aria
+  - Headless UI
+  - Bootstrap 5
+  - Nuxt UI
+  - PrimeVue
+  - Open UI
+anatomy:
+  - part: tab-list
+    description: tab list
+  - part: tab
+    description: tab
+  - part: active-indicator
+    description: active indicator
+  - part: tab-panel
+    description: tab panel
+  - part: overflow-control
+    description: overflow control
+variants:
+  - axis: variant
+    values:
+      - underline
+      - pill
+      - enclosed
+      - vertical
+      - scrollable
+      - with-icons
+      - with-counters
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: selected
+  - id: current
+accessibility:
+  apg:
+    pattern: Tabs
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/tabs/
+  notes: >-
+    ARIA: `role="tablist"` / `tab` / `tabpanel`; `aria-selected` and `aria-controls` link them.
+
+    Keyboard: One tab stop; Left/Right (Up/Down when vertical) move; Home/End jump; automatic or manual
+    activation.
+tokens:
+  consumes:
+    - color.fg.accent
+    - color.border.accent
+    - type.label.md
+    - space.inset.control.sm
+    - motion.duration.fast
+usage:
+  use_when:
+    - Peer views of one object (Overview / Activity / Settings)
+  avoid_when:
+    - Content is sequential — use a stepper
+    - Each tab is really a separate page — use nav
+  pairs_well_with:
+    - card
+    - badge
+    - empty-state
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/tabs/
+  - https://m3.material.io/components
+  - https://developer.apple.com/design/human-interface-guidelines/components

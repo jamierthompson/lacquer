@@ -1,0 +1,104 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: video-player
+name: Video Player
+kind: component
+catalog: core
+group: media
+tier: 3
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Plays video or audio with accessible custom controls.
+aliases:
+  - Media player
+  - Player
+  - VideoThumbnail
+  - Audio player
+found_in:
+  - Polaris
+  - Apple HIG
+  - PrimeVue
+  - Open UI
+anatomy:
+  - part: media-element
+    description: media element
+  - part: play-pause
+    description: play/pause
+  - part: scrubber
+    description: scrubber
+  - part: time-display
+    description: time display
+  - part: volume
+    description: volume
+  - part: captions-toggle
+    description: captions toggle
+  - part: quality-menu
+    description: quality menu
+  - part: fullscreen
+    description: fullscreen
+  - part: poster
+    description: poster
+variants:
+  - axis: variant
+    values:
+      - inline
+      - modal
+      - audio-only
+      - live
+      - with-transcript
+  - axis: size
+    values:
+      - sm
+      - md
+      - lg
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: loading
+  - id: invalid
+  - id: dragging
+modes:
+  - id: playing
+  - id: paused
+accessibility:
+  apg:
+    pattern: Slider
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/slider/
+  notes: |-
+    ARIA: Controls are labelled buttons; the scrubber is a slider with `aria-valuetext` in time units.
+    Keyboard: Space plays/pauses; Left/Right seek; Up/Down volume; F fullscreen; M mute; C captions.
+tokens:
+  consumes:
+    - color.bg.overlay
+    - radius.surface
+    - size.control.md
+    - z.overlay
+    - motion.duration.fast
+usage:
+  use_when:
+    - Tutorials, recordings, generated media
+  avoid_when:
+    - A GIF or image sequence would communicate faster
+  pairs_well_with:
+    - aspect-ratio
+    - gallery-lightbox
+    - dialog
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/slider/
+  - https://github.com/Shopify/polaris/tree/main/polaris-react/src/components
+  - https://developer.apple.com/design/human-interface-guidelines/components

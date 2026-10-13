@@ -1,0 +1,84 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: sortable
+name: Sortable
+kind: component
+catalog: core
+group: utilities
+tier: 3
+atomic_level: primitive
+maturity: established
+status: draft
+version: 0.1.0
+summary: Drag-and-drop reordering behaviour with an accessible keyboard equivalent.
+aliases:
+  - Drag and drop
+  - DnD
+  - Reorderable list
+  - Pragmatic drag and drop
+  - OrderList
+found_in:
+  - Atlassian
+  - PrimeVue
+  - React Aria
+  - Ant Design
+anatomy:
+  - part: drag-handle
+    description: drag handle
+  - part: draggable-item
+    description: draggable item
+  - part: drop-indicator
+    description: drop indicator
+  - part: placeholder
+    description: placeholder
+  - part: auto-scroll
+    description: auto-scroll
+  - part: live-region
+    description: live region
+variants:
+  - axis: variant
+    values:
+      - list-reorder
+      - cross-container
+      - grid
+      - handle-only
+      - multi-select-drag
+states:
+  - id: enabled
+  - id: dragging
+  - id: drop-target
+  - id: disabled
+  - id: focus-visible
+accessibility:
+  notes: |-
+    ARIA: Announce pick up, move and drop in a live region; expose `aria-roledescription="sortable item"`.
+    Keyboard: Space or Enter picks up; Arrow keys move; Space drops; Escape cancels and restores position.
+tokens:
+  consumes:
+    - shadow.lg
+    - color.border.focus
+    - radius.surface
+    - motion.duration.fast
+    - z.overlay
+usage:
+  use_when:
+    - Priority lists, board columns, form builders, playlist ordering
+  avoid_when:
+    - Order is derived from data — sort by a column instead
+  pairs_well_with:
+    - list-view
+    - kanban-board
+    - tree-view
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://atlassian.design/components
+  - https://primevue.dev/

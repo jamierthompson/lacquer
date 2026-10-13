@@ -1,0 +1,111 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: tree-view
+name: Tree View
+kind: component
+catalog: core
+group: navigation
+tier: 3
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Hierarchical list with expandable nodes for nested structures.
+aliases:
+  - Tree
+  - Outline view
+  - File tree
+  - TreeView
+  - Nested list
+found_in:
+  - Carbon
+  - Primer
+  - Spectrum
+  - Ant Design
+  - MUI
+  - Chakra UI
+  - Mantine
+  - Ark UI
+  - React Aria
+  - Fluent 2
+  - Nuxt UI
+  - PrimeVue
+  - Apple HIG
+anatomy:
+  - part: tree-root
+    description: tree root
+  - part: nodes
+    description: nodes
+  - part: expand-collapse-chevrons
+    description: expand/collapse chevrons
+  - part: indentation-guides
+    description: indentation guides
+  - part: icons
+    description: icons
+  - part: selection-state
+    description: selection state
+  - part: drag-handles
+    description: drag handles
+variants:
+  - axis: variant
+    values:
+      - single-select
+      - multi-select
+      - with-checkboxes
+      - draggable
+      - virtualized
+  - axis: size
+    values:
+      - sm
+      - md
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: expanded
+  - id: selected
+  - id: indeterminate
+  - id: loading
+  - id: dragging
+  - id: drop-target
+accessibility:
+  apg:
+    pattern: Tree View
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
+  notes: >-
+    ARIA: `role="tree"` / `treeitem` / `group` with `aria-expanded`, `aria-selected`, `aria-level`.
+
+    Keyboard: Up/Down move; Right expands or descends; Left collapses or ascends; Home/End; `*` expands all
+    siblings; type-ahead.
+tokens:
+  consumes:
+    - space.inset.tree-indent
+    - color.bg.selected
+    - size.icon.sm
+    - type.body.sm
+usage:
+  use_when:
+    - File browsers, org charts, taxonomies, repository explorers
+  avoid_when:
+    - Depth rarely exceeds two — a nested list is simpler
+  pairs_well_with:
+    - scroll-area
+    - context-menu
+    - virtual-list
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
+  - https://carbondesignsystem.com/components/overview/components/
+  - https://primer.style/components

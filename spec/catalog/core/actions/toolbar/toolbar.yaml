@@ -1,0 +1,92 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: toolbar
+name: Toolbar
+kind: component
+catalog: core
+group: actions
+tier: 2
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: A grouped row of controls that shares one tab stop and arrow-key navigation.
+aliases:
+  - ActionBar
+  - Command bar
+  - Action group
+  - Ornament
+found_in:
+  - Radix
+  - Base UI
+  - React Aria
+  - Fluent 2
+  - Apple HIG
+  - Material 3
+  - PrimeVue
+  - Spectrum
+anatomy:
+  - part: container
+    description: container
+  - part: control-groups
+    description: control groups
+  - part: separators
+    description: separators
+  - part: overflow-menu
+    description: overflow menu
+variants:
+  - axis: variant
+    values:
+      - horizontal
+      - vertical
+      - floating
+      - docked
+  - axis: size
+    values:
+      - sm
+      - md
+states:
+  - id: enabled
+  - id: hover
+  - id: focus-visible
+  - id: active
+  - id: disabled
+  - id: selected
+accessibility:
+  apg:
+    pattern: Toolbar
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/
+  notes: |-
+    ARIA: `role="toolbar"` with `aria-label` and `aria-orientation`; roving tabindex inside.
+    Keyboard: One Tab stop; Left/Right (or Up/Down) move between controls; Home/End jump to ends.
+tokens:
+  consumes:
+    - radius.surface
+    - color.bg.surface
+    - space.gap.xs
+    - shadow.sm
+    - color.border.subtle
+usage:
+  use_when:
+    - Editors, table headers, canvas tools, message action rows
+  avoid_when:
+    - Two or three buttons only — a Button Group is simpler
+  pairs_well_with:
+    - icon-button
+    - toggle-group
+    - dropdown-menu
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/
+  - https://www.radix-ui.com/primitives/docs/overview/introduction
+  - https://base-ui.com/react/overview/quick-start

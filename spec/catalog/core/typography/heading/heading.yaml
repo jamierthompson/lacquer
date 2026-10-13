@@ -1,0 +1,82 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: heading
+name: Heading
+kind: component
+catalog: core
+group: typography
+tier: 1
+atomic_level: atom
+maturity: established
+status: draft
+version: 0.1.0
+summary: Titles a section and establishes the document outline.
+aliases:
+  - Title
+  - Typography.Title
+  - Text as=h1
+  - Display
+found_in:
+  - Primer
+  - Atlassian
+  - Spectrum
+  - Chakra UI
+  - Mantine
+  - Polaris
+  - Ant Design
+  - MUI
+  - Fluent 2
+  - shadcn/ui
+  - USWDS
+  - Carbon
+anatomy:
+  - part: heading-text
+    description: heading text
+  - part: optional-eyebrow
+    description: optional eyebrow
+  - part: optional-trailing-actions
+    description: optional trailing actions
+variants:
+  - axis: variant
+    values:
+      - display
+      - page-title
+      - section
+      - subsection
+  - axis: size
+    values:
+      - xs
+      - sm
+      - md
+      - lg
+      - xl
+      - 2xl
+states:
+  - id: enabled
+accessibility:
+  notes: |-
+    ARIA: Native `h1`–`h6`; visual size must be decoupled from semantic level.
+    Keyboard: Screen-reader users navigate by heading level, so levels must not skip.
+tokens:
+  consumes:
+    - type.heading.lg
+    - type.heading.md
+    - color.fg.default
+    - space.stack.sm
+usage:
+  use_when:
+    - Every section that a user could plausibly navigate to
+  avoid_when:
+    - You only want big text — use Text with a display size
+  pairs_well_with:
+    - text
+    - page-header
+    - prose
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://primer.style/components
+  - https://atlassian.design/components

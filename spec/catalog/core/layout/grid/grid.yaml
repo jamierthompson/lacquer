@@ -1,0 +1,77 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: grid
+name: Grid
+kind: component
+catalog: core
+group: layout
+tier: 2
+atomic_level: primitive
+maturity: established
+status: draft
+version: 0.1.0
+summary: Two-dimensional layout with responsive column tracks and token gaps.
+aliases:
+  - SimpleGrid
+  - InlineGrid
+  - Row/Col
+  - Layout grid
+found_in:
+  - Atlassian
+  - Chakra UI
+  - Mantine
+  - MUI
+  - Ant Design
+  - Polaris
+  - Bootstrap 5
+  - Carbon
+anatomy:
+  - part: grid-container
+    description: grid container
+  - part: grid-items
+    description: grid items
+  - part: column-tracks
+    description: column tracks
+  - part: row-gap
+    description: row gap
+  - part: column-gap
+    description: column gap
+variants:
+  - axis: variant
+    values:
+      - fixed-columns
+      - auto-fit
+      - 12-column
+      - masonry
+states:
+  - id: enabled
+accessibility:
+  notes: |-
+    ARIA: None; layout only.
+    Keyboard: None.
+tokens:
+  consumes:
+    - space.gap.md
+    - space.gap.lg
+    - breakpoint.sm
+    - breakpoint.md
+    - breakpoint.lg
+usage:
+  use_when:
+    - Card galleries, dashboards, form column layouts
+    - Content must align across rows
+  avoid_when:
+    - A single axis is enough
+    - Content order must change per breakpoint in ways grid areas obscure
+  pairs_well_with:
+    - card
+    - container
+    - stat
+  ai_products_rely_on: true
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://atlassian.design/components
+  - https://chakra-ui.com/docs/components/concepts/overview
