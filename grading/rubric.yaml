@@ -1,0 +1,89 @@
+# Lacquer finish grade — the rubric.
+#
+# A "finish report" grades one screen (or one component) against the catalog.
+# The grader does not invent criteria: every finding cites a rule id from
+# spec/dist/rules.json, and every rule belongs to exactly one dimension below.
+# The dimensions are what a person would feel; the rules are how a machine
+# finds it. Scores are 0–100 per dimension and overall; letter grades are for
+# humans, the numbers are for CI gates.
+#
+# How a score is computed (per dimension):
+#   start at 100
+#   for each finding:  MUST  -> -25 (capped so one dimension cannot go below 0)
+#                      SHOULD -> -8
+#                      MAY   ->  0 (reported, not scored)
+#   the same rule firing many times counts once at full and then -2 per extra
+#   instance, capped at -10 extra, so a repeated button defect is worse than a
+#   single one but does not zero the screen.
+# Overall = weighted mean of dimensions; a screen with any unresolved MUST in
+# `structure` or `accessibility` cannot grade above C regardless of the mean.
+
+version: 1
+
+dimensions:
+  structure:
+    weight: 1.0
+    question: Is it built from the right components, with the right native elements and parts?
+    rule_prefixes: [LQ-SEM, LQ-ANAT, LQ-LAYER, LQ-BUTTON-01, LQ-BUTTON-04, LQ-DIALOG-03]
+  states:
+    weight: 1.0
+    question: Does every interactive thing look and behave differently in every state it can be in?
+    rule_prefixes: [LQ-STATE, LQ-LOAD, LQ-BUTTON-02, LQ-TOOLCARD-02]
+  accessibility:
+    weight: 1.2
+    question: Can it be used with a keyboard and a screen reader, and does every state reach the accessibility tree?
+    rule_prefixes: [LQ-FOCUS, LQ-NAME, LQ-A11Y, LQ-MOTION, LQ-DIALOG-01, LQ-DIALOG-02, LQ-BUTTON-05]
+  tokens:
+    weight: 0.8
+    question: Does it consume the consumer's design tokens through roles, or hard-code a look?
+    rule_prefixes: [LQ-TOKEN, LQ-STYLE]
+  content:
+    weight: 0.6
+    question: Do labels, titles and messages say what happens, specifically?
+    rule_prefixes: [LQ-COPY, LQ-GATE-02, LQ-TOOL-01]
+  composition:
+    weight: 0.6
+    question: Is emphasis disciplined, is the right thing primary, are decisions (dialog vs drawer, select vs combobox) honest?
+    rule_prefixes: [LQ-BUTTON-03, LQ-BUTTON-06, LQ-DIALOG-04, LQ-DISCLOSE, LQ-TOOLCARD-04]
+  ai-conduct:
+    weight: 1.0
+    question: For AI surfaces only — does it wait, stream, act, ask, recover and disclose the way a trustworthy agent should?
+    rule_prefixes: [LQ-WAIT, LQ-STREAM, LQ-TOOL-02, LQ-GATE-01, LQ-REVIEW, LQ-ERR, LQ-TRUST, LQ-RECOVER, LQ-MACHINE, LQ-TOOLCARD-01, LQ-TOOLCARD-03]
+    applies_when: any ai-catalog component is detected on the screen
+
+deductions:
+  MUST: 25
+  SHOULD: 8
+  MAY: 0
+  repeat_instance: 2
+  repeat_cap: 10
+
+letter_grades:
+  A: 90
+  B: 80
+  C: 65
+  D: 50
+  F: 0
+gate:
+  # Any MUST finding in these dimensions caps the overall letter at C.
+  cap_at_c_if_must_in: [structure, accessibility]
+
+# What the grader needs to know about the input before it can score.
+detection:
+  # Step 1: identify which catalog components the markup is attempting, by
+  # (in priority order) data-slot/data-lacquer attributes, ARIA role + APG
+  # shape, native element + class heuristics, component names in source.
+  # Each detected instance is scored against its entry's resolved rules; the
+  # universal rules run on everything.
+  confidence_threshold: 0.6
+  unknown_component_finding: LQ-SEM-01   # markup that is interactive but matches no entry
+
+modes:
+  static:
+    input: source (tsx/jsx/html/vue/svelte) or a serialized DOM
+    runs: rules with detect.static
+    cost: milliseconds; run on every generation
+  runtime:
+    input: a URL the grader can open in a browser
+    runs: all rules; drives states, keyboard, reduced motion, layout shift, live regions
+    cost: seconds; run before shipping

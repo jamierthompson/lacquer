@@ -1,0 +1,120 @@
+{
+  "version": 1,
+  "mode": "static",
+  "generated_at": "2026-10-12T16:40:00Z",
+  "subject": {
+    "kind": "source",
+    "language": "html",
+    "binding": "html",
+    "hash": "sha256:3f9c…"
+  },
+  "detected": [
+    { "id": "dialog", "instances": 1, "confidence": 0.95, "how": "aria" },
+    { "id": "button", "instances": 3, "confidence": 0.9, "how": "heuristic" },
+    { "id": "text-input", "instances": 1, "confidence": 0.85, "how": "heuristic" }
+  ],
+  "score": {
+    "overall": 58,
+    "letter": "C",
+    "capped": true,
+    "dimensions": {
+      "structure": 75,
+      "states": 42,
+      "accessibility": 50,
+      "tokens": 67,
+      "content": 92,
+      "composition": 75
+    }
+  },
+  "findings": [
+    {
+      "id": "LQ-DIALOG-03#1",
+      "rule": "LQ-DIALOG-03",
+      "level": "MUST",
+      "dimension": "structure",
+      "component": "dialog",
+      "message": "The dialog has role=\"dialog\" but no aria-labelledby; its visible heading is not connected to it.",
+      "location": { "file": "rename-dialog.html", "line": 14, "selector": "div[role=dialog]", "snippet": "<div role=\"dialog\" aria-modal=\"true\" class=…>" },
+      "evidence": "role=dialog without aria-labelledby; <h2> found at line 16 with no id.",
+      "fix": "Give the <h2> an id and set aria-labelledby on the dialog, or use the native <dialog> with the Title part.",
+      "instances": 1,
+      "reference": "spec/catalog/core/overlays/dialog/dialog.yaml#anatomy.title"
+    },
+    {
+      "id": "LQ-FOCUS-01#1",
+      "rule": "LQ-FOCUS-01",
+      "level": "MUST",
+      "dimension": "accessibility",
+      "component": "button",
+      "message": "outline: none on :focus removes keyboard focus on the Cancel button and nothing replaces it.",
+      "location": { "file": "rename-dialog.css", "line": 31, "snippet": ".cancel:focus { outline: none; }" },
+      "evidence": "outline removed; no :focus-visible rule for the same element.",
+      "fix": "Replace with a :focus-visible rule: outline: var(--lq-focus-ring-width) solid var(--lq-color-border-focus); outline-offset: var(--lq-focus-ring-offset).",
+      "instances": 1,
+      "reference": "spec/catalog/core/actions/button/examples/html/button.css"
+    },
+    {
+      "id": "LQ-STATE-01#1",
+      "rule": "LQ-STATE-01",
+      "level": "MUST",
+      "dimension": "states",
+      "component": "button",
+      "message": "Two of three buttons define no hover or active treatment.",
+      "location": { "file": "rename-dialog.css", "line": 31 },
+      "evidence": "No :hover or :active rule for the buttons at lines 31 and 33; line 35 (primary) is complete.",
+      "fix": "Add :hover (background-color: var(--lq-color-bg-secondary-hover)) and :active (translate: 0 1px), or use the catalog button.",
+      "instances": 2,
+      "reference": "spec/catalog/core/actions/button/button.yaml#states"
+    },
+    {
+      "id": "LQ-BUTTON-02#1",
+      "rule": "LQ-BUTTON-02",
+      "level": "MUST",
+      "dimension": "states",
+      "component": "button",
+      "message": "The Rename button swaps its label for a spinner while saving, so it changes width and loses its name.",
+      "location": { "file": "rename-dialog.html", "line": 35, "snippet": "<button class=\"submit\"><span class=\"spinner\"></span></button>" },
+      "evidence": "The label is gone from the DOM while saving; no aria-busy.",
+      "fix": "Keep the label, render the spinner in the leading-icon slot, set aria-busy and ignore presses while saving.",
+      "instances": 1,
+      "reference": "spec/catalog/core/actions/button/examples/html/loading-submit.html"
+    },
+    {
+      "id": "LQ-TOKEN-01#1",
+      "rule": "LQ-TOKEN-01",
+      "level": "MUST",
+      "dimension": "tokens",
+      "component": "dialog",
+      "message": "The dialog surface uses literal values (background: #fff, border-radius: 16px, a hard-coded shadow) that ignore the consumer's theme and dark mode.",
+      "location": { "file": "rename-dialog.css", "line": 14 },
+      "evidence": "#fff, 16px and the shadow literal do not resolve to any role in the html binding.",
+      "fix": "Use var(--lq-color-bg-surface), var(--lq-radius-surface) and var(--lq-shadow-lg) (color.bg.surface, radius.surface, shadow.lg).",
+      "instances": 1
+    },
+    {
+      "id": "LQ-DIALOG-04#1",
+      "rule": "LQ-DIALOG-04",
+      "level": "SHOULD",
+      "dimension": "composition",
+      "component": "dialog",
+      "message": "Initial focus lands on the text input, which is fine here — but Escape and scrim-click both close the dialog while the field is dirty, discarding the edit without asking.",
+      "location": { "file": "rename-dialog.html", "line": 20 },
+      "evidence": "The close handler is wired to both; no dirty check.",
+      "fix": "Guard dismissal when the field is dirty, or keep the draft on reopen.",
+      "instances": 1
+    },
+    {
+      "id": "LQ-COPY-01#1",
+      "rule": "LQ-COPY-01",
+      "level": "SHOULD",
+      "dimension": "content",
+      "component": "button",
+      "message": "\"OK\" does not say what happens; the action renames a project.",
+      "location": { "file": "rename-dialog.html", "line": 33 },
+      "evidence": "Button text matches stoplist.",
+      "fix": "Label it \"Rename project\".",
+      "instances": 1
+    }
+  ],
+  "summary": "Capped at C: the dialog has no accessible name and one button removes keyboard focus. States are the weakest dimension — two buttons have no hover/active treatment and the submit reflows while saving. Content is nearly clean apart from an \"OK\" label."
+}
