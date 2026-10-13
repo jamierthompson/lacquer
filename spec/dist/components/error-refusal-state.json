@@ -1,0 +1,164 @@
+{
+  "id": "error-refusal-state",
+  "name": "Error, refusal and scoped-answer states",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "conversation",
+  "tier": 1,
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Three distinct designs: transport errors (retry, keep draft), refusals (calm, offer alternatives) and quota notices (facts and reset time).",
+  "aliases": [
+    "Error primitive (assistant-ui)",
+    "AI SDK error status",
+    "blocked/scoped response",
+    "Caveat (Shape of AI)"
+  ],
+  "found_in": [
+    "ChatGPT",
+    "Claude",
+    "Gemini",
+    "assistant-ui",
+    "AI Elements"
+  ],
+  "anatomy": [
+    {
+      "part": "transport-error",
+      "description": "transport error: inline in assistant slot, message, Retry, user text preserved"
+    },
+    {
+      "part": "refusal-scoped",
+      "description": "refusal/scoped: calm normal message with what can be done next"
+    },
+    {
+      "part": "quota",
+      "description": "quota: banner with reset time and upgrade path, send disabled, draft kept"
+    }
+  ],
+  "states": [
+    {
+      "id": "cancelled"
+    }
+  ],
+  "modes": [
+    {
+      "id": "network-error"
+    },
+    {
+      "id": "model-error"
+    },
+    {
+      "id": "refused"
+    },
+    {
+      "id": "scoped"
+    },
+    {
+      "id": "rate-limited"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "retry",
+      "edit prompt",
+      "report",
+      "learn more"
+    ]
+  },
+  "accessibility": {
+    "notes": "Errors use role=alert; refusals are ordinary messages (polite); quota banner is a status region."
+  },
+  "tokens": {
+    "consumes": [
+      "color.status.error",
+      "color.status.warning",
+      "color.bg.surface-secondary",
+      "radius.md"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "always"
+    ],
+    "avoid_when": [
+      "rendering refusals in red error styling",
+      "losing the user's draft on any error"
+    ],
+    "pairs_well_with": [
+      "message",
+      "quota-notice",
+      "safety-interstitial"
+    ],
+    "reuses": [
+      "alert",
+      "alert",
+      "button",
+      "link"
+    ],
+    "exemplars": [
+      "assistant-ui Error — accessible alert role with automatic text",
+      "Apple HIG — help people improve requests when blocked"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://www.assistant-ui.com/docs/primitives",
+    "https://pair.withgoogle.com/chapter/errors-failing/",
+    "https://developer.apple.com/design/human-interface-guidelines/generative-ai"
+  ],
+  "path": "spec/catalog/ai/conversation/error-refusal-state",
+  "skill": "spec/catalog/ai/conversation/error-refusal-state/SKILL.md",
+  "missing": [
+    "states.treatment: cancelled",
+    "states.a11y: cancelled",
+    "modes.treatment: network-error, model-error, refused, scoped, rate-limited",
+    "modes.a11y: network-error, model-error, refused, scoped, rate-limited",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "id": "sources-panel",
+  "name": "Sources row / panel",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "conversation",
+  "tier": 1,
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "The answer-level view of all sources: a count at the action bar plus an expandable list or side panel.",
+  "aliases": [
+    "Sources (AI Elements: 'Used N sources')",
+    "Sources tab / sidebar (Perplexity)",
+    "References (Shape of AI)",
+    "Links tab"
+  ],
+  "found_in": [
+    "Perplexity",
+    "ChatGPT",
+    "Gemini",
+    "Copilot",
+    "AI Elements"
+  ],
+  "anatomy": [
+    {
+      "part": "favicon-stack",
+      "description": "favicon stack + count at action-bar prominence"
+    },
+    {
+      "part": "collapsible-list",
+      "description": "collapsible list or side panel of source cards"
+    },
+    {
+      "part": "per-card",
+      "description": "per-card: favicon, title, domain, snippet, open"
+    }
+  ],
+  "states": [
+    {
+      "id": "expanded"
+    },
+    {
+      "id": "empty"
+    }
+  ],
+  "modes": [
+    {
+      "id": "collapsed",
+      "notes": "collapsed (count)"
+    },
+    {
+      "id": "panel"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "click count to expand or open panel",
+      "filter by domain type (optional)",
+      "report wrong source"
+    ]
+  },
+  "accessibility": {
+    "notes": "List semantics; panel is a dialog or complementary region with focus management."
+  },
+  "tokens": {
+    "consumes": [
+      "color.bg.surface-secondary",
+      "radius.md",
+      "space.gap.sm",
+      "type.body.sm"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "any grounded answer with more than one source"
+    ],
+    "avoid_when": [
+      "single-source answers (inline marker suffices)"
+    ],
+    "pairs_well_with": [
+      "inline-citation",
+      "message-actions"
+    ],
+    "reuses": [
+      "disclosure",
+      "list",
+      "drawer",
+      "tabs",
+      "card"
+    ],
+    "exemplars": [
+      "Perplexity — favicon stack + '10 sources' beside share/copy",
+      "AI Elements Sources — 'Used 3 sources' trigger"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://elements.ai-sdk.dev/components/sources",
+    "https://aiuxplayground.com/teardowns/perplexity/citations/"
+  ],
+  "path": "spec/catalog/ai/conversation/sources-panel",
+  "skill": "spec/catalog/ai/conversation/sources-panel/SKILL.md",
+  "missing": [
+    "states.treatment: expanded, empty",
+    "states.a11y: expanded, empty",
+    "modes.treatment: collapsed, panel",
+    "modes.a11y: collapsed, panel",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

@@ -1,0 +1,176 @@
+{
+  "id": "empty-state",
+  "name": "Empty State",
+  "kind": "component",
+  "catalog": "core",
+  "group": "data-display",
+  "tier": 1,
+  "atomic_level": "organism",
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Explains why a region has no content and offers the next action.",
+  "aliases": [
+    "Blankslate",
+    "Illustrated message",
+    "Empty",
+    "Zero state",
+    "EmptySearchResult",
+    "No results"
+  ],
+  "found_in": [
+    "Polaris",
+    "Spectrum",
+    "Atlassian",
+    "Primer",
+    "Ant Design",
+    "Chakra UI",
+    "Mantine",
+    "shadcn/ui",
+    "Nuxt UI"
+  ],
+  "anatomy": [
+    {
+      "part": "illustration-or-icon",
+      "description": "illustration or icon"
+    },
+    {
+      "part": "heading",
+      "description": "heading"
+    },
+    {
+      "part": "description",
+      "description": "description"
+    },
+    {
+      "part": "primary-action",
+      "description": "primary action"
+    },
+    {
+      "part": "secondary-action",
+      "description": "secondary action"
+    },
+    {
+      "part": "help-link",
+      "description": "help link"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "variant",
+      "values": [
+        "first-run",
+        "no-results",
+        "error",
+        "permission",
+        "cleared/done"
+      ]
+    },
+    {
+      "axis": "size",
+      "values": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    },
+    {
+      "id": "empty"
+    },
+    {
+      "id": "loading"
+    },
+    {
+      "id": "invalid"
+    }
+  ],
+  "accessibility": {
+    "notes": "ARIA: Announce dynamic empty results in a polite live region so the change is not silent.\nKeyboard: Actions are ordinary focusable controls."
+  },
+  "tokens": {
+    "consumes": [
+      "space.inset.lg",
+      "type.heading.sm",
+      "color.fg.muted",
+      "size.illustration.md",
+      "space.stack.md"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "Every list, table, search and inbox — the empty case is not optional"
+    ],
+    "avoid_when": [
+      "Loading has not finished — show a skeleton instead"
+    ],
+    "pairs_well_with": [
+      "search-input",
+      "data-table",
+      "button",
+      "skeleton"
+    ],
+    "ai_products_rely_on": true
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://github.com/Shopify/polaris/tree/main/polaris-react/src/components",
+    "https://opensource.adobe.com/spectrum-design-data/components"
+  ],
+  "path": "spec/catalog/core/data-display/empty-state",
+  "skill": "spec/catalog/core/data-display/empty-state/SKILL.md",
+  "missing": [
+    "states.treatment: enabled, empty, loading, invalid",
+    "states.a11y: enabled, empty, loading, invalid",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

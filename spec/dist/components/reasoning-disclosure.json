@@ -1,0 +1,168 @@
+{
+  "id": "reasoning-disclosure",
+  "name": "Reasoning / extended-thinking disclosure",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "conversation",
+  "tier": 1,
+  "maturity": "emerging",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "A collapsible, de-emphasised view of the model's reasoning or step trace that opens while streaming and collapses when the answer begins.",
+  "aliases": [
+    "Reasoning (AI Elements, prompt-kit)",
+    "ChainOfThought (assistant-ui, AI Elements)",
+    "Thought for N seconds (ChatGPT)",
+    "Show thinking (Gemini)",
+    "Stream of Thought (Shape of AI)",
+    "Chainlit Step cot"
+  ],
+  "found_in": [
+    "ChatGPT",
+    "Claude",
+    "Gemini",
+    "Perplexity",
+    "AI Elements",
+    "assistant-ui",
+    "prompt-kit",
+    "Chainlit"
+  ],
+  "anatomy": [
+    {
+      "part": "collapsible-trigger",
+      "description": "collapsible trigger with status text and elapsed time"
+    },
+    {
+      "part": "muted-reasoning-text",
+      "description": "muted reasoning text"
+    },
+    {
+      "part": "optional-step-list",
+      "description": "optional step list with complete/active/pending"
+    },
+    {
+      "part": "optional-search-results",
+      "description": "optional search results and images per step"
+    }
+  ],
+  "states": [
+    {
+      "id": "streaming"
+    },
+    {
+      "id": "complete"
+    }
+  ],
+  "modes": [
+    {
+      "id": "pinned-open"
+    },
+    {
+      "id": "hidden",
+      "notes": "hidden (no reasoning)"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "auto-open while streaming, auto-close when answer starts",
+      "user toggle overrides",
+      "steps expand to show outputs"
+    ]
+  },
+  "accessibility": {
+    "notes": "Disclosure button with aria-expanded and a region; reasoning text not announced live; announce start once and duration on completion."
+  },
+  "tokens": {
+    "consumes": [
+      "color.fg.muted",
+      "type.body.sm",
+      "shimmer.duration",
+      "space.gap.sm"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "reasoning models",
+      "research/agent products where steps and sources matter"
+    ],
+    "avoid_when": [
+      "styling reasoning as proof of correctness",
+      "expanding by default after completion"
+    ],
+    "pairs_well_with": [
+      "thinking-indicator",
+      "tool-call-card",
+      "disclosure-conventions"
+    ],
+    "reuses": [
+      "disclosure",
+      "badge",
+      "list"
+    ],
+    "exemplars": [
+      "AI Elements Reasoning — auto open/close, 'Thought for N seconds'",
+      "Anthropic (Feb 2025) — caveat that visible thinking may not reflect the model's actual process",
+      "Perplexity — 'Completed 2 steps' before the answer"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://elements.ai-sdk.dev/components/reasoning",
+    "https://elements.ai-sdk.dev/components/chain-of-thought",
+    "https://www.anthropic.com/news/visible-extended-thinking"
+  ],
+  "path": "spec/catalog/ai/conversation/reasoning-disclosure",
+  "skill": "spec/catalog/ai/conversation/reasoning-disclosure/SKILL.md",
+  "missing": [
+    "states.treatment: streaming, complete",
+    "states.a11y: streaming, complete",
+    "modes.treatment: pinned-open, hidden",
+    "modes.a11y: pinned-open, hidden",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

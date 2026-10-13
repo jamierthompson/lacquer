@@ -1,0 +1,166 @@
+{
+  "id": "autonomy-dial",
+  "name": "Autonomy dial / permission modes",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "agentic",
+  "tier": 2,
+  "maturity": "emerging",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Lets the user set how much the agent does without asking, always visible, with a floor of actions that never auto-approve.",
+  "aliases": [
+    "Autonomy Dial (Smashing)",
+    "permission modes (Claude Code: default, acceptEdits, plan, auto, dontAsk, bypassPermissions)",
+    "auto-run levels (Cursor)",
+    "auto-continue (Windsurf)",
+    "Modes (Shape of AI)"
+  ],
+  "found_in": [
+    "Claude Code",
+    "Cursor",
+    "Windsurf",
+    "GitHub Copilot"
+  ],
+  "anatomy": [
+    {
+      "part": "segmented-control",
+      "description": "segmented control or menu of levels with plain descriptions"
+    },
+    {
+      "part": "always-visible-current-level",
+      "description": "always-visible current level while an agent is active"
+    },
+    {
+      "part": "list-of-actions",
+      "description": "list of actions never auto-approved"
+    },
+    {
+      "part": "shortcut-to-cycle",
+      "description": "shortcut to cycle"
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    }
+  ],
+  "modes": [
+    {
+      "id": "suggest-only"
+    },
+    {
+      "id": "ask-for-edits"
+    },
+    {
+      "id": "auto-edits"
+    },
+    {
+      "id": "auto-with-reviewer"
+    },
+    {
+      "id": "unrestricted",
+      "notes": "unrestricted (warned)"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "switch mid-run",
+      "prompt offers 'switch to auto' at approval time"
+    ]
+  },
+  "accessibility": {
+    "notes": "Radio/segmented semantics; level change announced; warning for unrestricted levels."
+  },
+  "tokens": {
+    "consumes": [
+      "color.bg.surface-secondary",
+      "color.status.warning",
+      "type.body.sm",
+      "radius.pill"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "agents that can act with varying risk"
+    ],
+    "avoid_when": [
+      "hiding the current level",
+      "defaulting to unrestricted"
+    ],
+    "pairs_well_with": [
+      "approval-prompt",
+      "agent-status",
+      "plan-view"
+    ],
+    "reuses": [
+      "segmented-control",
+      "dropdown-menu",
+      "badge",
+      "alert"
+    ],
+    "exemplars": [
+      "Claude Code — Shift+Tab cycles modes; status bar shows the mode; a classifier reviews actions in auto mode",
+      "Smashing — 'suggest-only through fully autonomous'"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://code.claude.com/docs/en/permission-modes",
+    "https://www.smashingmagazine.com/2026/02/designing-agentic-ai-practical-ux-patterns/"
+  ],
+  "path": "spec/catalog/ai/agentic/autonomy-dial",
+  "skill": "spec/catalog/ai/agentic/autonomy-dial/SKILL.md",
+  "missing": [
+    "states.treatment: enabled",
+    "states.a11y: enabled",
+    "modes.treatment: suggest-only, ask-for-edits, auto-edits, auto-with-reviewer, unrestricted",
+    "modes.a11y: suggest-only, ask-for-edits, auto-edits, auto-with-reviewer, unrestricted",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

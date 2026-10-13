@@ -1,0 +1,161 @@
+{
+  "id": "generate-button",
+  "name": "Generate button (and the sparkle convention)",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "generation",
+  "tier": 1,
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "The entry point for AI in augmented products: a verb-labelled button, optionally with a brand glyph; never a bare sparkle.",
+  "aliases": [
+    "Initial CTA (Shape of AI)",
+    "Generate / Write with AI / Ask AI / Magic Write / Make",
+    "Actions (Figma toolbar)"
+  ],
+  "found_in": [
+    "Notion",
+    "Canva",
+    "Figma",
+    "Google Workspace",
+    "Microsoft 365 Copilot"
+  ],
+  "anatomy": [
+    {
+      "part": "button-with-icon",
+      "description": "button with icon + verb label"
+    },
+    {
+      "part": "optional-dropdown",
+      "description": "optional dropdown of presets"
+    },
+    {
+      "part": "opens-prompt-affordance",
+      "description": "opens prompt affordance or runs preset"
+    },
+    {
+      "part": "result-appears",
+      "description": "result appears in a reviewable slot"
+    }
+  ],
+  "states": [
+    {
+      "id": "idle"
+    },
+    {
+      "id": "error"
+    }
+  ],
+  "modes": [
+    {
+      "id": "generating",
+      "notes": "generating (spinner/shimmer, becomes stop)"
+    },
+    {
+      "id": "done"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "click to generate",
+      "click again to stop",
+      "menu for presets"
+    ]
+  },
+  "accessibility": {
+    "notes": "Named by its verb, never by an icon alone; busy state announced."
+  },
+  "tokens": {
+    "consumes": [
+      "color.accent.brand",
+      "color.accent.ai",
+      "radius.md",
+      "type.weight.medium"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "any AI feature entry point"
+    ],
+    "avoid_when": [
+      "sparkle-only icon buttons",
+      "using sparkles for suggestions, favourites or 'new'"
+    ],
+    "pairs_well_with": [
+      "selection-ai-menu",
+      "ai-label",
+      "ai-accent-token"
+    ],
+    "reuses": [
+      "button",
+      "dropdown-menu",
+      "icon"
+    ],
+    "exemplars": [
+      "NN/g (Sep 2024) — no participant read ✨ as AI; use labels",
+      "Canva — named 'Magic' family",
+      "Shape of AI — 'When sparkles alone are applied everywhere, they lose meaning'"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://www.nngroup.com/articles/ai-sparkles-icon-problem/",
+    "https://www.shapeof.ai/patterns/iconography",
+    "https://www.canva.com/magic/"
+  ],
+  "path": "spec/catalog/ai/generation/generate-button",
+  "skill": "spec/catalog/ai/generation/generate-button/SKILL.md",
+  "missing": [
+    "states.treatment: idle, error",
+    "states.a11y: idle, error",
+    "modes.treatment: generating, done",
+    "modes.a11y: generating, done",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

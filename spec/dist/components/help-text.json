@@ -1,0 +1,162 @@
+{
+  "id": "help-text",
+  "name": "Help Text",
+  "kind": "component",
+  "catalog": "core",
+  "group": "typography",
+  "tier": 1,
+  "atomic_level": "atom",
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Short supporting copy under a control that explains format, constraints or consequences.",
+  "aliases": [
+    "Description",
+    "Hint",
+    "Supporting text",
+    "Caption",
+    "FormControl.Caption",
+    "Helper text"
+  ],
+  "found_in": [
+    "Spectrum",
+    "Material 3",
+    "Primer",
+    "GOV.UK",
+    "Carbon",
+    "Base UI",
+    "Chakra UI",
+    "React Aria"
+  ],
+  "anatomy": [
+    {
+      "part": "description-text",
+      "description": "description text"
+    },
+    {
+      "part": "optional-character-counter",
+      "description": "optional character counter"
+    },
+    {
+      "part": "optional-link",
+      "description": "optional link"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "variant",
+      "values": [
+        "neutral",
+        "error",
+        "success",
+        "warning"
+      ]
+    },
+    {
+      "axis": "size",
+      "values": [
+        "sm"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    },
+    {
+      "id": "invalid"
+    },
+    {
+      "id": "success"
+    },
+    {
+      "id": "warning"
+    },
+    {
+      "id": "disabled"
+    }
+  ],
+  "accessibility": {
+    "notes": "ARIA: Referenced by the control's `aria-describedby`; error copy also drives `aria-invalid`.\nKeyboard: None."
+  },
+  "tokens": {
+    "consumes": [
+      "type.body.sm",
+      "color.fg.muted",
+      "color.fg.danger",
+      "space.stack.xs"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "Format is non-obvious",
+      "You would otherwise rely on an error to teach the rule"
+    ],
+    "avoid_when": [
+      "The label alone is sufficient — noise costs attention"
+    ],
+    "pairs_well_with": [
+      "field",
+      "label",
+      "text-input"
+    ],
+    "ai_products_rely_on": true
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://opensource.adobe.com/spectrum-design-data/components",
+    "https://m3.material.io/components"
+  ],
+  "path": "spec/catalog/core/typography/help-text",
+  "skill": "spec/catalog/core/typography/help-text/SKILL.md",
+  "missing": [
+    "states.treatment: enabled, invalid, success, warning, disabled",
+    "states.a11y: enabled, invalid, success, warning, disabled",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

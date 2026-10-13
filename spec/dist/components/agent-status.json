@@ -1,0 +1,174 @@
+{
+  "id": "agent-status",
+  "name": "Agent status and step progress",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "agentic",
+  "tier": 1,
+  "maturity": "emerging",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "A persistent, plain-language indicator of what the agent is doing and whether it is blocked on the human.",
+  "aliases": [
+    "Agents window status (Cursor)",
+    "status bar mode indicator (Claude Code)",
+    "CopilotKit agent state",
+    "run status pill"
+  ],
+  "found_in": [
+    "Cursor",
+    "Claude Code",
+    "GitHub Copilot",
+    "CopilotKit",
+    "Devin"
+  ],
+  "anatomy": [
+    {
+      "part": "status-pill",
+      "description": "status pill: thinking / working (current step) / waiting-for-tool / needs-input / paused / done / failed / cancelled"
+    },
+    {
+      "part": "current-mode-label",
+      "description": "current mode label"
+    },
+    {
+      "part": "elapsed-time",
+      "description": "elapsed time"
+    },
+    {
+      "part": "stop-and-pause",
+      "description": "stop and pause controls"
+    }
+  ],
+  "states": [
+    {
+      "id": "cancelled"
+    }
+  ],
+  "modes": [
+    {
+      "id": "thinking"
+    },
+    {
+      "id": "working"
+    },
+    {
+      "id": "waiting-for-tool"
+    },
+    {
+      "id": "needs-input"
+    },
+    {
+      "id": "paused"
+    },
+    {
+      "id": "done"
+    },
+    {
+      "id": "failed"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "stop",
+      "pause/resume",
+      "open run",
+      "answer question without stopping unrelated work"
+    ]
+  },
+  "accessibility": {
+    "notes": "Status region announces transitions once; needs-input is assertive; mode label is text, not colour only."
+  },
+  "tokens": {
+    "consumes": [
+      "color.status.running",
+      "color.status.warning",
+      "color.status.success",
+      "color.status.error",
+      "type.label.sm"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "any long-running agent"
+    ],
+    "avoid_when": [
+      "hiding 'needs input' inside the transcript where it can be missed"
+    ],
+    "pairs_well_with": [
+      "plan-view",
+      "background-job-card",
+      "hitl-gate",
+      "autonomy-dial"
+    ],
+    "reuses": [
+      "badge",
+      "spinner",
+      "button",
+      "tooltip"
+    ],
+    "exemplars": [
+      "Claude Code — '⏸ plan mode on', '⏵⏵ auto mode on' in the status bar",
+      "Cursor 2.4 — agents ask clarifying questions while continuing file operations"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://code.claude.com/docs/en/permission-modes",
+    "https://cursor.com/changelog/2-4"
+  ],
+  "path": "spec/catalog/ai/agentic/agent-status",
+  "skill": "spec/catalog/ai/agentic/agent-status/SKILL.md",
+  "missing": [
+    "states.treatment: cancelled",
+    "states.a11y: cancelled",
+    "modes.treatment: thinking, working, waiting-for-tool, needs-input, paused, done, failed",
+    "modes.a11y: thinking, working, waiting-for-tool, needs-input, paused, done, failed",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

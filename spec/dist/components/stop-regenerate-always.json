@@ -1,0 +1,97 @@
+{
+  "id": "stop-regenerate-always",
+  "name": "Stop and regenerate are always available",
+  "kind": "principle",
+  "catalog": "ai",
+  "group": "foundations",
+  "tier": 1,
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "The two controls that make probabilistic, slow output tolerable; their absence is the most common agent-built-UI defect.",
+  "aliases": [
+    "HAX G8 efficient dismissal",
+    "HAX G9 efficient correction",
+    "Apple: Edit, Undo, Retry, Adjust near generated content",
+    "Regenerate (Shape of AI Inputs)"
+  ],
+  "found_in": [
+    "ChatGPT",
+    "Claude",
+    "Gemini",
+    "Cursor",
+    "AI Elements",
+    "assistant-ui"
+  ],
+  "anatomy": [
+    {
+      "part": "stop-in-every",
+      "description": "Stop in every non-idle state (composer button, Esc)"
+    },
+    {
+      "part": "regenerate-on-every",
+      "description": "Regenerate on every terminal assistant message"
+    },
+    {
+      "part": "edit-and-resend-on-every",
+      "description": "Edit-and-resend on every user message"
+    },
+    {
+      "part": "partial-output-kept",
+      "description": "partial output kept on stop, labelled Stopped"
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "Esc stops",
+      "Regenerate branches",
+      "Edit resends"
+    ]
+  },
+  "accessibility": {
+    "notes": "Stop reachable within one Tab of the composer; stop announced."
+  },
+  "usage": {
+    "use_when": [
+      "always"
+    ],
+    "avoid_when": [
+      "hiding stop during tool runs",
+      "discarding partial output on stop"
+    ],
+    "pairs_well_with": [
+      "message-state-machine",
+      "composer",
+      "message-actions",
+      "branch-picker"
+    ],
+    "reuses": [
+      "button",
+      "icon-button"
+    ],
+    "exemplars": [
+      "Cursor best practices — 'Stop button: click to cancel agents heading in wrong directions'"
+    ]
+  },
+  "rules": {
+    "shared": [],
+    "resolved": []
+  },
+  "sources": [
+    "https://cursor.com/blog/agent-best-practices",
+    "https://developer.apple.com/design/human-interface-guidelines/generative-ai"
+  ],
+  "path": "spec/catalog/ai/foundations/stop-regenerate-always",
+  "skill": "spec/catalog/ai/foundations/stop-regenerate-always/SKILL.md",
+  "missing": [
+    "states.treatment: enabled",
+    "states.a11y: enabled",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)"
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "id": "suggested-prompts",
+  "name": "Suggested prompts and follow-ups",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "conversation",
+  "tier": 1,
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Specific, contextual prompt buttons at the start of a conversation and after answers; buttons, not text.",
+  "aliases": [
+    "Suggestion (AI Elements, assistant-ui)",
+    "PromptSuggestion (prompt-kit)",
+    "Follow up / Suggestions / Templates (Shape of AI Wayfinders)",
+    "CopilotKit suggestions",
+    "related questions"
+  ],
+  "found_in": [
+    "ChatGPT",
+    "Claude",
+    "Gemini",
+    "Copilot",
+    "Perplexity",
+    "AI Elements",
+    "assistant-ui",
+    "CopilotKit"
+  ],
+  "anatomy": [
+    {
+      "part": "group-label",
+      "description": "group label (Suggested)"
+    },
+    {
+      "part": "row-of-2",
+      "description": "row of 2–6 pill buttons (starter) or 2–4 (follow-up)"
+    },
+    {
+      "part": "optional-card-variant",
+      "description": "optional card variant with icon and description for empty state"
+    }
+  ],
+  "states": [
+    {
+      "id": "loading"
+    }
+  ],
+  "modes": [
+    {
+      "id": "starter",
+      "notes": "starter (empty state)"
+    },
+    {
+      "id": "follow-up",
+      "notes": "follow-up (after answer)"
+    },
+    {
+      "id": "hidden"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "click sends the prompt (default) or fills the composer when the prompt has slots",
+      "horizontal scroll on narrow screens"
+    ]
+  },
+  "accessibility": {
+    "notes": "Real buttons inside a labelled group; keyboard reachable scroll row; sent suggestion appears as the user's message."
+  },
+  "tokens": {
+    "consumes": [
+      "radius.pill",
+      "color.border.subtle",
+      "color.bg.surface-raised",
+      "type.body.sm",
+      "space.gap.sm"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "empty states",
+      "after answers where a next step is likely",
+      "onboarding to capabilities"
+    ],
+    "avoid_when": [
+      "generic suggestions ('Get ideas')",
+      "engagement-bait follow-ups unrelated to the task"
+    ],
+    "pairs_well_with": [
+      "capability-empty-state",
+      "composer",
+      "message-actions"
+    ],
+    "reuses": [
+      "button",
+      "tag",
+      "scroll-area",
+      "card"
+    ],
+    "exemplars": [
+      "NN/g (Jun 2025) — 'Easy family dinner ideas' beats generic",
+      "NN/g (Apr 2026) — suggested questions as buttons, not text"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://www.nngroup.com/articles/designing-use-case-prompt-suggestions/",
+    "https://www.nngroup.com/articles/ai-chatbots-design-guidelines/",
+    "https://elements.ai-sdk.dev/components/suggestion"
+  ],
+  "path": "spec/catalog/ai/conversation/suggested-prompts",
+  "skill": "spec/catalog/ai/conversation/suggested-prompts/SKILL.md",
+  "missing": [
+    "states.treatment: loading",
+    "states.a11y: loading",
+    "modes.treatment: starter, follow-up, hidden",
+    "modes.a11y: starter, follow-up, hidden",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

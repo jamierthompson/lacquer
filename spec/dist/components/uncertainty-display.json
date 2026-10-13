@@ -1,0 +1,164 @@
+{
+  "id": "uncertainty-display",
+  "name": "Confidence / uncertainty display",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "trust",
+  "tier": 2,
+  "maturity": "emerging",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Show uncertainty as specific first-person language or localised categorical markers; the evidence says raw probabilities do not help.",
+  "aliases": [
+    "Confidence Signal (Smashing)",
+    "Caveat (Shape of AI)",
+    "citation strength indicator",
+    "edit-likelihood highlighting"
+  ],
+  "found_in": [
+    "Copilot code review",
+    "Perplexity",
+    "research prototypes"
+  ],
+  "anatomy": [
+    {
+      "part": "preferred",
+      "description": "preferred: first-person, specific hedge inside the answer"
+    },
+    {
+      "part": "categorical-badge",
+      "description": "categorical badge (high/medium/low) localised to a claim, hunk or cell"
+    },
+    {
+      "part": "n-best-alternatives-when",
+      "description": "N-best alternatives when confidence is low"
+    },
+    {
+      "part": "never-a-bare",
+      "description": "never a bare percentage without context"
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    }
+  ],
+  "modes": [
+    {
+      "id": "confident",
+      "notes": "confident (no marker)"
+    },
+    {
+      "id": "hedged"
+    },
+    {
+      "id": "low",
+      "notes": "low (alternatives shown)"
+    },
+    {
+      "id": "unknown",
+      "notes": "unknown (no signal shown)"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "hover for basis",
+      "open alternatives"
+    ]
+  },
+  "accessibility": {
+    "notes": "Text hedge is inherently accessible; badges carry text; colour never the only signal."
+  },
+  "tokens": {
+    "consumes": [
+      "color.status.warning",
+      "color.fg.muted",
+      "type.label.sm"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "a calibrated signal exists and affects a decision"
+    ],
+    "avoid_when": [
+      "no calibrated signal (show nothing)",
+      "numeric percentages for general audiences",
+      "global scores on a whole answer"
+    ],
+    "pairs_well_with": [
+      "inline-citation",
+      "explainability-popover",
+      "never-fake-confidence"
+    ],
+    "reuses": [
+      "badge",
+      "tooltip",
+      "highlight"
+    ],
+    "exemplars": [
+      "Kim et al. FAccT 2024 — 'I'm not sure, but…' reduced over-reliance and increased accuracy",
+      "Vasconcelos et al. TOCHI 2024 — highlighting likely-to-be-edited tokens helped; generation probability did not",
+      "PAIR — display confidence only when it improves decisions"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://arxiv.org/abs/2405.00623",
+    "https://arxiv.org/abs/2302.07248",
+    "https://pair.withgoogle.com/chapter/explainability-trust/"
+  ],
+  "path": "spec/catalog/ai/trust/uncertainty-display",
+  "skill": "spec/catalog/ai/trust/uncertainty-display/SKILL.md",
+  "missing": [
+    "states.treatment: enabled",
+    "states.a11y: enabled",
+    "modes.treatment: confident, hedged, low, unknown",
+    "modes.a11y: confident, hedged, low, unknown",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

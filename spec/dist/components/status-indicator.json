@@ -1,0 +1,154 @@
+{
+  "id": "status-indicator",
+  "name": "Status Indicator",
+  "kind": "component",
+  "catalog": "core",
+  "group": "data-display",
+  "tier": 2,
+  "atomic_level": "atom",
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "A small dot or light conveying operational or presence status, always paired with text.",
+  "aliases": [
+    "Status light",
+    "Indicator",
+    "StateLabel",
+    "PresenceBadge",
+    "Dot",
+    "Health dot"
+  ],
+  "found_in": [
+    "Spectrum",
+    "Polaris",
+    "Mantine",
+    "Chakra UI",
+    "Primer",
+    "Fluent 2",
+    "Ant Design"
+  ],
+  "anatomy": [
+    {
+      "part": "dot-ring",
+      "description": "dot/ring"
+    },
+    {
+      "part": "label-text",
+      "description": "label text"
+    },
+    {
+      "part": "optional-pulse-animation",
+      "description": "optional pulse animation"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "variant",
+      "values": [
+        "neutral",
+        "info",
+        "success",
+        "warning",
+        "danger",
+        "pending",
+        "pulsing"
+      ]
+    },
+    {
+      "axis": "size",
+      "values": [
+        "sm",
+        "md"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    }
+  ],
+  "accessibility": {
+    "notes": "ARIA: Dot is `aria-hidden`; the status must exist as text or via `aria-label` on the container.\nKeyboard: None."
+  },
+  "tokens": {
+    "consumes": [
+      "color.bg.success",
+      "color.bg.danger",
+      "size.icon.xs",
+      "radius.full",
+      "motion.duration.slow"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "Service health, user presence, job/run state, model availability"
+    ],
+    "avoid_when": [
+      "Colour is the only differentiator between states"
+    ],
+    "pairs_well_with": [
+      "avatar",
+      "list-view",
+      "stat",
+      "tag"
+    ],
+    "ai_products_rely_on": true
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://opensource.adobe.com/spectrum-design-data/components",
+    "https://github.com/Shopify/polaris/tree/main/polaris-react/src/components"
+  ],
+  "path": "spec/catalog/core/data-display/status-indicator",
+  "skill": "spec/catalog/core/data-display/status-indicator/SKILL.md",
+  "missing": [
+    "states.treatment: enabled",
+    "states.a11y: enabled",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "id": "generation-progress",
+  "name": "Generation progress",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "generation",
+  "tier": 1,
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "A ladder from shimmer to steps to a real determinate bar, with a background-job hand-off for long runs.",
+  "aliases": [
+    "Shimmer / Plan streaming (AI Elements)",
+    "st.status (Streamlit)",
+    "Deep Research progress",
+    "image generation percent + blurred preview"
+  ],
+  "found_in": [
+    "ChatGPT",
+    "Gemini",
+    "Perplexity",
+    "Lovable",
+    "v0",
+    "AI Elements",
+    "Streamlit"
+  ],
+  "anatomy": [
+    {
+      "part": "indeterminate-shimmer",
+      "description": "indeterminate shimmer (<5 s)"
+    },
+    {
+      "part": "step-list",
+      "description": "step list with active step (5 s–1 min)"
+    },
+    {
+      "part": "determinate-bar",
+      "description": "determinate bar with count or ETA (>1 min, real numbers only)"
+    },
+    {
+      "part": "background-job-hand-off",
+      "description": "background job hand-off"
+    }
+  ],
+  "states": [
+    {
+      "id": "indeterminate"
+    }
+  ],
+  "modes": [
+    {
+      "id": "stepped"
+    },
+    {
+      "id": "determinate"
+    },
+    {
+      "id": "backgrounded"
+    },
+    {
+      "id": "done"
+    },
+    {
+      "id": "failed"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "stop",
+      "run in background",
+      "open partial results"
+    ]
+  },
+  "accessibility": {
+    "notes": "progressbar semantics when determinate; status region for step changes (once per step)."
+  },
+  "tokens": {
+    "consumes": [
+      "shimmer.duration",
+      "color.accent.brand",
+      "color.status.running",
+      "type.body.sm"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "any generation longer than a second"
+    ],
+    "avoid_when": [
+      "invented progress values",
+      "showing 100% before the result"
+    ],
+    "pairs_well_with": [
+      "thinking-indicator",
+      "background-job-card",
+      "latency-patterns"
+    ],
+    "reuses": [
+      "progress",
+      "skeleton",
+      "list",
+      "spinner"
+    ],
+    "exemplars": [
+      "Apple HIG — generate in the background while a person uses another part of the app",
+      "Perplexity — visible retrieval steps"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://developer.apple.com/design/human-interface-guidelines/generative-ai",
+    "https://elements.ai-sdk.dev/components/plan"
+  ],
+  "path": "spec/catalog/ai/generation/generation-progress",
+  "skill": "spec/catalog/ai/generation/generation-progress/SKILL.md",
+  "missing": [
+    "states.treatment: indeterminate",
+    "states.a11y: indeterminate",
+    "modes.treatment: stepped, determinate, backgrounded, done, failed",
+    "modes.a11y: stepped, determinate, backgrounded, done, failed",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

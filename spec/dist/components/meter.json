@@ -1,0 +1,169 @@
+{
+  "id": "meter",
+  "name": "Meter",
+  "kind": "component",
+  "catalog": "core",
+  "group": "feedback",
+  "tier": 3,
+  "atomic_level": "atom",
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Displays a static measurement inside a known range, such as quota or storage used.",
+  "aliases": [
+    "Gauge",
+    "MeterGroup",
+    "Usage bar",
+    "Capacity indicator"
+  ],
+  "found_in": [
+    "Base UI",
+    "Spectrum",
+    "Apple HIG",
+    "PrimeVue",
+    "Open UI"
+  ],
+  "anatomy": [
+    {
+      "part": "track",
+      "description": "track"
+    },
+    {
+      "part": "fill",
+      "description": "fill"
+    },
+    {
+      "part": "threshold-markers",
+      "description": "threshold markers"
+    },
+    {
+      "part": "value-label",
+      "description": "value label"
+    },
+    {
+      "part": "legend",
+      "description": "legend"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "variant",
+      "values": [
+        "linear",
+        "circular",
+        "segmented",
+        "with-thresholds"
+      ]
+    },
+    {
+      "axis": "size",
+      "values": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    },
+    {
+      "id": "success"
+    },
+    {
+      "id": "warning"
+    },
+    {
+      "id": "invalid"
+    }
+  ],
+  "accessibility": {
+    "apg": {
+      "pattern": "Meter",
+      "url": "https://www.w3.org/WAI/ARIA/apg/patterns/meter/"
+    },
+    "notes": "ARIA: `role=\"meter\"` with `aria-valuenow/min/max` and `aria-valuetext`; distinct from progressbar.\nKeyboard: Not focusable."
+  },
+  "tokens": {
+    "consumes": [
+      "radius.pill",
+      "color.bg.success",
+      "color.bg.warning",
+      "color.bg.danger",
+      "size.progress.height"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "Storage, credits, rate limits, password strength, token budgets"
+    ],
+    "avoid_when": [
+      "The value is progress toward completion — use Progress"
+    ],
+    "pairs_well_with": [
+      "stat",
+      "alert",
+      "card"
+    ],
+    "ai_products_rely_on": true
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://www.w3.org/WAI/ARIA/apg/patterns/meter/",
+    "https://base-ui.com/react/overview/quick-start",
+    "https://opensource.adobe.com/spectrum-design-data/components"
+  ],
+  "path": "spec/catalog/core/feedback/meter",
+  "skill": "spec/catalog/core/feedback/meter/SKILL.md",
+  "missing": [
+    "states.treatment: enabled, success, warning, invalid",
+    "states.a11y: enabled, success, warning, invalid",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "id": "hitl-gate",
+  "name": "Human-in-the-loop gate / clarifying question",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "agentic",
+  "tier": 1,
+  "maturity": "emerging",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "The agent pauses and asks a structured question; the answer is folded back into the run and recorded in the thread.",
+  "aliases": [
+    "useHumanInTheLoop / useInterrupt (CopilotKit)",
+    "Escalation Pathway (Smashing)",
+    "AskUserQuestion",
+    "clarifying questions (Cursor)",
+    "Deep Research plan review (Gemini)"
+  ],
+  "found_in": [
+    "CopilotKit",
+    "Claude Code",
+    "Cursor",
+    "Gemini",
+    "ChatGPT Agent"
+  ],
+  "anatomy": [
+    {
+      "part": "inline-question-card",
+      "description": "inline question card: single-choice, multi-choice, free text or form"
+    },
+    {
+      "part": "context-of-why",
+      "description": "context of why it is asking"
+    },
+    {
+      "part": "submit-skip",
+      "description": "submit / skip"
+    },
+    {
+      "part": "answer-becomes",
+      "description": "answer becomes a user message"
+    }
+  ],
+  "states": [
+    {
+      "id": "input-streaming"
+    }
+  ],
+  "modes": [
+    {
+      "id": "answered"
+    },
+    {
+      "id": "skipped"
+    },
+    {
+      "id": "expired"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "answer without stopping unrelated work",
+      "skip with default",
+      "edit answer later"
+    ]
+  },
+  "accessibility": {
+    "notes": "Form semantics with a group label; focus moved when it blocks; announced assertively when the run is paused."
+  },
+  "tokens": {
+    "consumes": [
+      "color.bg.surface-raised",
+      "color.border.strong",
+      "radius.md",
+      "space.gap.md"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "ambiguous requests",
+      "high-stakes branches",
+      "missing constraints"
+    ],
+    "avoid_when": [
+      "asking what the agent could safely infer or look up"
+    ],
+    "pairs_well_with": [
+      "approval-prompt",
+      "plan-view",
+      "agent-status"
+    ],
+    "reuses": [
+      "form",
+      "radio-group",
+      "checkbox",
+      "textarea",
+      "button",
+      "card"
+    ],
+    "exemplars": [
+      "CopilotKit — 'lets an agent pause mid-run to collect input, confirmation, or a choice'",
+      "NN/g — ChatGPT Agent failed to ask about constraints up front"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://docs.copilotkit.ai/agent-spec/human-in-the-loop",
+    "https://www.nngroup.com/articles/impressions-chatgpt-agent/"
+  ],
+  "path": "spec/catalog/ai/agentic/hitl-gate",
+  "skill": "spec/catalog/ai/agentic/hitl-gate/SKILL.md",
+  "missing": [
+    "states.treatment: input-streaming",
+    "states.a11y: input-streaming",
+    "modes.treatment: answered, skipped, expired",
+    "modes.a11y: answered, skipped, expired",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

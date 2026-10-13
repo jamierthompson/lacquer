@@ -1,0 +1,581 @@
+{
+  "id": "dialog",
+  "name": "Dialog",
+  "kind": "component",
+  "catalog": "core",
+  "group": "overlays",
+  "tier": 1,
+  "atomic_level": "organism",
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Modal window that interrupts the flow for a focused task and traps focus until dismissed.",
+  "aliases": [
+    "Modal",
+    "Standard dialog",
+    "Sheet (desktop)",
+    "Window",
+    "Takeover dialog",
+    "Modal dialog"
+  ],
+  "found_in": [
+    "Material 3",
+    "Apple HIG",
+    "Fluent 2",
+    "Carbon",
+    "Polaris",
+    "Spectrum",
+    "Atlassian",
+    "USWDS",
+    "Ant Design",
+    "MUI",
+    "Chakra UI",
+    "Mantine",
+    "Radix",
+    "shadcn/ui",
+    "Base UI",
+    "Ark UI",
+    "React Aria",
+    "Headless UI",
+    "Nuxt UI",
+    "PrimeVue",
+    "Bootstrap 5",
+    "Open UI"
+  ],
+  "anatomy": [
+    {
+      "part": "scrim",
+      "description": "Full-viewport backdrop in color.bg.scrim. Click-to-close is a choice, not a default; destructive confirms disable it."
+    },
+    {
+      "part": "root",
+      "element": "dialog",
+      "description": "The container. role=\"dialog\" aria-modal=\"true\". Prefer the native `<dialog>` with showModal(); it provides the top layer and inertness for free."
+    },
+    {
+      "part": "title",
+      "element": "h2",
+      "description": "Labels the dialog via aria-labelledby. Required. States the task, not the product (\"Rename project\", not \"Project\")."
+    },
+    {
+      "part": "close-button",
+      "required": false,
+      "description": "Icon button with aria-label=\"Close\". Omit for dialogs that must be answered (see alert-dialog)."
+    },
+    {
+      "part": "body",
+      "description": "The scroll region when content overflows; the header and footer stay fixed."
+    },
+    {
+      "part": "footer",
+      "description": "Actions, right-aligned on desktop, stacked on mobile; the primary action is last in DOM and visual order."
+    },
+    {
+      "part": "focus-trap",
+      "description": "Behavioural part. Tab cycles inside the dialog while open."
+    }
+  ],
+  "variants": [
+    {
+      "axis": "size",
+      "values": [
+        "sm",
+        "md",
+        "lg",
+        "xl",
+        "full"
+      ],
+      "default": "md",
+      "guidance": "Width only. Height follows content up to a viewport-relative max, then the body scrolls."
+    },
+    {
+      "axis": "modality",
+      "values": [
+        "modal",
+        "non-modal"
+      ],
+      "default": "modal",
+      "guidance": "Non-modal dialogs do not trap focus or use a scrim; they are for tool palettes, not tasks."
+    }
+  ],
+  "modifiers": [
+    "scrollable-body",
+    "nested"
+  ],
+  "states": [
+    {
+      "id": "enabled",
+      "treatment": "color.bg.surface, radius.surface, shadow.lg, z.modal; scrim at color.bg.scrim.",
+      "a11y": "role=\"dialog\" aria-modal=\"true\" aria-labelledby=<title id>. Everything behind it is inert."
+    },
+    {
+      "id": "expanded",
+      "treatment": "Entry motion of motion.duration.base — fade + 2–4% scale, opacity-only under reduced motion.",
+      "a11y": "Focus moves in on open; announcement is the title."
+    },
+    {
+      "id": "loading",
+      "treatment": "aria-busy on the body; footer actions keep width (see button loading).",
+      "a11y": "aria-busy=\"true\" on the body region."
+    },
+    {
+      "id": "focus-visible",
+      "treatment": "Standard ring on every focusable inside; the dialog container itself is not focused unless nothing inside is.",
+      "a11y": "Implicit."
+    },
+    {
+      "id": "hover",
+      "required": false,
+      "treatment": "none on the container; close-button and footer buttons own their own.",
+      "a11y": "none"
+    },
+    {
+      "id": "active",
+      "required": false,
+      "treatment": "none on the container.",
+      "a11y": "none"
+    },
+    {
+      "id": "disabled",
+      "required": false,
+      "treatment": "Dialogs are not disabled; actions inside may be.",
+      "a11y": "none"
+    }
+  ],
+  "api": {
+    "props": [
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": true,
+        "maps_to": "open attribute / showModal()"
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "required": true
+      },
+      {
+        "name": "size",
+        "type": "enum(sm|md|lg|xl|full)",
+        "default": "md"
+      },
+      {
+        "name": "modal",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "name": "dismissible",
+        "type": "boolean",
+        "default": true,
+        "description": "Whether Escape and scrim-click close it. False for confirms that need an explicit answer."
+      },
+      {
+        "name": "initialFocus",
+        "type": "ref | selector",
+        "description": "Where focus lands on open. Default is the first focusable element; for destructive confirms, the cancel button."
+      }
+    ],
+    "slots": [
+      "title",
+      "description",
+      "children",
+      "footer"
+    ],
+    "events": [
+      {
+        "name": "openChange",
+        "payload": "boolean"
+      }
+    ],
+    "composition": "Trigger, Title, Description, Body and Footer are composed as children so any content works and headings stay real headings. Size and modality are props because the system owns those sets. Do not add `confirmLabel` / `onConfirm` props; that is alert-dialog.\n"
+  },
+  "accessibility": {
+    "apg": {
+      "pattern": "Dialog (Modal)",
+      "url": "https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/"
+    },
+    "role": "dialog",
+    "name": "aria-labelledby pointing at the title; aria-describedby at the description when present.",
+    "aria": [
+      {
+        "attr": "aria-modal",
+        "on": "root",
+        "value": "true"
+      },
+      {
+        "attr": "aria-labelledby",
+        "on": "root",
+        "value": "id of title"
+      },
+      {
+        "attr": "aria-describedby",
+        "on": "root",
+        "when": "a description exists"
+      },
+      {
+        "attr": "inert",
+        "on": "everything outside the dialog",
+        "when": "open and modal"
+      }
+    ],
+    "keyboard": [
+      {
+        "key": "Tab / Shift+Tab",
+        "action": "Cycles focus within the dialog; never escapes to the page."
+      },
+      {
+        "key": "Escape",
+        "action": "Closes the dialog when dismissible.",
+        "when": "dismissible"
+      }
+    ],
+    "focus": "On open, focus moves to initialFocus, else the first focusable, else the container (tabindex=-1). On close, focus returns to the element that opened it. If that element is gone, focus the nearest logical ancestor.",
+    "announcements": "The title is announced on open by virtue of focus movement; no extra live region."
+  },
+  "tokens": {
+    "consumes": [
+      "color.bg.surface",
+      "color.bg.scrim",
+      "color.fg.default",
+      "color.fg.muted",
+      "radius.surface",
+      "shadow.lg",
+      "z.modal",
+      "space.inset.lg",
+      "space.gap.md",
+      "type.heading.md",
+      "type.body.md",
+      "motion.duration.base",
+      "motion.easing.standard"
+    ]
+  },
+  "content": {
+    "label": "Title is the task as a verb phrase (\"Rename project\", \"Invite teammates\"). Footer buttons name the outcome (\"Rename\", \"Send invites\"), never \"OK\".",
+    "limits": "One paragraph of description at most; longer content is a page, not a dialog."
+  },
+  "usage": {
+    "use_when": [
+      "A short task must be completed or abandoned before the user continues.",
+      "The user needs to confirm something with consequences (use alert-dialog for the destructive case)."
+    ],
+    "avoid_when": [
+      "The content is long or deserves its own URL — use a page.",
+      "You are stacking dialogs — flatten into steps or use a drawer.",
+      "The content is contextual and non-blocking — use a popover.",
+      "On mobile with a long form — use a full-screen or bottom drawer."
+    ],
+    "instead": [
+      {
+        "when": "Destructive confirmation requiring an explicit answer",
+        "use": "alert-dialog"
+      },
+      {
+        "when": "Side panel with the page still usable",
+        "use": "drawer"
+      },
+      {
+        "when": "Small contextual content anchored to a trigger",
+        "use": "popover"
+      }
+    ],
+    "pairs_well_with": [
+      "alert-dialog",
+      "focus-trap",
+      "portal",
+      "form",
+      "button"
+    ],
+    "ai_products_rely_on": true
+  },
+  "rules": {
+    "shared": [
+      "LQ-STATE-03",
+      "LQ-FOCUS-01",
+      "LQ-SEM-01",
+      "LQ-NAME-01",
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01",
+      "LQ-MOTION-02",
+      "LQ-LAYER-01",
+      "LQ-COPY-01"
+    ],
+    "local": [
+      {
+        "id": "LQ-DIALOG-01",
+        "level": "MUST",
+        "polarity": "require",
+        "title": "Focus in, focus back",
+        "statement": "Opening moves focus inside the dialog; closing returns focus to the trigger.",
+        "detect": {
+          "runtime": "document.activeElement is inside the dialog after open and equals the trigger after close."
+        },
+        "fix": "Use the native <dialog>.showModal() or the renderer's focus-scope primitive; store the trigger on open.",
+        "source": "apg"
+      },
+      {
+        "id": "LQ-DIALOG-02",
+        "level": "MUST",
+        "polarity": "require",
+        "title": "Background is inert",
+        "statement": "While a modal dialog is open, content outside it is inert (not focusable, not clickable, hidden from assistive tech).",
+        "detect": {
+          "runtime": "Tab from the last focusable inside wraps to the first; outside elements are not reachable."
+        },
+        "fix": "Use <dialog>.showModal() or set `inert` on siblings of the portal root.",
+        "source": "apg"
+      },
+      {
+        "id": "LQ-DIALOG-03",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "Never an unlabeled dialog",
+        "statement": "Every dialog has a visible title referenced by aria-labelledby; a visually-hidden title is acceptable only for full-screen media viewers.",
+        "detect": {
+          "static": "role=dialog without aria-labelledby, or the referenced element is empty."
+        },
+        "fix": "Add a Title part.",
+        "source": "wcag"
+      },
+      {
+        "id": "LQ-DIALOG-04",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Destructive confirms default to safety",
+        "statement": "When the primary action is destructive, initial focus and the default (Enter) action are the non-destructive option, and scrim-click does not close.",
+        "detect": {
+          "runtime": "On open, activeElement is the cancel button when a destructive button is present."
+        },
+        "fix": "Set initialFocus to the cancel action and dismissible=false."
+      }
+    ],
+    "resolved": [
+      {
+        "id": "LQ-STATE-03",
+        "level": "MUST",
+        "polarity": "require",
+        "title": "Every state reaches the accessibility tree",
+        "statement": "Every visible state has an ARIA expression or an explicit \"none\" in the spec; selected, expanded, invalid, busy and current are never visual-only.",
+        "detect": {
+          "static": "For each state the component declares, the matching attribute (aria-selected, aria-expanded, aria-invalid, aria-busy, aria-current, aria-checked) is present when the state is active."
+        },
+        "fix": "Set the attribute the APG pattern specifies; do not invent a new one.",
+        "applies_to": [
+          "*"
+        ],
+        "source": "apg",
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-FOCUS-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "Never remove focus without replacing it",
+        "statement": "No `outline: none` / `outline-0` / `focus:outline-none` without a `:focus-visible` replacement that has ≥3:1 contrast against both the component and the page.",
+        "detect": {
+          "static": "Class or style removes outline and no focus-visible ring class/rule exists on the same element.",
+          "runtime": "Tab to the element; the focused and unfocused screenshots must differ at ≥3:1 along the element's edge."
+        },
+        "fix": "Use `focus-visible:ring-2 ring-ring ring-offset-2` (or the binding's equivalent) and keep `:focus` untouched.",
+        "applies_to": [
+          "*"
+        ],
+        "source": "wcag",
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-SEM-01",
+        "level": "MUST",
+        "polarity": "require",
+        "title": "Native element first",
+        "statement": "Prefer the native element (button, a, select, details, input) until a product requirement makes it impossible; a div or span with a click handler and a role is a defect unless the spec names an exception.",
+        "detect": {
+          "static": "div|span with onClick/onKeyDown and no native equivalent in the subtree."
+        },
+        "fix": "Replace with the native element; keep the styling.",
+        "applies_to": [
+          "*"
+        ],
+        "source": "apg",
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-NAME-01",
+        "level": "MUST",
+        "polarity": "require",
+        "title": "Every control has an accessible name",
+        "statement": "Every interactive element has an accessible name from content, a label, aria-label or aria-labelledby; placeholder text and title attributes do not count.",
+        "detect": {
+          "static": "Compute the accessible name per accname 1.2; empty is a failure."
+        },
+        "fix": "Add visible text, a <label>, or aria-label for icon-only controls.",
+        "applies_to": [
+          "*"
+        ],
+        "source": "wcag",
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-MOTION-02",
+        "level": "MUST",
+        "polarity": "require",
+        "title": "Reduced motion is honoured",
+        "statement": "Any transition longer than 150 ms or any looping animation has a `prefers-reduced-motion` branch that removes movement (opacity-only is fine).",
+        "detect": {
+          "static": "Animation/transition utilities present without a motion-reduce: variant or media query.",
+          "runtime": "Emulate prefers-reduced-motion and assert no transform-based animation is running."
+        },
+        "fix": "Add `motion-reduce:transition-none` / `motion-reduce:animate-none` or an equivalent media query.",
+        "applies_to": [
+          "*"
+        ],
+        "source": "wcag",
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-LAYER-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No stacked modals",
+        "statement": "A modal dialog never opens another modal dialog; use a step inside the same dialog, a drawer, or a non-modal popover.",
+        "detect": {
+          "runtime": "Two elements with role=dialog and aria-modal=true are open at once."
+        },
+        "fix": "Flatten into a stepper inside one dialog, or convert the inner one to non-modal.",
+        "applies_to": [
+          "dialog",
+          "alert-dialog",
+          "drawer"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-COPY-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Labels are verb-first and specific",
+        "statement": "Action labels start with a verb and name the object (\"Save changes\", \"Delete 3 files\"); never \"OK\", \"Yes\", \"Submit\" or \"Click here\" when a specific label is possible.",
+        "detect": {
+          "static": "Button/menu-item text matches a stoplist or lacks a verb."
+        },
+        "fix": "Rewrite as verb + object, sentence case, ≤3 words where possible.",
+        "applies_to": [
+          "group:actions",
+          "dialog",
+          "alert-dialog",
+          "approval-prompt",
+          "hitl-gate"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-DIALOG-01",
+        "level": "MUST",
+        "polarity": "require",
+        "title": "Focus in, focus back",
+        "statement": "Opening moves focus inside the dialog; closing returns focus to the trigger.",
+        "detect": {
+          "runtime": "document.activeElement is inside the dialog after open and equals the trigger after close."
+        },
+        "fix": "Use the native <dialog>.showModal() or the renderer's focus-scope primitive; store the trigger on open.",
+        "source": "apg",
+        "owner": "dialog"
+      },
+      {
+        "id": "LQ-DIALOG-02",
+        "level": "MUST",
+        "polarity": "require",
+        "title": "Background is inert",
+        "statement": "While a modal dialog is open, content outside it is inert (not focusable, not clickable, hidden from assistive tech).",
+        "detect": {
+          "runtime": "Tab from the last focusable inside wraps to the first; outside elements are not reachable."
+        },
+        "fix": "Use <dialog>.showModal() or set `inert` on siblings of the portal root.",
+        "source": "apg",
+        "owner": "dialog"
+      },
+      {
+        "id": "LQ-DIALOG-03",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "Never an unlabeled dialog",
+        "statement": "Every dialog has a visible title referenced by aria-labelledby; a visually-hidden title is acceptable only for full-screen media viewers.",
+        "detect": {
+          "static": "role=dialog without aria-labelledby, or the referenced element is empty."
+        },
+        "fix": "Add a Title part.",
+        "source": "wcag",
+        "owner": "dialog"
+      },
+      {
+        "id": "LQ-DIALOG-04",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Destructive confirms default to safety",
+        "statement": "When the primary action is destructive, initial focus and the default (Enter) action are the non-destructive option, and scrim-click does not close.",
+        "detect": {
+          "runtime": "On open, activeElement is the cancel button when a destructive button is present."
+        },
+        "fix": "Set initialFocus to the cancel action and dismissible=false.",
+        "owner": "dialog"
+      }
+    ]
+  },
+  "grading": {
+    "weight": 1.5,
+    "notes": "A dialog defect blocks the whole screen, so it is weighted above an atom."
+  },
+  "sources": [
+    "https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/",
+    "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog",
+    "https://base-ui.com/react/components/dialog"
+  ],
+  "path": "spec/catalog/core/overlays/dialog",
+  "skill": "spec/catalog/core/overlays/dialog/SKILL.md",
+  "missing": [
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

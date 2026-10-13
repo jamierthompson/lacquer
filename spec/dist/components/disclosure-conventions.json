@@ -1,0 +1,94 @@
+{
+  "id": "disclosure-conventions",
+  "name": "Disclosure conventions (collapsed vs expanded by default)",
+  "kind": "principle",
+  "catalog": "ai",
+  "group": "foundations",
+  "tier": 1,
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Keeps the thread readable: detail is one click away, blocking states are never hidden.",
+  "aliases": [
+    "progressive disclosure (NN/g)",
+    "collapsed by default (AI Elements Tool)",
+    "auto-open while streaming (AI Elements Reasoning)"
+  ],
+  "found_in": [
+    "ChatGPT",
+    "Claude",
+    "Cursor",
+    "AI Elements",
+    "prompt-kit"
+  ],
+  "anatomy": [
+    {
+      "part": "collapsed-by-default",
+      "description": "collapsed by default: tool cards, sources list, activity detail, reasoning after completion"
+    },
+    {
+      "part": "open-by-default",
+      "description": "open by default: errors, approvals, needs-input, plans awaiting approval"
+    },
+    {
+      "part": "auto-open-while-streaming",
+      "description": "auto-open while streaming then collapse: reasoning"
+    },
+    {
+      "part": "grouped",
+      "description": "grouped: repeated tool calls"
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "user pin overrides defaults"
+    ]
+  },
+  "accessibility": {
+    "notes": "All disclosures are button[aria-expanded] + region."
+  },
+  "usage": {
+    "use_when": [
+      "always"
+    ],
+    "avoid_when": [
+      "expanding every tool call",
+      "hiding approvals inside collapsed cards"
+    ],
+    "pairs_well_with": [
+      "tool-call-card",
+      "reasoning-disclosure",
+      "sources-panel",
+      "approval-prompt"
+    ],
+    "reuses": [
+      "disclosure"
+    ],
+    "exemplars": [
+      "NN/g (Apr 2026) — progressive disclosure keeps the chat short",
+      "AI Elements — tools default collapsed; Reasoning auto-opens while streaming"
+    ]
+  },
+  "rules": {
+    "shared": [],
+    "resolved": []
+  },
+  "sources": [
+    "https://www.nngroup.com/articles/ai-chatbots-design-guidelines/",
+    "https://elements.ai-sdk.dev/components/tool",
+    "https://elements.ai-sdk.dev/components/reasoning"
+  ],
+  "path": "spec/catalog/ai/foundations/disclosure-conventions",
+  "skill": "spec/catalog/ai/foundations/disclosure-conventions/SKILL.md",
+  "missing": [
+    "states.treatment: enabled",
+    "states.a11y: enabled",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)"
+  ]
+}

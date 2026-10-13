@@ -1,0 +1,147 @@
+{
+  "id": "kbd",
+  "name": "Kbd",
+  "kind": "component",
+  "catalog": "core",
+  "group": "typography",
+  "tier": 2,
+  "atomic_level": "atom",
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Renders a keyboard key or chord, and doubles as the shortcut hint on menus and buttons.",
+  "aliases": [
+    "KeyboardKey",
+    "KeybindingHint",
+    "Shortcut",
+    "Hotkey"
+  ],
+  "found_in": [
+    "Chakra UI",
+    "Mantine",
+    "shadcn/ui",
+    "Nuxt UI",
+    "Polaris",
+    "Primer"
+  ],
+  "anatomy": [
+    {
+      "part": "key-cap",
+      "description": "key cap"
+    },
+    {
+      "part": "modifier-separator",
+      "description": "modifier separator"
+    },
+    {
+      "part": "group-of-caps",
+      "description": "group of caps"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "variant",
+      "values": [
+        "single-key",
+        "chord",
+        "subtle",
+        "outline"
+      ]
+    },
+    {
+      "axis": "size",
+      "values": [
+        "sm",
+        "md"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    }
+  ],
+  "accessibility": {
+    "notes": "ARIA: Native `kbd`; include the platform-correct modifier names in the text.\nKeyboard: Decorative — the shortcut itself must be bound elsewhere."
+  },
+  "tokens": {
+    "consumes": [
+      "type.code.sm",
+      "color.bg.subtle",
+      "color.border.default",
+      "radius.control",
+      "shadow.sm"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "Command palettes, menu items, empty states teaching shortcuts"
+    ],
+    "avoid_when": [
+      "The shortcut is not actually implemented"
+    ],
+    "pairs_well_with": [
+      "command-palette",
+      "dropdown-menu",
+      "tooltip"
+    ],
+    "ai_products_rely_on": true
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://chakra-ui.com/docs/components/concepts/overview",
+    "https://mantine.dev/core/package/"
+  ],
+  "path": "spec/catalog/core/typography/kbd",
+  "skill": "spec/catalog/core/typography/kbd/SKILL.md",
+  "missing": [
+    "states.treatment: enabled",
+    "states.a11y: enabled",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

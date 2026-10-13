@@ -1,0 +1,163 @@
+{
+  "id": "terminal-panel",
+  "name": "Terminal output panel",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "agentic",
+  "tier": 2,
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Console output from agent-run commands, with exit status, ANSI colour and the same follow/release scrolling rule as chat.",
+  "aliases": [
+    "Terminal, StackTrace, TestResults, Snippet (AI Elements Code)",
+    "integrated terminal (Cursor, VS Code)",
+    "Bash tool output (Claude Code)"
+  ],
+  "found_in": [
+    "Cursor",
+    "VS Code",
+    "Claude Code",
+    "AI Elements"
+  ],
+  "anatomy": [
+    {
+      "part": "header",
+      "description": "header: command, running/exit code"
+    },
+    {
+      "part": "ansi-coloured-monospace-output",
+      "description": "ANSI-coloured monospace output"
+    },
+    {
+      "part": "sticky-bottom-with-release",
+      "description": "sticky-bottom with release on scroll-up"
+    },
+    {
+      "part": "copy",
+      "description": "copy, clear, expand"
+    },
+    {
+      "part": "stack-traces",
+      "description": "stack traces with clickable paths"
+    }
+  ],
+  "states": [
+    {
+      "id": "input-available"
+    },
+    {
+      "id": "cancelled"
+    }
+  ],
+  "modes": [
+    {
+      "id": "exit-0"
+    },
+    {
+      "id": "exit-nonzero"
+    },
+    {
+      "id": "truncated"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "stop",
+      "copy",
+      "open file from trace",
+      "collapse"
+    ]
+  },
+  "accessibility": {
+    "notes": "Log region; exit status announced; output readable as text; colour not the only status signal."
+  },
+  "tokens": {
+    "consumes": [
+      "type.family.mono",
+      "color.bg.code",
+      "color.status.success",
+      "color.status.error"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "coding agents and sandboxes"
+    ],
+    "avoid_when": [
+      "consumer products (summarise instead)"
+    ],
+    "pairs_well_with": [
+      "tool-call-card",
+      "sandbox-browser-view",
+      "diff-review"
+    ],
+    "reuses": [
+      "code-block",
+      "scroll-area",
+      "badge",
+      "button"
+    ],
+    "exemplars": [
+      "AI Elements Terminal — ANSI colour support and auto-scroll (Jan 2026)"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://vercel.com/changelog/ai-code-elements"
+  ],
+  "path": "spec/catalog/ai/agentic/terminal-panel",
+  "skill": "spec/catalog/ai/agentic/terminal-panel/SKILL.md",
+  "missing": [
+    "states.treatment: input-available, cancelled",
+    "states.a11y: input-available, cancelled",
+    "modes.treatment: exit-0, exit-nonzero, truncated",
+    "modes.a11y: exit-0, exit-nonzero, truncated",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

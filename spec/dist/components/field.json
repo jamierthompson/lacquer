@@ -1,0 +1,307 @@
+{
+  "id": "field",
+  "name": "Field",
+  "kind": "component",
+  "catalog": "core",
+  "group": "inputs",
+  "tier": 1,
+  "atomic_level": "molecule",
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "The wrapper that binds label, control, description and error into one accessible unit.",
+  "aliases": [
+    "FormControl",
+    "FormField",
+    "Labelled",
+    "Field",
+    "FormItem"
+  ],
+  "found_in": [
+    "Base UI",
+    "Chakra UI",
+    "Fluent 2",
+    "Ark UI",
+    "Primer",
+    "Spectrum",
+    "shadcn/ui",
+    "Nuxt UI",
+    "Material 3",
+    "Polaris"
+  ],
+  "anatomy": [
+    {
+      "part": "label",
+      "description": "label"
+    },
+    {
+      "part": "required-indicator",
+      "description": "required indicator"
+    },
+    {
+      "part": "control-slot",
+      "description": "control slot"
+    },
+    {
+      "part": "description",
+      "description": "description"
+    },
+    {
+      "part": "error-message",
+      "description": "error message"
+    },
+    {
+      "part": "character-count",
+      "description": "character count"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "variant",
+      "values": [
+        "stacked",
+        "inline",
+        "horizontal",
+        "hidden-label"
+      ]
+    },
+    {
+      "axis": "size",
+      "values": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    },
+    {
+      "id": "hover"
+    },
+    {
+      "id": "focus-visible"
+    },
+    {
+      "id": "active"
+    },
+    {
+      "id": "disabled"
+    },
+    {
+      "id": "invalid"
+    },
+    {
+      "id": "success"
+    },
+    {
+      "id": "warning"
+    },
+    {
+      "id": "read-only"
+    },
+    {
+      "id": "filled"
+    },
+    {
+      "id": "placeholder"
+    }
+  ],
+  "accessibility": {
+    "notes": "ARIA: Generates ids and wires `aria-describedby`, `aria-invalid`, `aria-required` automatically.\nKeyboard: Delegates to the control it wraps."
+  },
+  "tokens": {
+    "consumes": [
+      "space.stack.xs",
+      "type.label.md",
+      "color.fg.danger",
+      "color.border.danger"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "Every form control — it is the unit of composition, not the raw input"
+    ],
+    "avoid_when": [
+      "Never in a form; only bare inputs inside toolbars or table cells"
+    ],
+    "pairs_well_with": [
+      "label",
+      "help-text",
+      "text-input",
+      "form"
+    ],
+    "ai_products_rely_on": true
+  },
+  "rules": {
+    "shared": [
+      "LQ-STATE-01",
+      "LQ-STATE-02",
+      "LQ-STATE-03",
+      "LQ-FOCUS-01",
+      "LQ-SEM-01",
+      "LQ-NAME-01",
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-STATE-01",
+        "level": "MUST",
+        "polarity": "require",
+        "title": "All five base states",
+        "statement": "Every interactive component implements enabled, hover, focus-visible, active and disabled with a defined visual treatment, including in dark mode.",
+        "rationale": "Most \"the UI looks unfinished\" complaints are missing states, not missing components.",
+        "detect": {
+          "static": "For each interactive element, the stylesheet or class list defines treatments for :hover, :focus-visible, :active and [disabled] / [aria-disabled].",
+          "runtime": "Drive each state and diff computed styles against the enabled state; each must differ in at least one property."
+        },
+        "fix": "Add the missing state using the component's token deltas (see its states[] treatment).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-STATE-02",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No state by colour alone",
+        "statement": "No state is expressed by colour alone; every state has a second channel (icon, weight, border, position or text).",
+        "detect": {
+          "static": "A state's class delta changes only color/background-color.",
+          "runtime": "Grayscale the screenshot of each state and check it still differs from enabled."
+        },
+        "fix": "Add an icon, border, weight or text change alongside the colour change.",
+        "applies_to": [
+          "*"
+        ],
+        "source": "wcag",
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-STATE-03",
+        "level": "MUST",
+        "polarity": "require",
+        "title": "Every state reaches the accessibility tree",
+        "statement": "Every visible state has an ARIA expression or an explicit \"none\" in the spec; selected, expanded, invalid, busy and current are never visual-only.",
+        "detect": {
+          "static": "For each state the component declares, the matching attribute (aria-selected, aria-expanded, aria-invalid, aria-busy, aria-current, aria-checked) is present when the state is active."
+        },
+        "fix": "Set the attribute the APG pattern specifies; do not invent a new one.",
+        "applies_to": [
+          "*"
+        ],
+        "source": "apg",
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-FOCUS-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "Never remove focus without replacing it",
+        "statement": "No `outline: none` / `outline-0` / `focus:outline-none` without a `:focus-visible` replacement that has ≥3:1 contrast against both the component and the page.",
+        "detect": {
+          "static": "Class or style removes outline and no focus-visible ring class/rule exists on the same element.",
+          "runtime": "Tab to the element; the focused and unfocused screenshots must differ at ≥3:1 along the element's edge."
+        },
+        "fix": "Use `focus-visible:ring-2 ring-ring ring-offset-2` (or the binding's equivalent) and keep `:focus` untouched.",
+        "applies_to": [
+          "*"
+        ],
+        "source": "wcag",
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-SEM-01",
+        "level": "MUST",
+        "polarity": "require",
+        "title": "Native element first",
+        "statement": "Prefer the native element (button, a, select, details, input) until a product requirement makes it impossible; a div or span with a click handler and a role is a defect unless the spec names an exception.",
+        "detect": {
+          "static": "div|span with onClick/onKeyDown and no native equivalent in the subtree."
+        },
+        "fix": "Replace with the native element; keep the styling.",
+        "applies_to": [
+          "*"
+        ],
+        "source": "apg",
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-NAME-01",
+        "level": "MUST",
+        "polarity": "require",
+        "title": "Every control has an accessible name",
+        "statement": "Every interactive element has an accessible name from content, a label, aria-label or aria-labelledby; placeholder text and title attributes do not count.",
+        "detect": {
+          "static": "Compute the accessible name per accname 1.2; empty is a failure."
+        },
+        "fix": "Add visible text, a <label>, or aria-label for icon-only controls.",
+        "applies_to": [
+          "*"
+        ],
+        "source": "wcag",
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://base-ui.com/react/overview/quick-start",
+    "https://chakra-ui.com/docs/components/concepts/overview"
+  ],
+  "path": "spec/catalog/core/inputs/field",
+  "skill": "spec/catalog/core/inputs/field/SKILL.md",
+  "missing": [
+    "states.treatment: enabled, hover, focus-visible, active, disabled, invalid, success, warning, read-only, filled, placeholder",
+    "states.a11y: enabled, hover, focus-visible, active, disabled, invalid, success, warning, read-only, filled, placeholder",
+    "api.props",
+    "accessibility.name",
+    "accessibility.keyboard",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

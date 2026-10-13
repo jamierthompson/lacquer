@@ -1,0 +1,161 @@
+{
+  "id": "model-mode-selector",
+  "name": "Model and mode selector",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "conversation",
+  "tier": 2,
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Mode (what the AI is allowed to do) lives in the composer; model (which engine) lives in a secondary menu.",
+  "aliases": [
+    "ModelSelector (AI Elements)",
+    "model dropdown (ChatGPT, Gemini)",
+    "Model management / Modes (Shape of AI Tuners)",
+    "Plan/Build (Lovable)",
+    "permission modes (Claude Code)",
+    "Code/Chat (Windsurf)"
+  ],
+  "found_in": [
+    "ChatGPT",
+    "Gemini",
+    "Claude",
+    "Cursor",
+    "Lovable",
+    "Windsurf",
+    "AI Elements"
+  ],
+  "anatomy": [
+    {
+      "part": "mode",
+      "description": "mode: segmented control or toggle in the composer with plain-word labels and one-line 'best for'"
+    },
+    {
+      "part": "model",
+      "description": "model: menu or searchable palette grouped by provider with logos"
+    },
+    {
+      "part": "current-selection-badge",
+      "description": "current selection badge"
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    }
+  ],
+  "modes": [
+    {
+      "id": "default"
+    },
+    {
+      "id": "open"
+    },
+    {
+      "id": "changed-mid-thread",
+      "notes": "changed mid-thread (marker in transcript)"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "search models",
+      "switch mode with shortcut (Shift+Tab in Claude Code)",
+      "multi-select for side-by-side comparison (Cursor)"
+    ]
+  },
+  "accessibility": {
+    "notes": "Listbox/menu semantics; current value announced; shortcut documented."
+  },
+  "tokens": {
+    "consumes": [
+      "color.bg.surface-raised",
+      "radius.md",
+      "type.body.sm"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "multiple models or autonomy levels are user-facing"
+    ],
+    "avoid_when": [
+      "a single model with no meaningful choice"
+    ],
+    "pairs_well_with": [
+      "composer",
+      "autonomy-dial",
+      "model-version-badge"
+    ],
+    "reuses": [
+      "select",
+      "dropdown-menu",
+      "command-palette",
+      "segmented-control",
+      "badge"
+    ],
+    "exemplars": [
+      "Gemini — 'select 3.6 Flash in the model drop down' (Jul 2026)",
+      "AI Elements ModelSelector — cmdk palette grouped by provider"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://elements.ai-sdk.dev/components/model-selector",
+    "https://gemini.google/release-notes/",
+    "https://code.claude.com/docs/en/permission-modes"
+  ],
+  "path": "spec/catalog/ai/conversation/model-mode-selector",
+  "skill": "spec/catalog/ai/conversation/model-mode-selector/SKILL.md",
+  "missing": [
+    "states.treatment: enabled",
+    "states.a11y: enabled",
+    "modes.treatment: default, open, changed-mid-thread",
+    "modes.a11y: default, open, changed-mid-thread",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

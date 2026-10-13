@@ -1,0 +1,167 @@
+{
+  "id": "message-list",
+  "name": "Message list / thread",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "conversation",
+  "tier": 1,
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "The scrolling conversation container with stick-to-bottom behaviour that releases when the user scrolls up.",
+  "aliases": [
+    "Conversation (AI Elements)",
+    "Thread (assistant-ui)",
+    "ChatContainer + ScrollButton (prompt-kit)",
+    "Chatbot (Gradio)"
+  ],
+  "found_in": [
+    "ChatGPT",
+    "Claude",
+    "Gemini",
+    "AI Elements",
+    "assistant-ui",
+    "prompt-kit"
+  ],
+  "anatomy": [
+    {
+      "part": "scroll-container",
+      "description": "scroll container"
+    },
+    {
+      "part": "message-groups",
+      "description": "message groups"
+    },
+    {
+      "part": "scroll-to-bottom-button",
+      "description": "scroll-to-bottom button"
+    },
+    {
+      "part": "empty-state-slot",
+      "description": "empty-state slot"
+    },
+    {
+      "part": "hidden-live-region",
+      "description": "hidden live region"
+    }
+  ],
+  "states": [
+    {
+      "id": "empty"
+    }
+  ],
+  "modes": [
+    {
+      "id": "following",
+      "notes": "following (stuck to bottom)"
+    },
+    {
+      "id": "released",
+      "notes": "released (user scrolled up)"
+    },
+    {
+      "id": "loading-history"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "stick-to-bottom only while user is at bottom",
+      "release on scroll-up",
+      "scroll-to-bottom button restores following",
+      "arrow keys move between messages"
+    ]
+  },
+  "accessibility": {
+    "notes": "Either role=log on the list or a separate hidden role=status region, never both; each message is an article with an accessible name; keyboard navigation between messages and into actions."
+  },
+  "tokens": {
+    "consumes": [
+      "size.measure.prose",
+      "space.gap.message",
+      "color.bg.surface"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "any threaded AI conversation"
+    ],
+    "avoid_when": [
+      "single-shot generation surfaces where a result panel is clearer"
+    ],
+    "pairs_well_with": [
+      "message",
+      "composer",
+      "capability-empty-state",
+      "live-region-strategy"
+    ],
+    "reuses": [
+      "scroll-area",
+      "button",
+      "skeleton",
+      "divider"
+    ],
+    "exemplars": [
+      "NN/g (Apr 2026): do not autoscroll users to the end of a response",
+      "AI Elements ConversationScrollButton"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://www.nngroup.com/articles/ai-chatbots-design-guidelines/",
+    "https://elements.ai-sdk.dev/overview"
+  ],
+  "path": "spec/catalog/ai/conversation/message-list",
+  "skill": "spec/catalog/ai/conversation/message-list/SKILL.md",
+  "missing": [
+    "states.treatment: empty",
+    "states.a11y: empty",
+    "modes.treatment: following, released, loading-history",
+    "modes.a11y: following, released, loading-history",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

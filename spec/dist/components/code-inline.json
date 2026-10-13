@@ -1,0 +1,147 @@
+{
+  "id": "code-inline",
+  "name": "Inline Code",
+  "kind": "component",
+  "catalog": "core",
+  "group": "typography",
+  "tier": 2,
+  "atomic_level": "atom",
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Marks a short code token inside running text.",
+  "aliases": [
+    "Code",
+    "InlineCode",
+    "kbd-adjacent",
+    "Mono"
+  ],
+  "found_in": [
+    "Atlassian",
+    "Chakra UI",
+    "Mantine",
+    "Polaris",
+    "Spectrum",
+    "shadcn/ui",
+    "Carbon"
+  ],
+  "anatomy": [
+    {
+      "part": "mono-text",
+      "description": "mono text"
+    },
+    {
+      "part": "subtle-background",
+      "description": "subtle background"
+    },
+    {
+      "part": "padding",
+      "description": "padding"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "variant",
+      "values": [
+        "default",
+        "subtle",
+        "danger"
+      ]
+    },
+    {
+      "axis": "size",
+      "values": [
+        "sm",
+        "md"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    }
+  ],
+  "accessibility": {
+    "notes": "ARIA: Native `code`.\nKeyboard: None."
+  },
+  "tokens": {
+    "consumes": [
+      "type.code.sm",
+      "color.bg.subtle",
+      "radius.control",
+      "space.inset.2xs",
+      "color.fg.default"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "File names, flags, identifiers inside a sentence"
+    ],
+    "avoid_when": [
+      "Multi-line snippets — use a code block"
+    ],
+    "pairs_well_with": [
+      "code-block",
+      "prose",
+      "kbd"
+    ],
+    "ai_products_rely_on": true
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://atlassian.design/components",
+    "https://chakra-ui.com/docs/components/concepts/overview"
+  ],
+  "path": "spec/catalog/core/typography/code-inline",
+  "skill": "spec/catalog/core/typography/code-inline/SKILL.md",
+  "missing": [
+    "states.treatment: enabled",
+    "states.a11y: enabled",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

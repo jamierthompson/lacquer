@@ -1,0 +1,160 @@
+{
+  "id": "virtual-list",
+  "name": "Virtual List",
+  "kind": "component",
+  "catalog": "core",
+  "group": "utilities",
+  "tier": 2,
+  "atomic_level": "primitive",
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Renders only visible rows of a large collection, with optional infinite loading.",
+  "aliases": [
+    "Virtualizer",
+    "VirtualScroller",
+    "Windowing",
+    "Infinite scroll",
+    "Lazy list"
+  ],
+  "found_in": [
+    "React Aria",
+    "Fluent 2",
+    "PrimeVue",
+    "MUI",
+    "Ant Design"
+  ],
+  "anatomy": [
+    {
+      "part": "scroll-container",
+      "description": "scroll container"
+    },
+    {
+      "part": "spacer-elements",
+      "description": "spacer elements"
+    },
+    {
+      "part": "rendered-window",
+      "description": "rendered window"
+    },
+    {
+      "part": "item-measurement-cache",
+      "description": "item measurement cache"
+    },
+    {
+      "part": "sentinel-loader",
+      "description": "sentinel/loader"
+    },
+    {
+      "part": "scroll-restoration",
+      "description": "scroll restoration"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "variant",
+      "values": [
+        "fixed-height",
+        "variable-height",
+        "grid",
+        "infinite",
+        "bidirectional"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    },
+    {
+      "id": "loading"
+    },
+    {
+      "id": "empty"
+    },
+    {
+      "id": "skeleton"
+    }
+  ],
+  "accessibility": {
+    "notes": "ARIA: Expose `aria-setsize` and `aria-posinset` (or `aria-rowcount`) so assistive tech knows the true total.\nKeyboard: Keyboard navigation must move through all items, not only rendered ones; Home/End reach true bounds."
+  },
+  "tokens": {
+    "consumes": [
+      "size.control.row",
+      "space.gap.2xs"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "Thousands of rows, long chat transcripts, log viewers"
+    ],
+    "avoid_when": [
+      "Under a few hundred simple rows — complexity outweighs the gain"
+    ],
+    "pairs_well_with": [
+      "list-view",
+      "data-table",
+      "scroll-area",
+      "tree-view"
+    ],
+    "ai_products_rely_on": true
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://react-aria.adobe.com/llms.txt",
+    "https://fluent2.microsoft.design/components/web/react"
+  ],
+  "path": "spec/catalog/core/utilities/virtual-list",
+  "skill": "spec/catalog/core/utilities/virtual-list/SKILL.md",
+  "missing": [
+    "states.treatment: enabled, loading, empty, skeleton",
+    "states.a11y: enabled, loading, empty, skeleton",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

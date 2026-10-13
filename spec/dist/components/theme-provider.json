@@ -1,0 +1,155 @@
+{
+  "id": "theme-provider",
+  "name": "Theme Provider",
+  "kind": "component",
+  "catalog": "core",
+  "group": "utilities",
+  "tier": 1,
+  "atomic_level": "primitive",
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Supplies token values and colour scheme to the tree, and exposes the light/dark/system toggle.",
+  "aliases": [
+    "ColorModeProvider",
+    "AppProvider",
+    "ConfigProvider",
+    "ThemeProvider",
+    "DirectionProvider"
+  ],
+  "found_in": [
+    "Polaris",
+    "Atlassian",
+    "Ant Design",
+    "MUI",
+    "Chakra UI",
+    "Mantine",
+    "Fluent 2",
+    "Nuxt UI",
+    "PrimeVue",
+    "Radix"
+  ],
+  "anatomy": [
+    {
+      "part": "provider",
+      "description": "provider"
+    },
+    {
+      "part": "token-css-variables",
+      "description": "token CSS variables"
+    },
+    {
+      "part": "colour-scheme-attribute",
+      "description": "colour-scheme attribute"
+    },
+    {
+      "part": "toggle-control",
+      "description": "toggle control"
+    },
+    {
+      "part": "storage-adapter",
+      "description": "storage adapter"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "variant",
+      "values": [
+        "light",
+        "dark",
+        "system",
+        "high-contrast",
+        "brand-scoped",
+        "rtl"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    }
+  ],
+  "accessibility": {
+    "notes": "ARIA: Set `color-scheme` so form controls and scrollbars follow; the toggle is a labelled button or radio group.\nKeyboard: The toggle is an ordinary control; the choice must persist across sessions."
+  },
+  "tokens": {
+    "consumes": [
+      "color.bg.canvas",
+      "color.fg.default",
+      "radius.*",
+      "space.*",
+      "type.*"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "Always — this is where the token layer physically enters the app"
+    ],
+    "avoid_when": [
+      "Never; but avoid multiple competing providers in one tree"
+    ],
+    "pairs_well_with": [
+      "box",
+      "icon",
+      "chart"
+    ],
+    "ai_products_rely_on": true
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://github.com/Shopify/polaris/tree/main/polaris-react/src/components",
+    "https://atlassian.design/components"
+  ],
+  "path": "spec/catalog/core/utilities/theme-provider",
+  "skill": "spec/catalog/core/utilities/theme-provider/SKILL.md",
+  "missing": [
+    "states.treatment: enabled",
+    "states.a11y: enabled",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

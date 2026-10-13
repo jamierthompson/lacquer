@@ -1,0 +1,102 @@
+{
+  "id": "ai-accent-token",
+  "name": "AI features inherit the brand (--ai-accent as an alias)",
+  "kind": "principle",
+  "catalog": "ai",
+  "group": "foundations",
+  "tier": 1,
+  "maturity": "emerging",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Define AI tokens as aliases of the brand system so AI surfaces look like the product, not like every other AI product.",
+  "aliases": [
+    "no 'AI purple'",
+    "Carbon AI styling tokens (ai-border-start/end, ai-aura-start/end)",
+    "Identifiers: Color, Iconography, Name (Shape of AI)"
+  ],
+  "found_in": [
+    "IBM Carbon",
+    "OpenAI Apps SDK (system colors, brand only on buttons/badges)",
+    "Apple HIG"
+  ],
+  "anatomy": [
+    {
+      "part": "ai-accent-aliases",
+      "description": "--ai-accent aliases an existing brand/accent token"
+    },
+    {
+      "part": "ai-accent-subtle-8",
+      "description": "--ai-accent-subtle 8–12% tint for labelled containers"
+    },
+    {
+      "part": "ai-border-for-labelled",
+      "description": "--ai-border for labelled AI containers (optional gradient)"
+    },
+    {
+      "part": "ai-popover-bg",
+      "description": "--ai-popover-bg"
+    },
+    {
+      "part": "signal-ai",
+      "description": "signal AI with labels and structure, not colour"
+    },
+    {
+      "part": "glow-only",
+      "description": "glow only on the border of labelled content"
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    }
+  ],
+  "api": {
+    "interactions": []
+  },
+  "accessibility": {
+    "notes": "All AI-tinted surfaces keep AA contrast for text; gradients never carry meaning alone."
+  },
+  "tokens": {
+    "consumes": [
+      "color.accent.ai",
+      "color.accent.ai-subtle",
+      "color.border.ai",
+      "color.bg.surface-raised"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "always"
+    ],
+    "avoid_when": [
+      "introducing a separate purple/gradient palette",
+      "decorative animated gradients"
+    ],
+    "pairs_well_with": [
+      "ai-label",
+      "generate-button",
+      "reduced-motion-streaming"
+    ],
+    "exemplars": [
+      "Carbon — AI tokens extend existing themes; styling is identification, not decoration",
+      "OpenAI Apps SDK — 'Use system colors for text, icons, and spatial elements'; brand accents only on buttons and badges",
+      "Indie Hackers/DEV — 'the AI purple problem' critiques"
+    ]
+  },
+  "rules": {
+    "shared": [],
+    "resolved": []
+  },
+  "sources": [
+    "https://carbondesignsystem.com/guidelines/carbon-for-ai/",
+    "https://developers.openai.com/apps-sdk/concepts/ui-guidelines"
+  ],
+  "path": "spec/catalog/ai/foundations/ai-accent-token",
+  "skill": "spec/catalog/ai/foundations/ai-accent-token/SKILL.md",
+  "missing": [
+    "states.treatment: enabled",
+    "states.a11y: enabled",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)"
+  ]
+}

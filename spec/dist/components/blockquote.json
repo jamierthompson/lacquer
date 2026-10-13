@@ -1,0 +1,144 @@
+{
+  "id": "blockquote",
+  "name": "Blockquote",
+  "kind": "component",
+  "catalog": "core",
+  "group": "typography",
+  "tier": 3,
+  "atomic_level": "molecule",
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Sets off quoted material with an accent rule and optional attribution.",
+  "aliases": [
+    "Quote",
+    "Pull quote",
+    "Inset text"
+  ],
+  "found_in": [
+    "Chakra UI",
+    "Mantine",
+    "shadcn/ui",
+    "Bootstrap 5",
+    "USWDS",
+    "GOV.UK"
+  ],
+  "anatomy": [
+    {
+      "part": "quote-body",
+      "description": "quote body"
+    },
+    {
+      "part": "accent-border",
+      "description": "accent border"
+    },
+    {
+      "part": "citation-footer",
+      "description": "citation/footer"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "variant",
+      "values": [
+        "default",
+        "accent",
+        "pull-quote"
+      ]
+    },
+    {
+      "axis": "size",
+      "values": [
+        "sm",
+        "md"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    }
+  ],
+  "accessibility": {
+    "notes": "ARIA: Native `blockquote` with `cite`; attribution in a `figcaption` when using `figure`.\nKeyboard: None."
+  },
+  "tokens": {
+    "consumes": [
+      "type.body.lg",
+      "color.border.accent",
+      "space.inset.md",
+      "color.fg.muted"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "Quoted source material, testimonials, cited passages in model answers"
+    ],
+    "avoid_when": [
+      "You just want an indented callout — use Alert"
+    ],
+    "pairs_well_with": [
+      "prose",
+      "alert",
+      "text"
+    ],
+    "ai_products_rely_on": true
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://chakra-ui.com/docs/components/concepts/overview",
+    "https://mantine.dev/core/package/"
+  ],
+  "path": "spec/catalog/core/typography/blockquote",
+  "skill": "spec/catalog/core/typography/blockquote/SKILL.md",
+  "missing": [
+    "states.treatment: enabled",
+    "states.a11y: enabled",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

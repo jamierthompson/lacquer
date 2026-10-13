@@ -1,0 +1,147 @@
+{
+  "id": "form-error-summary",
+  "name": "Error Summary",
+  "kind": "component",
+  "catalog": "core",
+  "group": "feedback",
+  "tier": 2,
+  "atomic_level": "organism",
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "A single block at the top of a form listing every validation failure with links to each field.",
+  "aliases": [
+    "Error summary",
+    "Validation summary",
+    "InlineError list",
+    "Form errors"
+  ],
+  "found_in": [
+    "GOV.UK",
+    "USWDS",
+    "Carbon",
+    "Polaris"
+  ],
+  "anatomy": [
+    {
+      "part": "container",
+      "description": "container"
+    },
+    {
+      "part": "heading",
+      "description": "heading"
+    },
+    {
+      "part": "error-list",
+      "description": "error list"
+    },
+    {
+      "part": "anchor-links",
+      "description": "anchor links to fields"
+    },
+    {
+      "part": "count",
+      "description": "count"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "variant",
+      "values": [
+        "error",
+        "warning"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    },
+    {
+      "id": "invalid"
+    }
+  ],
+  "accessibility": {
+    "notes": "ARIA: `role=\"alert\"` or a focused container with `tabindex=\"-1\"`; move focus here on failed submit.\nKeyboard: Each entry is a link that moves focus to the offending field."
+  },
+  "tokens": {
+    "consumes": [
+      "color.bg.danger-subtle",
+      "color.border.danger",
+      "radius.surface",
+      "space.inset.md",
+      "type.label.md"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "Forms longer than one screen",
+      "Government or regulated services"
+    ],
+    "avoid_when": [
+      "A one-field form — inline errors suffice"
+    ],
+    "pairs_well_with": [
+      "form",
+      "field",
+      "alert"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://design-system.service.gov.uk/components/",
+    "https://designsystem.digital.gov/components/overview/"
+  ],
+  "path": "spec/catalog/core/feedback/form-error-summary",
+  "skill": "spec/catalog/core/feedback/form-error-summary/SKILL.md",
+  "missing": [
+    "states.treatment: enabled, invalid",
+    "states.a11y: enabled, invalid",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

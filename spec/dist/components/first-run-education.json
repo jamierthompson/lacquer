@@ -1,0 +1,148 @@
+{
+  "id": "first-run-education",
+  "name": "First-run education",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "onboarding",
+  "tier": 2,
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "A dismissible explanation of how the AI works that stays reachable, preferably delivered as the first message.",
+  "aliases": [
+    "first assistant message",
+    "product tour",
+    "Sample response (Shape of AI)"
+  ],
+  "found_in": [
+    "ChatGPT",
+    "Claude",
+    "Gemini",
+    "Notion"
+  ],
+  "anatomy": [
+    {
+      "part": "one-time-first-message",
+      "description": "one-time first message or lightweight tour"
+    },
+    {
+      "part": "modes",
+      "description": "modes, memory, data use, feedback explained"
+    },
+    {
+      "part": "re-openable-from-help",
+      "description": "re-openable from Help"
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    }
+  ],
+  "modes": [
+    {
+      "id": "unseen"
+    },
+    {
+      "id": "seen"
+    },
+    {
+      "id": "dismissed"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "dismiss",
+      "reopen"
+    ]
+  },
+  "accessibility": {
+    "notes": "Prefer a message over a modal; dismissible; no focus trap."
+  },
+  "tokens": {
+    "consumes": [
+      "color.bg.surface-secondary",
+      "type.body.sm"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "first session",
+      "after major changes (HAX G18)"
+    ],
+    "avoid_when": [
+      "multi-step modal tours that block use"
+    ],
+    "pairs_well_with": [
+      "capability-empty-state",
+      "data-use-notice",
+      "model-version-badge"
+    ],
+    "reuses": [
+      "message",
+      "dialog",
+      "link"
+    ],
+    "exemplars": [
+      "HAX G8 — support efficient dismissal"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://www.microsoft.com/en-us/haxtoolkit/library/"
+  ],
+  "path": "spec/catalog/ai/onboarding/first-run-education",
+  "skill": "spec/catalog/ai/onboarding/first-run-education/SKILL.md",
+  "missing": [
+    "states.treatment: enabled",
+    "states.a11y: enabled",
+    "modes.treatment: unseen, seen, dismissed",
+    "modes.a11y: unseen, seen, dismissed",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

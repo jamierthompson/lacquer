@@ -1,0 +1,155 @@
+{
+  "id": "quota-notice",
+  "name": "Rate limit / quota notice",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "conversation",
+  "tier": 2,
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Honest quota communication: facts, reset time, alternatives, no fake urgency.",
+  "aliases": [
+    "usage limit banner (ChatGPT, Claude)",
+    "credits (Lovable, v0)",
+    "Cost estimates (Shape of AI)"
+  ],
+  "found_in": [
+    "ChatGPT",
+    "Claude",
+    "Lovable",
+    "v0",
+    "Cursor"
+  ],
+  "anatomy": [
+    {
+      "part": "banner-or-inline",
+      "description": "banner or inline notice"
+    },
+    {
+      "part": "what-is-limited",
+      "description": "what is limited and when it resets"
+    },
+    {
+      "part": "alternative",
+      "description": "alternative (smaller model, wait, upgrade)"
+    },
+    {
+      "part": "usage-meter",
+      "description": "usage meter in settings"
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    }
+  ],
+  "modes": [
+    {
+      "id": "approaching"
+    },
+    {
+      "id": "reached"
+    },
+    {
+      "id": "reset"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "dismiss",
+      "switch model",
+      "upgrade"
+    ]
+  },
+  "accessibility": {
+    "notes": "Status region; send disabled state announced; draft preserved."
+  },
+  "tokens": {
+    "consumes": [
+      "color.status.warning",
+      "color.bg.surface-secondary",
+      "type.body.sm"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "metered products"
+    ],
+    "avoid_when": [
+      "countdown theatre or manufactured scarcity"
+    ],
+    "pairs_well_with": [
+      "context-meter",
+      "model-mode-selector",
+      "anti-dark-patterns"
+    ],
+    "reuses": [
+      "alert",
+      "progress",
+      "button"
+    ],
+    "exemplars": [
+      "Claude/ChatGPT — usage limit notices with reset time",
+      "Lovable — credits and usage docs"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://docs.lovable.dev/llms.txt"
+  ],
+  "path": "spec/catalog/ai/conversation/quota-notice",
+  "skill": "spec/catalog/ai/conversation/quota-notice/SKILL.md",
+  "missing": [
+    "states.treatment: enabled",
+    "states.a11y: enabled",
+    "modes.treatment: approaching, reached, reset",
+    "modes.a11y: approaching, reached, reset",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

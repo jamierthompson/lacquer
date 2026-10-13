@@ -1,0 +1,146 @@
+{
+  "id": "stack",
+  "name": "Stack",
+  "kind": "component",
+  "catalog": "core",
+  "group": "layout",
+  "tier": 1,
+  "atomic_level": "primitive",
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "One-dimensional layout that spaces children along a single axis with a token-valued gap.",
+  "aliases": [
+    "VStack",
+    "HStack",
+    "BlockStack",
+    "InlineStack",
+    "Group",
+    "Stacks"
+  ],
+  "found_in": [
+    "Polaris",
+    "Atlassian",
+    "Primer",
+    "Chakra UI",
+    "Mantine",
+    "MUI",
+    "Bootstrap 5"
+  ],
+  "anatomy": [
+    {
+      "part": "container",
+      "description": "container"
+    },
+    {
+      "part": "children",
+      "description": "children"
+    },
+    {
+      "part": "gap",
+      "description": "gap"
+    },
+    {
+      "part": "optional-divider-slot",
+      "description": "optional divider slot"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "variant",
+      "values": [
+        "vertical",
+        "horizontal",
+        "with-dividers"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    }
+  ],
+  "accessibility": {
+    "notes": "ARIA: None; layout only.\nKeyboard: None."
+  },
+  "tokens": {
+    "consumes": [
+      "space.gap.xs",
+      "space.gap.sm",
+      "space.gap.md",
+      "space.gap.lg"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "Any time children need consistent rhythm",
+      "Replacing ad-hoc margin utilities"
+    ],
+    "avoid_when": [
+      "Two-dimensional alignment is required — use grid"
+    ],
+    "pairs_well_with": [
+      "box",
+      "divider",
+      "flex"
+    ],
+    "ai_products_rely_on": true
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://github.com/Shopify/polaris/tree/main/polaris-react/src/components",
+    "https://atlassian.design/components"
+  ],
+  "path": "spec/catalog/core/layout/stack",
+  "skill": "spec/catalog/core/layout/stack/SKILL.md",
+  "missing": [
+    "states.treatment: enabled",
+    "states.a11y: enabled",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

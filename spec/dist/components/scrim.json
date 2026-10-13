@@ -1,0 +1,151 @@
+{
+  "id": "scrim",
+  "name": "Scrim",
+  "kind": "component",
+  "catalog": "core",
+  "group": "overlays",
+  "tier": 2,
+  "atomic_level": "primitive",
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "The dimming layer behind a modal surface that signals the rest of the UI is unavailable.",
+  "aliases": [
+    "Backdrop",
+    "Blanket",
+    "Overlay",
+    "Modal background",
+    "Shade"
+  ],
+  "found_in": [
+    "Material 3",
+    "Atlassian",
+    "MUI",
+    "Mantine",
+    "Chakra UI",
+    "Ant Design"
+  ],
+  "anatomy": [
+    {
+      "part": "full-viewport-layer",
+      "description": "full-viewport layer"
+    },
+    {
+      "part": "opacity",
+      "description": "opacity"
+    },
+    {
+      "part": "optional-blur",
+      "description": "optional blur"
+    },
+    {
+      "part": "click-to-dismiss-handler",
+      "description": "click-to-dismiss handler"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "variant",
+      "values": [
+        "dim",
+        "blur",
+        "transparent",
+        "inverse"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    }
+  ],
+  "modes": [
+    {
+      "id": "hidden"
+    }
+  ],
+  "accessibility": {
+    "notes": "ARIA: `aria-hidden` itself; it must be paired with making the content beneath `inert`.\nKeyboard: Not focusable; clicking it may dismiss, but Escape must also work."
+  },
+  "tokens": {
+    "consumes": [
+      "color.bg.scrim",
+      "z.overlay",
+      "motion.duration.fast",
+      "blur.overlay"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "Behind every modal dialog, drawer and lightbox"
+    ],
+    "avoid_when": [
+      "Non-modal popovers and tooltips"
+    ],
+    "pairs_well_with": [
+      "dialog",
+      "drawer",
+      "gallery-lightbox"
+    ],
+    "ai_products_rely_on": true
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://m3.material.io/components",
+    "https://atlassian.design/components"
+  ],
+  "path": "spec/catalog/core/overlays/scrim",
+  "skill": "spec/catalog/core/overlays/scrim/SKILL.md",
+  "missing": [
+    "states.treatment: enabled",
+    "states.a11y: enabled",
+    "modes.treatment: hidden",
+    "modes.a11y: hidden",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

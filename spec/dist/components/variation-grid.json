@@ -1,0 +1,169 @@
+{
+  "id": "variation-grid",
+  "name": "Variation grid",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "generation",
+  "tier": 2,
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Show several candidates at once so the user chooses rather than re-prompts; keep the prompt visible and reveal cells as they finish.",
+  "aliases": [
+    "2x2 grid + Vary Subtle/Strong + Upscale (Midjourney)",
+    "4-up results (Ideogram, DALL-E, Imagen)",
+    "Variations (Shape of AI Governors)",
+    "First Draft alternatives (Figma)",
+    "/best-of-n (Cursor)"
+  ],
+  "found_in": [
+    "Midjourney",
+    "Ideogram",
+    "ChatGPT images",
+    "Gemini images",
+    "Figma",
+    "Cursor"
+  ],
+  "anatomy": [
+    {
+      "part": "grid-of-2",
+      "description": "grid of 2–4 candidates, identical aspect ratio"
+    },
+    {
+      "part": "per-cell-skeleton",
+      "description": "per-cell skeleton with progressive reveal"
+    },
+    {
+      "part": "per-item-actions",
+      "description": "per-item actions: select, vary, upscale, download"
+    },
+    {
+      "part": "grid-level-more-like",
+      "description": "grid-level 'more like this'"
+    },
+    {
+      "part": "prompt-shown-beneath",
+      "description": "prompt shown beneath with reuse"
+    }
+  ],
+  "states": [
+    {
+      "id": "complete"
+    },
+    {
+      "id": "selected"
+    }
+  ],
+  "modes": [
+    {
+      "id": "generating",
+      "notes": "generating (per-cell)"
+    },
+    {
+      "id": "partial-failure"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "select one to continue",
+      "vary creates a new grid",
+      "compare side by side"
+    ]
+  },
+  "accessibility": {
+    "notes": "List/grid semantics with per-item names ('Variation 2 of 4'); generated alt text editable; keyboard selection."
+  },
+  "tokens": {
+    "consumes": [
+      "space.gap.sm",
+      "radius.md",
+      "color.bg.surface-secondary",
+      "shadow.sm"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "image, video, design or code outputs where variability is the point"
+    ],
+    "avoid_when": [
+      "mixed aspect ratios in one grid",
+      "all-or-nothing loading"
+    ],
+    "pairs_well_with": [
+      "generation-progress",
+      "attachment-preview",
+      "content-credentials"
+    ],
+    "reuses": [
+      "grid",
+      "card",
+      "image",
+      "skeleton",
+      "icon-button",
+      "dialog"
+    ],
+    "exemplars": [
+      "Midjourney — grid with Vary/Upscale actions (product behaviour; docs page not fetched)",
+      "Apple HIG — 'Offering people a choice can give them a greater sense of control'"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://developer.apple.com/design/human-interface-guidelines/generative-ai",
+    "https://cursor.com/changelog/3-0"
+  ],
+  "path": "spec/catalog/ai/generation/variation-grid",
+  "skill": "spec/catalog/ai/generation/variation-grid/SKILL.md",
+  "missing": [
+    "states.treatment: complete, selected",
+    "states.a11y: complete, selected",
+    "modes.treatment: generating, partial-failure",
+    "modes.a11y: generating, partial-failure",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

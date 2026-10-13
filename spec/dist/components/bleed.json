@@ -1,0 +1,132 @@
+{
+  "id": "bleed",
+  "name": "Bleed",
+  "kind": "component",
+  "catalog": "core",
+  "group": "layout",
+  "tier": 3,
+  "atomic_level": "primitive",
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Negates parent padding so a child can run edge to edge.",
+  "aliases": [
+    "FullBleed",
+    "NegativeMargin",
+    "Edge-to-edge"
+  ],
+  "found_in": [
+    "Polaris",
+    "Atlassian",
+    "Chakra UI"
+  ],
+  "anatomy": [
+    {
+      "part": "negative-margin-wrapper",
+      "description": "negative-margin wrapper"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "variant",
+      "values": [
+        "horizontal",
+        "vertical",
+        "all"
+      ]
+    },
+    {
+      "axis": "size",
+      "values": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    }
+  ],
+  "accessibility": {
+    "notes": "ARIA: None.\nKeyboard: None."
+  },
+  "tokens": {
+    "consumes": [
+      "space.inset.md",
+      "space.inset.lg"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "Card media that must touch the card edge",
+      "Full-width table inside a padded panel"
+    ],
+    "avoid_when": [
+      "You can simply move the padding to the correct element"
+    ],
+    "pairs_well_with": [
+      "card",
+      "image",
+      "table"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://github.com/Shopify/polaris/tree/main/polaris-react/src/components",
+    "https://atlassian.design/components"
+  ],
+  "path": "spec/catalog/core/layout/bleed",
+  "skill": "spec/catalog/core/layout/bleed/SKILL.md",
+  "missing": [
+    "states.treatment: enabled",
+    "states.a11y: enabled",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

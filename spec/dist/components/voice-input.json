@@ -1,0 +1,166 @@
+{
+  "id": "voice-input",
+  "name": "Voice input, waveform and transcript",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "augmentation",
+  "tier": 2,
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Dictation into the composer and full voice conversation, both with a visible transcript.",
+  "aliases": [
+    "Speech Input, Transcription, Audio Player, Mic Selector, Voice Selector, Persona (AI Elements Voice)",
+    "Orb, Live Waveform, Voice Button (ElevenLabs UI)",
+    "ChatGPT Voice",
+    "Gemini Live",
+    "dictation (assistant-ui Composer)"
+  ],
+  "found_in": [
+    "ChatGPT",
+    "Gemini",
+    "Claude",
+    "AI Elements",
+    "ElevenLabs UI"
+  ],
+  "anatomy": [
+    {
+      "part": "dictation",
+      "description": "dictation: mic button, live transcript into composer, stop"
+    },
+    {
+      "part": "conversation",
+      "description": "conversation: full-screen orb/waveform, mute, end, running transcript"
+    },
+    {
+      "part": "mic-voice-selectors",
+      "description": "mic/voice selectors"
+    },
+    {
+      "part": "captions-for-playback",
+      "description": "captions for playback"
+    }
+  ],
+  "states": [
+    {
+      "id": "idle"
+    },
+    {
+      "id": "error"
+    }
+  ],
+  "modes": [
+    {
+      "id": "listening"
+    },
+    {
+      "id": "transcribing"
+    },
+    {
+      "id": "speaking"
+    },
+    {
+      "id": "muted"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "push-to-talk or toggle",
+      "interrupt speaking",
+      "switch to text"
+    ]
+  },
+  "accessibility": {
+    "notes": "Transcript always available; orb/waveform aria-hidden with text status; permission errors explained."
+  },
+  "tokens": {
+    "consumes": [
+      "color.accent.ai",
+      "color.accent.brand",
+      "radius.pill",
+      "motion.reduce"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "mobile, hands-free, accessibility"
+    ],
+    "avoid_when": [
+      "voice-only flows without transcript"
+    ],
+    "pairs_well_with": [
+      "composer",
+      "reduced-motion-streaming"
+    ],
+    "reuses": [
+      "icon-button",
+      "audio-player",
+      "dialog",
+      "select"
+    ],
+    "exemplars": [
+      "NN/g — 'please, please have a voice-to-text option'",
+      "AI Elements Voice components (Jan 2026)"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://www.nngroup.com/articles/ai-chatbots-design-guidelines/",
+    "https://elements.ai-sdk.dev/overview",
+    "https://ui.elevenlabs.io/"
+  ],
+  "path": "spec/catalog/ai/augmentation/voice-input",
+  "skill": "spec/catalog/ai/augmentation/voice-input/SKILL.md",
+  "missing": [
+    "states.treatment: idle, error",
+    "states.a11y: idle, error",
+    "modes.treatment: listening, transcribing, speaking, muted",
+    "modes.a11y: listening, transcribing, speaking, muted",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

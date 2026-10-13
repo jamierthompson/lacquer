@@ -1,0 +1,185 @@
+{
+  "id": "plan-view",
+  "name": "Plan view / task list",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "agentic",
+  "tier": 1,
+  "maturity": "emerging",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "The agent proposes an editable plan before acting; approval is explicit and changes the agent's mode visibly.",
+  "aliases": [
+    "Plan, Task, Queue (AI Elements)",
+    "Action plan (Shape of AI)",
+    "plan mode (Claude Code, Cursor)",
+    "Plan mode (Lovable)",
+    "todo lists (Windsurf Cascade)",
+    "Steps (prompt-kit)"
+  ],
+  "found_in": [
+    "Claude Code",
+    "Cursor",
+    "Lovable",
+    "Windsurf",
+    "AI Elements",
+    "prompt-kit"
+  ],
+  "anatomy": [
+    {
+      "part": "title-and-summary",
+      "description": "title and summary"
+    },
+    {
+      "part": "ordered-steps",
+      "description": "ordered steps with status glyph (pending, active with shimmer, done, error, skipped)"
+    },
+    {
+      "part": "files-artifacts-per-step",
+      "description": "files/artifacts per step"
+    },
+    {
+      "part": "footer",
+      "description": "footer: Approve / Edit plan / Keep planning"
+    },
+    {
+      "part": "editable-as-markdown",
+      "description": "editable as markdown"
+    }
+  ],
+  "states": [
+    {
+      "id": "awaiting-approval"
+    },
+    {
+      "id": "complete"
+    }
+  ],
+  "modes": [
+    {
+      "id": "drafting",
+      "notes": "drafting (streaming)"
+    },
+    {
+      "id": "approved",
+      "notes": "approved (mode switch)"
+    },
+    {
+      "id": "executing",
+      "notes": "executing (progress n/m)"
+    },
+    {
+      "id": "abandoned"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "edit plan text",
+      "approve with explicit mode choice",
+      "keep planning with feedback",
+      "collapse when executing"
+    ]
+  },
+  "accessibility": {
+    "notes": "Ordered list with per-step status text; approval controls are buttons with focus on the safest option; progress announced per step."
+  },
+  "tokens": {
+    "consumes": [
+      "color.status.pending",
+      "color.status.running",
+      "color.status.success",
+      "color.status.error",
+      "shimmer.duration",
+      "type.body.sm"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "multi-step agent tasks",
+      "any edit to code or data"
+    ],
+    "avoid_when": [
+      "single-shot answers"
+    ],
+    "pairs_well_with": [
+      "agent-status",
+      "approval-prompt",
+      "autonomy-dial",
+      "activity-log"
+    ],
+    "reuses": [
+      "disclosure",
+      "list",
+      "checkbox",
+      "badge",
+      "button",
+      "textarea"
+    ],
+    "exemplars": [
+      "Claude Code — 'Yes, and use auto mode' / 'Yes, manually approve edits' / 'No, keep planning'",
+      "Lovable — plan as a readable markdown document, edits blocked until approved",
+      "AI Elements Plan/Task — streaming shimmer, file chips, progress counters"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://code.claude.com/docs/en/permission-modes",
+    "https://docs.lovable.dev/features/plan-mode.md",
+    "https://elements.ai-sdk.dev/components/plan",
+    "https://elements.ai-sdk.dev/components/task"
+  ],
+  "path": "spec/catalog/ai/agentic/plan-view",
+  "skill": "spec/catalog/ai/agentic/plan-view/SKILL.md",
+  "missing": [
+    "states.treatment: awaiting-approval, complete",
+    "states.a11y: awaiting-approval, complete",
+    "modes.treatment: drafting, approved, executing, abandoned",
+    "modes.a11y: drafting, approved, executing, abandoned",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

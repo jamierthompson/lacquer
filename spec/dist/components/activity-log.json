@@ -1,0 +1,167 @@
+{
+  "id": "activity-log",
+  "name": "Activity log / trace",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "agentic",
+  "tier": 2,
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "The audit surface: every agent action with time, target and result, filterable and exportable; the basis for undo and 'why did it do that'.",
+  "aliases": [
+    "transcript / tool log (Claude Code)",
+    "agent trace (Cursor, Vercel)",
+    "chain of thought (Chainlit)",
+    "Action Audit (Smashing)",
+    "Footprints (Shape of AI)"
+  ],
+  "found_in": [
+    "Claude Code",
+    "Cursor",
+    "GitHub Copilot",
+    "Chainlit",
+    "Vercel agent runs"
+  ],
+  "anatomy": [
+    {
+      "part": "chronological-list",
+      "description": "chronological list: timestamp, action, target, result, cost"
+    },
+    {
+      "part": "filters-by-type-status",
+      "description": "filters by type/status"
+    },
+    {
+      "part": "collapsible-detail",
+      "description": "collapsible detail"
+    },
+    {
+      "part": "export",
+      "description": "export"
+    },
+    {
+      "part": "undo-affordance-per",
+      "description": "undo affordance per reversible entry"
+    }
+  ],
+  "states": [
+    {
+      "id": "complete"
+    },
+    {
+      "id": "empty"
+    }
+  ],
+  "modes": [
+    {
+      "id": "live"
+    },
+    {
+      "id": "filtered"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "expand entry",
+      "filter",
+      "jump to message",
+      "undo/compensate"
+    ]
+  },
+  "accessibility": {
+    "notes": "Log region (polite) for live entries; table or list semantics; filters are form controls."
+  },
+  "tokens": {
+    "consumes": [
+      "type.family.mono",
+      "type.label.sm",
+      "color.fg.muted",
+      "color.border.subtle"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "agents that act on files, data or external systems"
+    ],
+    "avoid_when": [
+      "read-only assistants"
+    ],
+    "pairs_well_with": [
+      "tool-call-card",
+      "undo-rollback",
+      "approval-prompt",
+      "explainability-popover"
+    ],
+    "reuses": [
+      "table",
+      "list",
+      "disclosure",
+      "badge",
+      "filter-bar"
+    ],
+    "exemplars": [
+      "Smashing (Yocco 2026) — Action Audit & Undo",
+      "HAX G11 — make clear why the system did what it did"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://www.smashingmagazine.com/2026/02/designing-agentic-ai-practical-ux-patterns/",
+    "https://www.microsoft.com/en-us/haxtoolkit/library/"
+  ],
+  "path": "spec/catalog/ai/agentic/activity-log",
+  "skill": "spec/catalog/ai/agentic/activity-log/SKILL.md",
+  "missing": [
+    "states.treatment: complete, empty",
+    "states.a11y: complete, empty",
+    "modes.treatment: live, filtered",
+    "modes.a11y: live, filtered",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

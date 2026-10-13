@@ -1,0 +1,182 @@
+{
+  "id": "selection-ai-menu",
+  "name": "Selection AI menu (inline AI on text selection)",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "augmentation",
+  "tier": 1,
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "AI where the user already is: select, choose a verb, review the result next to the original, then replace or discard.",
+  "aliases": [
+    "Edit with AI (Notion)",
+    "Writing Tools (Apple)",
+    "AI Commands (Raycast)",
+    "Help me write (Google Docs)",
+    "SelectionToolbar (assistant-ui)",
+    "Inline Action / Restyle / Expand (Shape of AI)"
+  ],
+  "found_in": [
+    "Notion",
+    "Apple Writing Tools",
+    "Raycast",
+    "Google Docs",
+    "Figma",
+    "Microsoft 365 Copilot",
+    "assistant-ui"
+  ],
+  "anatomy": [
+    {
+      "part": "floating-toolbar",
+      "description": "floating toolbar or context-menu section on selection"
+    },
+    {
+      "part": "preset-verbs",
+      "description": "preset verbs: Improve, Shorten, Expand, Fix, Translate, Change tone"
+    },
+    {
+      "part": "free-prompt-field",
+      "description": "free prompt field"
+    },
+    {
+      "part": "result-preview-beside-below",
+      "description": "result preview beside/below original"
+    },
+    {
+      "part": "actions",
+      "description": "actions: Replace / Insert below / Copy / Try again / Discard"
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    }
+  ],
+  "modes": [
+    {
+      "id": "hidden"
+    },
+    {
+      "id": "menu-open"
+    },
+    {
+      "id": "generating"
+    },
+    {
+      "id": "preview"
+    },
+    {
+      "id": "applied"
+    },
+    {
+      "id": "discarded"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "select text then open",
+      "keyboard shortcut opens on current selection",
+      "try again keeps original",
+      "undo after replace"
+    ]
+  },
+  "accessibility": {
+    "notes": "Toolbar reachable by shortcut and announced; preview is a dialog or live region; original never replaced without confirmation."
+  },
+  "tokens": {
+    "consumes": [
+      "color.bg.surface-raised",
+      "shadow.md",
+      "radius.md",
+      "color.accent.ai",
+      "type.body.sm"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "editors and any text field with meaningful content"
+    ],
+    "avoid_when": [
+      "replacing text silently",
+      "menus that hide the original"
+    ],
+    "pairs_well_with": [
+      "generate-button",
+      "ai-label",
+      "diff-review",
+      "undo-rollback"
+    ],
+    "reuses": [
+      "toolbar",
+      "popover",
+      "dropdown-menu",
+      "button",
+      "textarea"
+    ],
+    "exemplars": [
+      "Notion — select text → Edit with AI; accept, discard, or try again",
+      "Raycast — Improve Writing / Fix Spelling on selected text"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://www.notion.com/help/guides/notion-ai-for-docs",
+    "https://manual.raycast.com/ai",
+    "https://www.assistant-ui.com/docs/primitives"
+  ],
+  "path": "spec/catalog/ai/augmentation/selection-ai-menu",
+  "skill": "spec/catalog/ai/augmentation/selection-ai-menu/SKILL.md",
+  "missing": [
+    "states.treatment: enabled",
+    "states.a11y: enabled",
+    "modes.treatment: hidden, menu-open, generating, preview, applied, discarded",
+    "modes.a11y: hidden, menu-open, generating, preview, applied, discarded",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

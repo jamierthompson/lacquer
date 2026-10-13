@@ -1,0 +1,136 @@
+{
+  "id": "live-region",
+  "name": "Live Region",
+  "kind": "component",
+  "catalog": "core",
+  "group": "utilities",
+  "tier": 1,
+  "atomic_level": "primitive",
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Announces dynamic changes to screen readers without moving focus.",
+  "aliases": [
+    "Announcer",
+    "aria-live region",
+    "Status region",
+    "VisuallyHidden status"
+  ],
+  "found_in": [
+    "React Aria",
+    "Radix",
+    "Chakra UI",
+    "Atlassian",
+    "Polaris"
+  ],
+  "anatomy": [
+    {
+      "part": "persistent-container",
+      "description": "persistent container"
+    },
+    {
+      "part": "politeness-setting",
+      "description": "politeness setting"
+    },
+    {
+      "part": "message-queue",
+      "description": "message queue"
+    },
+    {
+      "part": "clear-reset-timer",
+      "description": "clear/reset timer"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "variant",
+      "values": [
+        "polite",
+        "assertive",
+        "atomic",
+        "status",
+        "log"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    }
+  ],
+  "accessibility": {
+    "notes": "ARIA: `aria-live=\"polite|assertive\"`, or `role=\"status\"`/`\"alert\"`/`\"log\"`; the node must exist before text is inserted.\nKeyboard: No focus change — that is the entire point."
+  },
+  "usage": {
+    "use_when": [
+      "Search result counts, save confirmations, streaming status, validation summaries"
+    ],
+    "avoid_when": [
+      "Assertive for anything non-urgent — it interrupts whatever is being read"
+    ],
+    "pairs_well_with": [
+      "toast",
+      "search-input",
+      "copy-button",
+      "visually-hidden"
+    ],
+    "ai_products_rely_on": true
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://react-aria.adobe.com/llms.txt",
+    "https://www.radix-ui.com/primitives/docs/overview/introduction"
+  ],
+  "path": "spec/catalog/core/utilities/live-region",
+  "skill": "spec/catalog/core/utilities/live-region/SKILL.md",
+  "missing": [
+    "states.treatment: enabled",
+    "states.a11y: enabled",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

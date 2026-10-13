@@ -1,0 +1,159 @@
+{
+  "id": "multi-agent-view",
+  "name": "Multi-agent views",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "agentic",
+  "tier": 3,
+  "maturity": "experimental",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "A list of runs is the baseline shape; graph canvases are a product in themselves.",
+  "aliases": [
+    "Agents Window / Agent Tabs (Cursor)",
+    "agent teams (Claude Code)",
+    "parallel tasks (Codex)",
+    "Workflow canvas (AI Elements: Canvas, Node, Edge, Connection, Controls, Panel, Toolbar)"
+  ],
+  "found_in": [
+    "Cursor",
+    "Claude Code",
+    "OpenAI Codex",
+    "AI Elements"
+  ],
+  "anatomy": [
+    {
+      "part": "list-kanban-of-runs",
+      "description": "list/kanban of runs (each a job card) grouped by status"
+    },
+    {
+      "part": "side-by-side-chat-tabs",
+      "description": "side-by-side chat tabs or grid"
+    },
+    {
+      "part": "optional-graph-canvas",
+      "description": "optional graph canvas for authored workflows"
+    },
+    {
+      "part": "compare-outputs",
+      "description": "compare outputs (best-of-n)"
+    }
+  ],
+  "states": [
+    {
+      "id": "input-available"
+    }
+  ],
+  "modes": [
+    {
+      "id": "needs-input"
+    },
+    {
+      "id": "done"
+    },
+    {
+      "id": "comparing"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "open run",
+      "compare",
+      "merge/select winner",
+      "stop all"
+    ]
+  },
+  "accessibility": {
+    "notes": "List semantics for runs; canvas requires a list alternative; comparison as a table."
+  },
+  "tokens": {
+    "consumes": [
+      "color.bg.surface-secondary",
+      "color.border.subtle",
+      "color.status.running",
+      "color.status.success"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "parallel agents on one task or many"
+    ],
+    "avoid_when": [
+      "building a graph canvas when a run list suffices"
+    ],
+    "pairs_well_with": [
+      "background-job-card",
+      "agent-status"
+    ],
+    "reuses": [
+      "list",
+      "kanban-board",
+      "tabs",
+      "card",
+      "table"
+    ],
+    "exemplars": [
+      "Cursor 2.0/3.0 — up to eight agents in parallel, worktrees, /best-of-n"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://cursor.com/changelog/2-0",
+    "https://cursor.com/changelog/3-0",
+    "https://elements.ai-sdk.dev/overview"
+  ],
+  "path": "spec/catalog/ai/agentic/multi-agent-view",
+  "skill": "spec/catalog/ai/agentic/multi-agent-view/SKILL.md",
+  "missing": [
+    "states.treatment: input-available",
+    "states.a11y: input-available",
+    "modes.treatment: needs-input, done, comparing",
+    "modes.a11y: needs-input, done, comparing",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

@@ -1,0 +1,160 @@
+{
+  "id": "context-chips",
+  "name": "Contextual chips (what the model will see)",
+  "kind": "component",
+  "catalog": "ai",
+  "group": "augmentation",
+  "tier": 1,
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "The honest representation of context: if it is not a chip, the model did not get it.",
+  "aliases": [
+    "@ mentions (Cursor, Notion, Claude Code)",
+    "Attachments / Connectors (Shape of AI Tuners)",
+    "element references (Lovable, v0, Cursor Design Mode)",
+    "PromptInputHeader attachments (AI Elements)"
+  ],
+  "found_in": [
+    "Cursor",
+    "Claude Code",
+    "Notion",
+    "Lovable",
+    "v0",
+    "AI Elements"
+  ],
+  "anatomy": [
+    {
+      "part": "removable-chips",
+      "description": "removable chips in the composer header: file, selection, page, element, screenshot, connector"
+    },
+    {
+      "part": "type-icon",
+      "description": "type icon and name"
+    },
+    {
+      "part": "hover-preview",
+      "description": "hover preview"
+    },
+    {
+      "part": "picker-via",
+      "description": "picker via @"
+    }
+  ],
+  "states": [
+    {
+      "id": "loading"
+    }
+  ],
+  "modes": [
+    {
+      "id": "attached"
+    },
+    {
+      "id": "unavailable"
+    },
+    {
+      "id": "too-large"
+    }
+  ],
+  "api": {
+    "interactions": [
+      "add via @ or selection",
+      "remove",
+      "preview"
+    ]
+  },
+  "accessibility": {
+    "notes": "Chips are list items with remove buttons named 'Remove {name}'; additions announced."
+  },
+  "tokens": {
+    "consumes": [
+      "color.bg.surface-secondary",
+      "radius.pill",
+      "type.label.sm",
+      "color.border.subtle"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "any composer that accepts context beyond text"
+    ],
+    "avoid_when": [
+      "invisible context injection"
+    ],
+    "pairs_well_with": [
+      "composer",
+      "preview-chat-split",
+      "ask-about-this-page"
+    ],
+    "reuses": [
+      "tag",
+      "popover",
+      "list",
+      "icon-button"
+    ],
+    "exemplars": [
+      "Lovable — selected elements and annotations attach as references to messages",
+      "Cursor — @Branch, @Chats, files"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://docs.lovable.dev/features/preview-toolbar.md",
+    "https://cursor.com/blog/agent-best-practices"
+  ],
+  "path": "spec/catalog/ai/augmentation/context-chips",
+  "skill": "spec/catalog/ai/augmentation/context-chips/SKILL.md",
+  "missing": [
+    "states.treatment: loading",
+    "states.a11y: loading",
+    "modes.treatment: attached, unavailable, too-large",
+    "modes.a11y: attached, unavailable, too-large",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}

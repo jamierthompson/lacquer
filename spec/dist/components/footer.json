@@ -1,0 +1,164 @@
+{
+  "id": "footer",
+  "name": "Footer",
+  "kind": "component",
+  "catalog": "core",
+  "group": "navigation",
+  "tier": 2,
+  "atomic_level": "organism",
+  "maturity": "established",
+  "status": "draft",
+  "version": "0.1.0",
+  "summary": "Site-wide closing region with secondary navigation, legal links and contact information.",
+  "aliases": [
+    "Site footer",
+    "FooterColumns",
+    "Layout.Footer",
+    "FooterHelp"
+  ],
+  "found_in": [
+    "GOV.UK",
+    "USWDS",
+    "Polaris",
+    "Nuxt UI",
+    "Ant Design",
+    "Mantine"
+  ],
+  "anatomy": [
+    {
+      "part": "contentinfo-landmark",
+      "description": "contentinfo landmark"
+    },
+    {
+      "part": "link-columns",
+      "description": "link columns"
+    },
+    {
+      "part": "legal-row",
+      "description": "legal row"
+    },
+    {
+      "part": "locale-selector",
+      "description": "locale selector"
+    },
+    {
+      "part": "social-links",
+      "description": "social links"
+    },
+    {
+      "part": "back-to-top",
+      "description": "back-to-top"
+    }
+  ],
+  "variants": [
+    {
+      "axis": "variant",
+      "values": [
+        "minimal",
+        "columns",
+        "with-newsletter",
+        "app-footer"
+      ]
+    },
+    {
+      "axis": "size",
+      "values": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled"
+    }
+  ],
+  "accessibility": {
+    "apg": {
+      "pattern": "Landmarks",
+      "url": "https://www.w3.org/WAI/ARIA/apg/patterns/landmarks/"
+    },
+    "notes": "ARIA: `footer` mapped to `role=\"contentinfo\"` at the page level; internal nav gets `nav[aria-label]`.\nKeyboard: Standard link tabbing; must come last in DOM order."
+  },
+  "tokens": {
+    "consumes": [
+      "color.bg.subtle",
+      "type.body.sm",
+      "space.inset.page",
+      "space.gap.lg",
+      "color.fg.muted"
+    ]
+  },
+  "usage": {
+    "use_when": [
+      "Public-facing sites and any product with legal obligations"
+    ],
+    "avoid_when": [
+      "Full-height app shells where it would compete with content"
+    ],
+    "pairs_well_with": [
+      "container",
+      "link",
+      "app-header"
+    ]
+  },
+  "rules": {
+    "shared": [
+      "LQ-TOKEN-01",
+      "LQ-ANAT-01"
+    ],
+    "resolved": [
+      {
+        "id": "LQ-TOKEN-01",
+        "level": "MUST",
+        "polarity": "forbid",
+        "title": "No literal values",
+        "statement": "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).",
+        "rationale": "Tokens are the primer; the component is the finish. A literal value breaks every theme at once.",
+        "detect": {
+          "static": "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
+        },
+        "fix": "Replace with the role's custom property from the binding (see spec/bindings/html.yaml).",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      },
+      {
+        "id": "LQ-ANAT-01",
+        "level": "SHOULD",
+        "polarity": "require",
+        "title": "Parts are addressable",
+        "statement": "Every anatomy part renders with `data-slot=\"<part>\"` so docs, tests and the grader can target it without classes.",
+        "detect": {
+          "static": "For each anatomy part marked required, an element with that data-slot exists."
+        },
+        "fix": "Add data-slot to the part's root element.",
+        "applies_to": [
+          "*"
+        ],
+        "owner": "shared",
+        "file": "spec/rules/universal.yaml"
+      }
+    ]
+  },
+  "sources": [
+    "https://www.w3.org/WAI/ARIA/apg/patterns/landmarks/",
+    "https://design-system.service.gov.uk/components/",
+    "https://designsystem.digital.gov/components/overview/"
+  ],
+  "path": "spec/catalog/core/navigation/footer",
+  "skill": "spec/catalog/core/navigation/footer/SKILL.md",
+  "missing": [
+    "states.treatment: enabled",
+    "states.a11y: enabled",
+    "api.props",
+    "accessibility.name",
+    "rules.local (three or more, at least one forbid)",
+    "examples.good",
+    "examples.anti",
+    "implementations"
+  ]
+}
