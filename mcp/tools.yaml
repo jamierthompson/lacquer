@@ -1,0 +1,230 @@
+# Lacquer MCP server — tool manifest.
+#
+# This is the contract the server will implement. Every tool reads from
+# spec/dist/ (never from the YAML), so the server is a thin, stateless reader
+# over files the build already validated. Tool names are verbs an agent would
+# reach for mid-task; descriptions are written for the model that will call
+# them, not for a person.
+#
+# read: the catalog as a reference an agent consults while building.
+# grade: the catalog as a judge of what an agent built.
+
+server:
+  name: lacquer
+  version: 0.1.0
+  description: >
+    The finishing school for AI-generated UI. A framework-agnostic catalog of UI
+    components and AI-interface patterns, each with anatomy, states, accessibility
+    contract, token roles, forbidden usage and examples — plus tools that grade
+    generated UI against it.
+  reads:
+    - spec/dist/index.json
+    - spec/dist/catalog.json
+    - spec/dist/components/<id>.json
+    - spec/dist/rules.json
+    - spec/catalog/**/SKILL.md
+    - spec/bindings/*.yaml
+
+tools:
+  # ---------------------------------------------------------------- read tools
+  - name: lacquer_search
+    phase: read
+    description: >
+      Find the right component or pattern for a UI need. Matches on name, aliases
+      (what other systems call it), summary and group. Use before building any
+      control, surface or AI-interface element, so you use the catalog's name and
+      contract instead of inventing one.
+    input:
+      type: object
+      properties:
+        query:
+          {
+            type: string,
+            description: "Free text: 'modal', 'confirm delete', 'tool call status', 'Sheet'.",
+          }
+        catalog:
+          { type: string, enum: [core, ai], description: Optional filter. }
+        group:
+          {
+            type: string,
+            description: Optional group filter (actions,
+            overlays,
+            conversation,
+            agentic …).,
+          }
+        tier: { type: integer, enum: [1, 2, 3] }
+        limit: { type: integer, default: 10 }
+      required: [query]
+    output: Array of { id, name, kind, catalog, group, tier, status, summary, score }.
+
+  - name: lacquer_get
+    phase: read
+    description: >
+      The full spec for one entry: anatomy, variants, states with treatments and ARIA,
+      framework-neutral API, keyboard contract, token roles, content rules, usage and
+      the resolved rule list (shared + local). Returns JSON by default; ask for
+      format=skill to get the SKILL.md an agent can follow directly.
+    input:
+      type: object
+      properties:
+        id: { type: string }
+        format: { type: string, enum: [json, skill], default: json }
+        renderer:
+          {
+            type: string,
+            description: "Optionally include the implementation and examples for this renderer (html).",
+          }
+      required: [id]
+
+  - name: lacquer_decide
+    phase: read
+    description: >
+      Given two or more candidate ids, or a described situation, return the catalog's
+      decision rule for choosing between them (dialog vs drawer vs popover; select vs
+      combobox; toast vs alert; tabs vs navigation). Draws on usage.instead and the
+      decision guides. Use when unsure which component is the honest answer.
+    input:
+      type: object
+      properties:
+        candidates: { type: array, items: { type: string } }
+        situation: { type: string }
+      anyOf: [{ required: [candidates] }, { required: [situation] }]
+
+  - name: lacquer_rules
+    phase: read
+    description: >
+      List the rules that apply to a component, a group, or everything. Each rule
+      has an id, level (MUST/SHOULD/MAY), polarity (require/forbid), a one-sentence
+      statement, how it is detected and how to fix it. Use to pre-check your own
+      output before handing it over.
+    input:
+      type: object
+      properties:
+        id:
+          {
+            type: string,
+            description: A component id; omit for the universal rules.,
+          }
+        group: { type: string }
+        polarity: { type: string, enum: [require, forbid] }
+        level: { type: string, enum: [MUST, SHOULD, MAY] }
+
+  - name: lacquer_example
+    phase: read
+    description: >
+      Return example code for a component in a renderer, with the states and rules it
+      demonstrates. Ask for kind=anti to see forbidden usage with the rules it breaks.
+      Ready-made examples beat a blank canvas: start from one.
+    input:
+      type: object
+      properties:
+        id: { type: string }
+        renderer: { type: string, default: html }
+        kind: { type: string, enum: [good, anti, all], default: good }
+        example: { type: string, description: A specific example id. }
+      required: [id]
+
+  - name: lacquer_tokens
+    phase: read
+    description: >
+      Resolve token roles to a concrete system through a binding. Given roles (or a
+      component id, to get its consumed roles) and a binding name, return the CSS
+      custom property to use for each. Never guess a property name: resolve it.
+    input:
+      type: object
+      properties:
+        roles: { type: array, items: { type: string } }
+        id: { type: string }
+        binding: { type: string, default: html }
+
+  - name: lacquer_catalog
+    phase: read
+    description: >
+      Overview of the catalog: groups, tiers, counts by status, and the Tier 1 starter
+      set for a product type (classic, ai-augmented, ai-native). Use at the start of a
+      build to know what exists before searching.
+    input:
+      type: object
+      properties:
+        product_type: { type: string, enum: [classic, ai-augmented, ai-native] }
+
+  # ---------------------------------------------------------------- grade tools
+  - name: lacquer_lint
+    phase: grade
+    description: >
+      Static grade of markup and styles (HTML/CSS, or JSX/TSX/Vue/Svelte that produce them) or a DOM snapshot against
+      the catalog. Identifies which catalog components the markup is attempting,
+      then runs each component's static rules plus the universal rules. Returns a
+      finish report: score per dimension, findings with rule id, location, evidence
+      and fix. Run before returning generated UI to a user.
+    input:
+      type: object
+      properties:
+        source: { type: string, description: The code or serialized DOM. }
+        language: { type: string, enum: [tsx, jsx, html, vue, svelte, dom] }
+        binding: { type: string, default: html }
+        components:
+          {
+            type: array,
+            items: { type: string },
+            description: Optional hint of which catalog ids are present.,
+          }
+      required: [source]
+    output: FinishReport (grading/report.schema.json)
+
+  - name: lacquer_grade
+    phase: grade
+    description: >
+      Runtime grade of a live page: drives each interactive element through its
+      states, checks focus, keyboard, live regions, reduced motion and layout shift,
+      and returns a finish report. Needs a URL the server can open in a browser.
+      Slower than lacquer_lint; use for the final pass.
+    input:
+      type: object
+      properties:
+        url: { type: string, format: uri }
+        scenario:
+          {
+            type: string,
+            description: "Optional: 'send a message and wait for completion', used to drive AI lifecycle states.",
+          }
+        rules:
+          {
+            type: array,
+            items: { type: string },
+            description: Restrict to these rule ids.,
+          }
+      required: [url]
+    output: FinishReport
+
+  - name: lacquer_fix
+    phase: grade
+    description: >
+      Given a finish report finding (or the whole report) and the original source,
+      return a minimal patch that resolves it using the catalog's fix guidance and
+      the renderer's reference implementation. Returns a unified diff; does not apply it.
+    input:
+      type: object
+      properties:
+        source: { type: string }
+        finding_ids: { type: array, items: { type: string } }
+        report: { type: object }
+      required: [source]
+
+resources:
+  - uri: lacquer://catalog/index
+    description: spec/dist/index.json
+  - uri: lacquer://component/{id}
+    description: spec/dist/components/{id}.json
+  - uri: lacquer://skill/{id}
+    description: The generated SKILL.md for {id}
+  - uri: lacquer://rules
+    description: spec/dist/rules.json
+  - uri: lacquer://binding/{name}
+    description: spec/bindings/{name}.yaml
+
+prompts:
+  - name: build-with-lacquer
+    description: System prompt fragment that tells an agent to search the catalog before inventing a component, resolve tokens through the binding, and lint before returning.
+  - name: review-ui
+    description: Runs lacquer_lint on pasted code and explains the report in plain language, worst finding first.
