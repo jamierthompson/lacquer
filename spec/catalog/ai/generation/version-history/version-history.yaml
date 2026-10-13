@@ -1,0 +1,94 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: version-history
+name: Version history, checkpoints and restore
+kind: component
+catalog: ai
+group: generation
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: Previewable, reversible restore points for both files and conversation, with explicit statements of
+  what a restore does not undo.
+aliases:
+  - Checkpoint (AI Elements)
+  - Restore Checkpoint (VS Code)
+  - /rewind (Claude Code)
+  - checkpoints (Cursor)
+  - named checkpoints (Windsurf)
+  - History with bookmarks (Lovable)
+  - artifact version selector (Claude, ChatGPT)
+found_in:
+  - Claude Code
+  - VS Code Copilot
+  - Cursor
+  - Windsurf
+  - Lovable
+  - v0
+  - Claude
+  - AI Elements
+anatomy:
+  - part: checkpoint-marker
+    description: checkpoint marker in the thread with Restore
+  - part: history-panel
+    description: "history panel: versions, bookmarks, Published badge"
+  - part: snapshot-preview-before
+    description: snapshot preview before restore
+  - part: restore-options
+    description: "restore options: code / conversation / both"
+  - part: post-restore-redo
+    description: post-restore redo
+states:
+  - id: current
+modes:
+  - id: previewing
+  - id: restored
+  - id: unrestorable
+    notes: unrestorable (too old, external changes)
+api:
+  interactions:
+    - preview snapshot
+    - restore
+    - bookmark
+    - summarize from/up to here
+accessibility:
+  notes: Markers are buttons with names; history is a list; restore confirms and announces what was and was not
+    restored.
+tokens:
+  consumes:
+    - color.border.subtle
+    - color.fg.muted
+    - type.label.sm
+    - color.accent.ai-subtle
+usage:
+  use_when:
+    - agents edit files
+    - artifacts iterate
+  avoid_when:
+    - irreversible restores without preview (Windsurf warns 'Reverts are currently irreversible')
+  pairs_well_with:
+    - diff-review
+    - artifact-panel
+    - undo-rollback
+    - context-meter
+  reuses:
+    - divider
+    - button
+    - list
+    - dialog
+    - badge
+    - drawer
+  exemplars:
+    - Claude Code /rewind — Restore code and conversation / Restore conversation / Restore code / Summarize
+    - Lovable — preview snapshot, bookmarks, 'does not roll back your database data'
+    - VS Code — Restore Checkpoint with redo
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://code.claude.com/docs/en/checkpointing
+  - https://code.visualstudio.com/docs/agents/run/review-code-edits
+  - https://docs.lovable.dev/features/projects/history.md
+  - https://elements.ai-sdk.dev/components/checkpoint

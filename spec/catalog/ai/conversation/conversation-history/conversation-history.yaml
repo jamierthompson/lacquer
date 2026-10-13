@@ -1,0 +1,81 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: conversation-history
+name: Conversation history sidebar and search
+kind: component
+catalog: ai
+group: conversation
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: Left rail listing threads grouped by date and project, with search and per-thread management.
+aliases:
+  - ThreadList (assistant-ui)
+  - Chats sidebar (ChatGPT, Claude, Gemini)
+  - chat history search (Cursor 2.5)
+found_in:
+  - ChatGPT
+  - Claude
+  - Gemini
+  - Cursor
+  - assistant-ui
+anatomy:
+  - part: new-chat-button
+    description: new chat button
+  - part: search
+    description: search
+  - part: projects-folders-section
+    description: projects/folders section
+  - part: date-grouped-list
+    description: date-grouped list (Today, Yesterday, Previous 7 days)
+  - part: item-hover-menu
+    description: "item hover menu: rename, pin, archive, delete, share"
+  - part: collapse-control
+    description: collapse control
+states:
+  - id: expanded
+  - id: empty
+modes:
+  - id: collapsed
+    notes: collapsed (rail)
+  - id: searching
+api:
+  interactions:
+    - click switches thread
+    - inline rename
+    - delete with confirm
+    - drag into project (optional)
+accessibility:
+  notes: Navigation landmark; list with current item marked; menu reachable by keyboard; collapse state announced.
+tokens:
+  consumes:
+    - color.bg.surface-secondary
+    - color.border.subtle
+    - type.body.sm
+    - space.gap.xs
+    - space.gap.sm
+usage:
+  use_when:
+    - multi-thread products
+  avoid_when:
+    - single-purpose embedded assistants (use a compact history menu instead)
+  pairs_well_with:
+    - message-list
+    - memory-indicator
+  reuses:
+    - sidebar-nav
+    - list
+    - search-input
+    - context-menu
+    - dialog
+  exemplars:
+    - ChatGPT — Projects above date-grouped chats
+    - Cursor 2.5 — chat history search
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.assistant-ui.com/docs/primitives
+  - https://cursor.com/changelog/2-5

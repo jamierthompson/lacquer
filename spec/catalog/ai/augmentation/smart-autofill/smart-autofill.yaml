@@ -1,0 +1,71 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: smart-autofill
+name: Smart autocomplete and auto-fill
+kind: component
+catalog: ai
+group: augmentation
+tier: 2
+maturity: established
+status: draft
+version: 0.1.0
+summary: AI-proposed field values that look provisional until confirmed and can always be reverted.
+aliases:
+  - Auto-fill (Shape of AI; Notion database autofill)
+  - Smart Compose
+  - AI-labelled form fields (Carbon)
+found_in:
+  - Notion
+  - Gmail
+  - IBM Carbon
+  - Airtable
+anatomy:
+  - part: ghost-text
+    description: ghost text in fields
+  - part: pre-filled-values
+    description: pre-filled values with AI label
+  - part: revert-control-per
+    description: revert control per field
+  - part: confirm-apply-all
+    description: confirm/apply all
+states:
+  - id: enabled
+modes:
+  - id: suggested
+  - id: accepted
+  - id: overridden
+    notes: overridden (revert shown)
+  - id: confirmed
+api:
+  interactions:
+    - Tab accepts
+    - edit overrides
+    - revert restores AI value
+accessibility:
+  notes: Suggested values announced as suggestions; distinct visual state until confirmed; revert is a button.
+tokens:
+  consumes:
+    - color.fg.ghost
+    - color.border.ai
+    - color.accent.ai-subtle
+usage:
+  use_when:
+    - forms and databases with predictable fields
+  avoid_when:
+    - silently committing AI values
+  pairs_well_with:
+    - ghost-text-completion
+    - ai-label
+  reuses:
+    - text-input
+    - textarea
+    - badge
+    - button
+  exemplars:
+    - Carbon — revert button replaces the AI label after override
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://carbondesignsystem.com/components/ai-label/usage/

@@ -1,0 +1,79 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: model-mode-selector
+name: Model and mode selector
+kind: component
+catalog: ai
+group: conversation
+tier: 2
+maturity: established
+status: draft
+version: 0.1.0
+summary: Mode (what the AI is allowed to do) lives in the composer; model (which engine) lives in a secondary menu.
+aliases:
+  - ModelSelector (AI Elements)
+  - model dropdown (ChatGPT, Gemini)
+  - Model management / Modes (Shape of AI Tuners)
+  - Plan/Build (Lovable)
+  - permission modes (Claude Code)
+  - Code/Chat (Windsurf)
+found_in:
+  - ChatGPT
+  - Gemini
+  - Claude
+  - Cursor
+  - Lovable
+  - Windsurf
+  - AI Elements
+anatomy:
+  - part: mode
+    description: "mode: segmented control or toggle in the composer with plain-word labels and one-line 'best for'"
+  - part: model
+    description: "model: menu or searchable palette grouped by provider with logos"
+  - part: current-selection-badge
+    description: current selection badge
+states:
+  - id: enabled
+modes:
+  - id: default
+  - id: open
+  - id: changed-mid-thread
+    notes: changed mid-thread (marker in transcript)
+api:
+  interactions:
+    - search models
+    - switch mode with shortcut (Shift+Tab in Claude Code)
+    - multi-select for side-by-side comparison (Cursor)
+accessibility:
+  notes: Listbox/menu semantics; current value announced; shortcut documented.
+tokens:
+  consumes:
+    - color.bg.surface-raised
+    - radius.md
+    - type.body.sm
+usage:
+  use_when:
+    - multiple models or autonomy levels are user-facing
+  avoid_when:
+    - a single model with no meaningful choice
+  pairs_well_with:
+    - composer
+    - autonomy-dial
+    - model-version-badge
+  reuses:
+    - select
+    - dropdown-menu
+    - command-palette
+    - segmented-control
+    - badge
+  exemplars:
+    - Gemini — 'select 3.6 Flash in the model drop down' (Jul 2026)
+    - AI Elements ModelSelector — cmdk palette grouped by provider
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://elements.ai-sdk.dev/components/model-selector
+  - https://gemini.google/release-notes/
+  - https://code.claude.com/docs/en/permission-modes

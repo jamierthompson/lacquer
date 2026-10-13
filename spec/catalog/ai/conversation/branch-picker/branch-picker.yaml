@@ -1,0 +1,73 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: branch-picker
+name: Branching and edit-and-resend
+kind: component
+catalog: ai
+group: conversation
+tier: 2
+maturity: established
+status: draft
+version: 0.1.0
+summary: Regenerating or editing creates sibling versions that the user can page through without losing
+  earlier attempts.
+aliases:
+  - BranchPicker (assistant-ui)
+  - MessageBranch (AI Elements)
+  - Branches (Shape of AI Governors)
+  - Fork Chat (Cursor)
+  - /branch (Claude Code)
+found_in:
+  - ChatGPT
+  - Claude
+  - Cursor
+  - assistant-ui
+  - AI Elements
+anatomy:
+  - part: n-m
+    description: ‹ n/m › control on the message
+  - part: edit-affordance
+    description: edit affordance on user messages
+  - part: regenerate-creates-sibling
+    description: regenerate creates sibling
+  - part: thread-re-renders
+    description: thread re-renders to selected branch
+states:
+  - id: enabled
+modes:
+  - id: single
+  - id: n-of-m
+  - id: editing
+api:
+  interactions:
+    - previous/next sibling
+    - edit-and-resend
+    - fork whole thread
+accessibility:
+  notes: Control announces 'Version 2 of 3'; editing is a form with Save/Cancel.
+tokens:
+  consumes:
+    - color.fg.muted
+    - type.label.sm
+usage:
+  use_when:
+    - conversation products where regeneration is common
+  avoid_when:
+    - linear support transcripts that must be immutable
+  pairs_well_with:
+    - message
+    - message-actions
+    - version-history
+  reuses:
+    - icon-button
+    - textarea
+  exemplars:
+    - ChatGPT — '< 2/3 >' under edited messages
+    - Cursor — Fork Chat
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.assistant-ui.com/docs/primitives
+  - https://elements.ai-sdk.dev/components/message

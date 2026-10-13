@@ -1,0 +1,68 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: latency-patterns
+name: Latency patterns (honest perceived performance)
+kind: method
+catalog: ai
+group: onboarding
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: An ordered ladder of honest latency techniques and a list of fakes to prohibit.
+aliases:
+  - progressive disclosure of partial results
+  - optimistic UI (user actions only)
+  - chunked reveal
+  - background generation
+found_in:
+  - Perplexity
+  - ChatGPT
+  - Gemini
+  - Apple HIG
+  - Streamdown
+anatomy:
+  - part: part-1-stream
+    description: 1 stream the real thing
+  - part: part-2-show-completed
+    description: 2 show completed steps while later ones run
+  - part: part-3-specific-status
+    description: 3 specific status text
+  - part: part-4-optimistic-ui
+    description: 4 optimistic UI for user actions only
+  - part: part-5-chunk-fade
+    description: 5 chunk fade; typewriter only to smooth bursts
+  - part: part-6-background-job
+    description: 6 background job above ~30–60 s
+states:
+  - id: enabled
+api:
+  interactions: []
+accessibility:
+  notes: All steps must announce state once, never continuously; reduced motion disables smoothing effects.
+tokens:
+  consumes:
+    - stream.reveal-duration
+    - shimmer.duration
+    - motion.reduce
+usage:
+  use_when:
+    - any generation
+  avoid_when:
+    - fake progress bars, fake thinking delays, shimmer after arrival
+  pairs_well_with:
+    - generation-progress
+    - thinking-indicator
+    - background-job-card
+  reuses:
+    - progress
+    - skeleton
+    - toast
+  exemplars:
+    - Apple HIG — specific, reassuring feedback during generation
+    - NN/g — ChatGPT Agent's 11-minute task should have been backgrounded
+rules:
+  shared: []
+sources:
+  - https://developer.apple.com/design/human-interface-guidelines/generative-ai
+  - https://www.nngroup.com/articles/impressions-chatgpt-agent/

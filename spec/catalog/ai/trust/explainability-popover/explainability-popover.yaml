@@ -1,0 +1,79 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: explainability-popover
+name: Explainability popover ('why this?')
+kind: component
+catalog: ai
+group: trust
+tier: 2
+maturity: established
+status: draft
+version: 0.1.0
+summary: A partial, decision-relevant explanation of why the AI produced this, anchored to the AI element.
+aliases:
+  - explainability popover (Carbon AI label)
+  - Why this? (recommenders)
+  - Explainable Rationale (Smashing)
+  - personalisation sources (ChatGPT book icon)
+  - HAX G11
+found_in:
+  - IBM Carbon
+  - ChatGPT
+  - Spotify/Netflix-style recommenders
+  - Microsoft Copilot
+anatomy:
+  - part: anchored-popover
+    description: anchored popover or drawer
+  - part: what-data-was
+    description: what data was used (sources, memories, files, selection)
+  - part: which-model
+    description: which model, when
+  - part: how-to-change
+    description: how to change it (settings links)
+  - part: feedback
+    description: feedback
+states:
+  - id: enabled
+modes:
+  - id: closed
+  - id: open
+  - id: partial
+    notes: partial (limited explanation available)
+api:
+  interactions:
+    - open from AI label or info glyph
+    - navigate to settings
+accessibility:
+  notes: Dialog/popover semantics with focus trap or return; content readable as text.
+tokens:
+  consumes:
+    - color.bg.surface-raised
+    - color.border.ai
+    - shadow.md
+    - radius.md
+usage:
+  use_when:
+    - personalised or consequential outputs
+  avoid_when:
+    - "explaining everything (PAIR: the best explanation is likely a partial one)"
+  pairs_well_with:
+    - ai-label
+    - memory-indicator
+    - uncertainty-display
+  reuses:
+    - popover
+    - drawer
+    - list
+    - link
+    - button
+  exemplars:
+    - "Carbon — popover sections: overview, supporting details, artifacts, actions"
+    - ChatGPT — book icon lists custom instructions, past chats, files and memories used
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://carbondesignsystem.com/components/ai-label/usage/
+  - https://help.openai.com/en/articles/8590148-memory-faq
+  - https://pair.withgoogle.com/chapter/explainability-trust/

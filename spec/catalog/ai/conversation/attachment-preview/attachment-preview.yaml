@@ -1,0 +1,80 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: attachment-preview
+name: Attachment previews and media results
+kind: component
+catalog: ai
+group: conversation
+tier: 2
+maturity: established
+status: draft
+version: 0.1.0
+summary: How files and images look in the composer and in messages, including generated media with provenance.
+aliases:
+  - Attachments (AI Elements 1.8.0)
+  - Attachment (assistant-ui)
+  - FileUpload (prompt-kit)
+  - Image (AI Elements utility)
+  - Attachments (Shape of AI Tuners)
+found_in:
+  - ChatGPT
+  - Claude
+  - Gemini
+  - Cursor
+  - AI Elements
+  - assistant-ui
+  - prompt-kit
+anatomy:
+  - part: composer-chips-thumbnails
+    description: "composer chips/thumbnails: name, size, type icon, remove, upload progress"
+  - part: message-side
+    description: "message-side: image grid, file cards with open/download, audio player"
+  - part: lightbox-for-generated
+    description: lightbox for generated images with download, vary/edit, content credentials
+states:
+  - id: error
+modes:
+  - id: uploading
+  - id: ready
+  - id: generated
+  - id: expired
+api:
+  interactions:
+    - remove before send
+    - open lightbox
+    - download
+    - drag to reorder (optional)
+accessibility:
+  notes: Thumbnails have alt from filename or generated description; lightbox is a dialog; progress announced.
+tokens:
+  consumes:
+    - radius.md
+    - color.bg.surface-secondary
+    - color.border.subtle
+    - type.label.sm
+usage:
+  use_when:
+    - multimodal input or output
+  avoid_when:
+    - text-only products
+  pairs_well_with:
+    - composer
+    - content-credentials
+    - variation-grid
+  reuses:
+    - tag
+    - card
+    - image
+    - dialog
+    - progress
+    - audio-player
+  exemplars:
+    - AI Elements Attachments — files, images, video, audio, source documents
+    - NN/g — include images, not just links
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://vercel.com/changelog/ai-code-elements
+  - https://www.nngroup.com/articles/ai-chatbots-design-guidelines/

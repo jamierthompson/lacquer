@@ -1,0 +1,79 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: feedback-control
+name: Feedback collection
+kind: component
+catalog: ai
+group: trust
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: Reason-coded feedback that can improve the system without becoming a reward for agreeableness.
+aliases:
+  - thumbs with reasons
+  - Feedback (prompt-kit, Shape of AI)
+  - HAX G15 granular feedback
+  - Gradio like/dislike
+found_in:
+  - ChatGPT
+  - Claude
+  - Gemini
+  - Perplexity
+  - Copilot
+  - prompt-kit
+anatomy:
+  - part: thumbs-up-down
+    description: thumbs up/down
+  - part: reason-picker
+    description: reason picker with specific options (Inaccurate, Wrong sources, Unsafe, Not helpful, Style)
+  - part: free-text
+    description: free text
+  - part: statement-of-what
+    description: statement of what happens to feedback
+  - part: implicit-signals-captured
+    description: implicit signals captured separately (accept/reject, edits)
+states:
+  - id: submitted
+modes:
+  - id: none
+  - id: positive
+  - id: negative-with-reason
+api:
+  interactions:
+    - one click then optional reason
+    - undo feedback
+accessibility:
+  notes: Toggle buttons with pressed state; reason picker is a form; confirmation announced.
+tokens:
+  consumes:
+    - color.fg.muted
+    - radius.sm
+    - type.body.sm
+usage:
+  use_when:
+    - every assistant output
+  avoid_when:
+    - "'Was this helpful?' nags"
+    - thumbs as the sole training signal
+  pairs_well_with:
+    - message-actions
+    - inline-citation
+    - anti-dark-patterns
+  reuses:
+    - toggle-button
+    - popover
+    - radio-group
+    - textarea
+    - toast
+  exemplars:
+    - OpenAI (May 2025) — thumbs data amplified sycophancy; 'be critical of metrics that conflict with
+      qualitative testing'
+    - PAIR — explain the value and time-to-impact of feedback
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://openai.com/index/expanding-on-sycophancy/
+  - https://pair.withgoogle.com/chapter/feedback-controls/

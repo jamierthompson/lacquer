@@ -1,0 +1,76 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: terminal-panel
+name: Terminal output panel
+kind: component
+catalog: ai
+group: agentic
+tier: 2
+maturity: established
+status: draft
+version: 0.1.0
+summary: Console output from agent-run commands, with exit status, ANSI colour and the same follow/release
+  scrolling rule as chat.
+aliases:
+  - Terminal, StackTrace, TestResults, Snippet (AI Elements Code)
+  - integrated terminal (Cursor, VS Code)
+  - Bash tool output (Claude Code)
+found_in:
+  - Cursor
+  - VS Code
+  - Claude Code
+  - AI Elements
+anatomy:
+  - part: header
+    description: "header: command, running/exit code"
+  - part: ansi-coloured-monospace-output
+    description: ANSI-coloured monospace output
+  - part: sticky-bottom-with-release
+    description: sticky-bottom with release on scroll-up
+  - part: copy
+    description: copy, clear, expand
+  - part: stack-traces
+    description: stack traces with clickable paths
+states:
+  - id: input-available
+  - id: cancelled
+modes:
+  - id: exit-0
+  - id: exit-nonzero
+  - id: truncated
+api:
+  interactions:
+    - stop
+    - copy
+    - open file from trace
+    - collapse
+accessibility:
+  notes: Log region; exit status announced; output readable as text; colour not the only status signal.
+tokens:
+  consumes:
+    - type.family.mono
+    - color.bg.code
+    - color.status.success
+    - color.status.error
+usage:
+  use_when:
+    - coding agents and sandboxes
+  avoid_when:
+    - consumer products (summarise instead)
+  pairs_well_with:
+    - tool-call-card
+    - sandbox-browser-view
+    - diff-review
+  reuses:
+    - code-block
+    - scroll-area
+    - badge
+    - button
+  exemplars:
+    - AI Elements Terminal — ANSI colour support and auto-scroll (Jan 2026)
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://vercel.com/changelog/ai-code-elements

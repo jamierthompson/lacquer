@@ -1,0 +1,74 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: sources-panel
+name: Sources row / panel
+kind: component
+catalog: ai
+group: conversation
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: "The answer-level view of all sources: a count at the action bar plus an expandable list or side panel."
+aliases:
+  - "Sources (AI Elements: 'Used N sources')"
+  - Sources tab / sidebar (Perplexity)
+  - References (Shape of AI)
+  - Links tab
+found_in:
+  - Perplexity
+  - ChatGPT
+  - Gemini
+  - Copilot
+  - AI Elements
+anatomy:
+  - part: favicon-stack
+    description: favicon stack + count at action-bar prominence
+  - part: collapsible-list
+    description: collapsible list or side panel of source cards
+  - part: per-card
+    description: "per-card: favicon, title, domain, snippet, open"
+states:
+  - id: expanded
+  - id: empty
+modes:
+  - id: collapsed
+    notes: collapsed (count)
+  - id: panel
+api:
+  interactions:
+    - click count to expand or open panel
+    - filter by domain type (optional)
+    - report wrong source
+accessibility:
+  notes: List semantics; panel is a dialog or complementary region with focus management.
+tokens:
+  consumes:
+    - color.bg.surface-secondary
+    - radius.md
+    - space.gap.sm
+    - type.body.sm
+usage:
+  use_when:
+    - any grounded answer with more than one source
+  avoid_when:
+    - single-source answers (inline marker suffices)
+  pairs_well_with:
+    - inline-citation
+    - message-actions
+  reuses:
+    - disclosure
+    - list
+    - drawer
+    - tabs
+    - card
+  exemplars:
+    - Perplexity — favicon stack + '10 sources' beside share/copy
+    - AI Elements Sources — 'Used 3 sources' trigger
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://elements.ai-sdk.dev/components/sources
+  - https://aiuxplayground.com/teardowns/perplexity/citations/

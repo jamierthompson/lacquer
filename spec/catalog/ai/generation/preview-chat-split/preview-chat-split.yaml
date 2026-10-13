@@ -1,0 +1,91 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: preview-chat-split
+name: Preview + chat split layout with live preview pane
+kind: component
+catalog: ai
+group: generation
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: "The app-builder layout: conversation on one side, a live preview with tabs and a selection-to-prompt
+  toolbar on the other."
+aliases:
+  - v0 workspace (Preview / Code / Design tabs)
+  - Lovable editor + preview toolbar
+  - Bolt
+  - WebPreview + Sandbox (AI Elements)
+  - Cursor Design Mode
+found_in:
+  - v0
+  - Lovable
+  - Bolt
+  - Cursor
+  - AI Elements
+anatomy:
+  - part: chat-column
+    description: chat column (30–40%, min 320 px)
+  - part: preview-column
+    description: "preview column with toolbar: device size, URL/navigation, tabs, console drawer, publish"
+  - part: iframe-body
+    description: iframe body
+  - part: selection-to-prompt-tool
+    description: selection-to-prompt tool
+  - part: tabs-below-900
+    description: tabs below ~900 px
+states:
+  - id: error
+modes:
+  - id: building
+  - id: preview-ready
+  - id: code-view
+    notes: code view
+  - id: design-mode
+    notes: design mode
+api:
+  interactions:
+    - select element to attach as context
+    - inline text edit
+    - draw annotation
+    - comment pin
+    - publish
+accessibility:
+  notes: Iframe titled; toolbar buttons labelled; annotation tools have keyboard equivalents; console is a log
+    region.
+tokens:
+  consumes:
+    - color.bg.surface
+    - color.border.subtle
+    - space.gap.md
+    - radius.md
+usage:
+  use_when:
+    - generated UI, sites or apps
+  avoid_when:
+    - document-only products (use the artifact panel)
+  pairs_well_with:
+    - artifact-panel
+    - context-chips
+    - version-history
+    - terminal-panel
+  reuses:
+    - resizable-panels
+    - tabs
+    - toolbar
+    - iframe
+    - code-block
+    - button
+  exemplars:
+    - Lovable preview toolbar — select elements, inline text edits, draw annotation, comments
+    - v0 — Preview, Code and Design tabs in the preview toolbar
+    - Cursor 3.0 Design Mode — point the agent to exactly the part of the interface
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://docs.lovable.dev/features/preview-toolbar.md
+  - https://v0.app/docs/quickstart
+  - https://elements.ai-sdk.dev/components/web-preview
+  - https://cursor.com/changelog/3-0

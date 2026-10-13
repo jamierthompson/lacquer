@@ -1,0 +1,76 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: context-chips
+name: Contextual chips (what the model will see)
+kind: component
+catalog: ai
+group: augmentation
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: "The honest representation of context: if it is not a chip, the model did not get it."
+aliases:
+  - "@ mentions (Cursor, Notion, Claude Code)"
+  - Attachments / Connectors (Shape of AI Tuners)
+  - element references (Lovable, v0, Cursor Design Mode)
+  - PromptInputHeader attachments (AI Elements)
+found_in:
+  - Cursor
+  - Claude Code
+  - Notion
+  - Lovable
+  - v0
+  - AI Elements
+anatomy:
+  - part: removable-chips
+    description: "removable chips in the composer header: file, selection, page, element, screenshot, connector"
+  - part: type-icon
+    description: type icon and name
+  - part: hover-preview
+    description: hover preview
+  - part: picker-via
+    description: picker via @
+states:
+  - id: loading
+modes:
+  - id: attached
+  - id: unavailable
+  - id: too-large
+api:
+  interactions:
+    - add via @ or selection
+    - remove
+    - preview
+accessibility:
+  notes: Chips are list items with remove buttons named 'Remove {name}'; additions announced.
+tokens:
+  consumes:
+    - color.bg.surface-secondary
+    - radius.pill
+    - type.label.sm
+    - color.border.subtle
+usage:
+  use_when:
+    - any composer that accepts context beyond text
+  avoid_when:
+    - invisible context injection
+  pairs_well_with:
+    - composer
+    - preview-chat-split
+    - ask-about-this-page
+  reuses:
+    - tag
+    - popover
+    - list
+    - icon-button
+  exemplars:
+    - Lovable — selected elements and annotations attach as references to messages
+    - Cursor — @Branch, @Chats, files
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://docs.lovable.dev/features/preview-toolbar.md
+  - https://cursor.com/blog/agent-best-practices

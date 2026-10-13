@@ -1,0 +1,89 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: artifact-panel
+name: Artifact / canvas side panel
+kind: component
+catalog: ai
+group: generation
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: Substantial standalone output (code, docs, apps, diagrams) lives in a panel beside the conversation
+  with tabs, versions and actions.
+aliases:
+  - Artifacts (Claude)
+  - Canvas (ChatGPT, Gemini)
+  - Artifact (AI Elements)
+  - artifacts panel (vercel/ai-chatbot)
+found_in:
+  - Claude
+  - ChatGPT
+  - Gemini
+  - AI Elements
+  - vercel/ai-chatbot
+anatomy:
+  - part: header
+    description: "header: title, description ('Updated 1 minute ago'), version selector"
+  - part: tabs
+    description: "tabs: Preview / Code (/ Source)"
+  - part: actions
+    description: "actions: copy, download, publish/share, open in editor, close"
+  - part: content-area
+    description: content area
+  - part: optional-footer
+    description: optional footer
+states:
+  - id: complete
+modes:
+  - id: streaming-in
+  - id: editing
+    notes: editing (selection edit)
+  - id: version-n-of-m
+    notes: version n-of-m
+  - id: published
+api:
+  interactions:
+    - streams while chat narrates
+    - switch versions
+    - select text and 'Edit with AI'
+    - publish to URL
+    - full-screen sheet on narrow screens
+accessibility:
+  notes: Complementary region or dialog with a name; tabs semantics; focus returns to chat on close; version
+    change announced.
+tokens:
+  consumes:
+    - color.bg.surface
+    - color.border.subtle
+    - shadow.md
+    - radius.lg
+    - type.family.mono
+    - color.bg.code
+usage:
+  use_when:
+    - outputs over ~15 lines that the user will edit or reuse
+  avoid_when:
+    - short answers (keep them inline)
+  pairs_well_with:
+    - version-history
+    - preview-chat-split
+    - diff-review
+    - streaming-markdown
+  reuses:
+    - drawer
+    - tabs
+    - code-block
+    - toolbar
+    - button
+    - segmented-control
+  exemplars:
+    - Claude Artifacts — version selector, 'Edit with Claude' on selection, publish
+    - AI Elements Artifact — header/actions/content composition
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://support.claude.com/en/articles/9487310-what-are-artifacts-and-how-do-i-use-them
+  - https://elements.ai-sdk.dev/components/artifact

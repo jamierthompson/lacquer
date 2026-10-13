@@ -1,0 +1,75 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: data-use-notice
+name: Data-use / training notice and consent
+kind: component
+catalog: ai
+group: trust
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: Tells users what data the AI uses and whether it trains on it, with a one-tap opt-out and manual fallback.
+aliases:
+  - Consent, Data ownership (Shape of AI)
+  - Improve the model for everyone toggle (ChatGPT)
+  - not used for training badge (enterprise)
+found_in:
+  - ChatGPT
+  - Claude
+  - Gemini
+  - Apple Intelligence
+  - Notion
+anatomy:
+  - part: first-run-notice
+    description: "first-run notice: what is stored, whether it trains, retention"
+  - part: settings-toggle
+    description: settings toggle with plain description
+  - part: per-feature-permission-prompt
+    description: per-feature permission prompt for personal data
+  - part: reset-personalisation
+    description: reset personalisation
+states:
+  - id: enabled
+modes:
+  - id: not-asked
+  - id: opted-in
+  - id: opted-out
+  - id: enterprise-locked
+api:
+  interactions:
+    - opt out in one tap
+    - learn more
+    - reset
+accessibility:
+  notes: Switch semantics with description; notice is readable text, not a modal trap.
+tokens:
+  consumes:
+    - color.bg.surface-secondary
+    - type.body.sm
+    - color.border.subtle
+usage:
+  use_when:
+    - any product that stores prompts or personal data
+  avoid_when:
+    - burying opt-out
+    - saving memories silently
+  pairs_well_with:
+    - memory-indicator
+    - first-run-education
+    - ai-label
+  reuses:
+    - switch
+    - alert
+    - dialog
+    - link
+  exemplars:
+    - Apple HIG — 'Use the minimum data you need and always offer a clear way to opt out'
+    - PAIR — allow users to turn it off and reset personalisation
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://developer.apple.com/design/human-interface-guidelines/generative-ai
+  - https://pair.withgoogle.com/chapter/feedback-controls/

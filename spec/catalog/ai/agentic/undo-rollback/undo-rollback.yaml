@@ -1,0 +1,74 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: undo-rollback
+name: Undo / rollback for agent actions
+kind: component
+catalog: ai
+group: agentic
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: Every reversible agent action can be undone; irreversible ones are gated and labelled before they run.
+aliases:
+  - Restore checkpoint
+  - Undo (VS Code)
+  - Action Audit & Undo (Smashing)
+  - revert (Carbon AI label)
+found_in:
+  - VS Code Copilot
+  - Claude Code
+  - Cursor
+  - Lovable
+  - IBM Carbon
+anatomy:
+  - part: undo-affordance
+    description: Undo affordance with grace period on reversible actions
+  - part: restore-for-files
+    description: restore for files (checkpoints)
+  - part: compensating-action
+    description: compensating action for external effects
+  - part: irreversible-label-before
+    description: irreversible label before execution
+states:
+  - id: enabled
+modes:
+  - id: undoable
+  - id: undone
+  - id: expired
+  - id: irreversible
+api:
+  interactions:
+    - undo
+    - restore
+    - view what changed
+accessibility:
+  notes: Undo announced with what was reverted; irreversible warnings in text.
+tokens:
+  consumes:
+    - color.fg.muted
+    - color.status.warning
+    - type.body.sm
+usage:
+  use_when:
+    - always, for actions with effects
+  avoid_when:
+    - announcing irreversibility only after the fact
+  pairs_well_with:
+    - version-history
+    - activity-log
+    - approval-prompt
+  reuses:
+    - toast
+    - button
+    - dialog
+  exemplars:
+    - Apple HIG — 'revert or retry content transformations or other actions they don't agree with'
+    - Carbon — revert button replaces the AI label after override
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://developer.apple.com/design/human-interface-guidelines/generative-ai
+  - https://carbondesignsystem.com/components/ai-label/usage/

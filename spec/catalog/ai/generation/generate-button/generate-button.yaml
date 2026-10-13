@@ -1,0 +1,78 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: generate-button
+name: Generate button (and the sparkle convention)
+kind: component
+catalog: ai
+group: generation
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: "The entry point for AI in augmented products: a verb-labelled button, optionally with a brand glyph;
+  never a bare sparkle."
+aliases:
+  - Initial CTA (Shape of AI)
+  - Generate / Write with AI / Ask AI / Magic Write / Make
+  - Actions (Figma toolbar)
+found_in:
+  - Notion
+  - Canva
+  - Figma
+  - Google Workspace
+  - Microsoft 365 Copilot
+anatomy:
+  - part: button-with-icon
+    description: button with icon + verb label
+  - part: optional-dropdown
+    description: optional dropdown of presets
+  - part: opens-prompt-affordance
+    description: opens prompt affordance or runs preset
+  - part: result-appears
+    description: result appears in a reviewable slot
+states:
+  - id: idle
+  - id: error
+modes:
+  - id: generating
+    notes: generating (spinner/shimmer, becomes stop)
+  - id: done
+api:
+  interactions:
+    - click to generate
+    - click again to stop
+    - menu for presets
+accessibility:
+  notes: Named by its verb, never by an icon alone; busy state announced.
+tokens:
+  consumes:
+    - color.accent.brand
+    - color.accent.ai
+    - radius.md
+    - type.weight.medium
+usage:
+  use_when:
+    - any AI feature entry point
+  avoid_when:
+    - sparkle-only icon buttons
+    - using sparkles for suggestions, favourites or 'new'
+  pairs_well_with:
+    - selection-ai-menu
+    - ai-label
+    - ai-accent-token
+  reuses:
+    - button
+    - dropdown-menu
+    - icon
+  exemplars:
+    - NN/g (Sep 2024) — no participant read ✨ as AI; use labels
+    - Canva — named 'Magic' family
+    - Shape of AI — 'When sparkles alone are applied everywhere, they lose meaning'
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.nngroup.com/articles/ai-sparkles-icon-problem/
+  - https://www.shapeof.ai/patterns/iconography
+  - https://www.canva.com/magic/

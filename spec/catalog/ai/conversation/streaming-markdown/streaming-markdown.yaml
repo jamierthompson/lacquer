@@ -1,0 +1,89 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: streaming-markdown
+name: Streaming text + markdown renderer
+kind: component
+catalog: ai
+group: conversation
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: Renders partial markdown as it arrives without flashing, breaking or leaking unsafe HTML; styles open
+  fences and tables deliberately.
+aliases:
+  - MessageResponse / Response (AI Elements)
+  - ResponseStream + Markdown (prompt-kit)
+  - Streamdown (Vercel)
+  - st.write_stream (Streamlit)
+found_in:
+  - ChatGPT
+  - Claude
+  - Gemini
+  - Perplexity
+  - Streamdown
+  - AI Elements
+  - prompt-kit
+anatomy:
+  - part: incremental-parser
+    description: incremental parser
+  - part: unterminated-block-styling
+    description: unterminated-block styling
+  - part: caret
+    description: caret
+  - part: code-block
+    description: code block with header, language, filename, copy
+  - part: table-wrapper
+    description: table wrapper with horizontal scroll
+  - part: math
+    description: math (KaTeX) and Mermaid after fence close
+  - part: hardened-link
+    description: hardened link and image handling
+states:
+  - id: streaming
+  - id: complete
+  - id: error
+api:
+  interactions:
+    - copy code
+    - link safety preview of full URL
+    - expand long code blocks
+accessibility:
+  notes: Rendered region is not the live region; mirror sentence batches to a hidden status region; code blocks
+    are pre/code with a labelled copy button.
+tokens:
+  consumes:
+    - type.body.md
+    - type.family.mono
+    - color.bg.code
+    - stream.cursor-blink
+    - stream.reveal-duration
+    - size.measure.prose
+    - color.fg.link
+usage:
+  use_when:
+    - any streamed model output
+  avoid_when:
+    - never render raw model HTML; never re-parse the whole string per token
+  pairs_well_with:
+    - message
+    - thinking-indicator
+    - reduced-motion-streaming
+    - live-region-strategy
+  reuses:
+    - code-block
+    - table
+    - blockquote
+    - link
+    - image
+    - list
+  exemplars:
+    - Streamdown — 'parses incomplete Markdown for prettier streaming', blocks unexpected-origin images/links
+    - AI Elements MessageResponse — GFM, math, smart streaming
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://streamdown.ai/
+  - https://elements.ai-sdk.dev/components/message

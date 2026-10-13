@@ -1,0 +1,65 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: model-version-badge
+name: Model / version badge
+kind: component
+catalog: ai
+group: trust
+tier: 3
+maturity: emerging
+status: draft
+version: 0.1.0
+summary: Answers 'which model wrote this' and notifies users when the default changes.
+aliases:
+  - model label on responses
+  - model name in header
+  - HAX G18 change notice
+found_in:
+  - ChatGPT
+  - Claude
+  - Gemini
+  - Cursor
+anatomy:
+  - part: small-non-interactive-label
+    description: small non-interactive label (model name)
+  - part: link-to-selector
+    description: link to selector
+  - part: changelog-notice-when
+    description: changelog/notice when the default model changes
+states:
+  - id: enabled
+modes:
+  - id: default
+  - id: changed-mid-thread
+  - id: deprecated
+api:
+  interactions:
+    - click opens selector or changelog
+accessibility:
+  notes: Text label; change announced once.
+tokens:
+  consumes:
+    - color.fg.muted
+    - type.label.sm
+    - radius.sm
+usage:
+  use_when:
+    - multi-model products
+    - after model migrations
+  avoid_when:
+    - single fixed model
+  pairs_well_with:
+    - model-mode-selector
+    - first-run-education
+  reuses:
+    - badge
+    - link
+    - toast
+  exemplars:
+    - HAX G18 — Notify users about changes
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.microsoft.com/en-us/haxtoolkit/library/

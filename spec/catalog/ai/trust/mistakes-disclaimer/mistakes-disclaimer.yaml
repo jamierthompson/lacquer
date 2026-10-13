@@ -1,0 +1,67 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: mistakes-disclaimer
+name: "'AI can make mistakes' disclaimer"
+kind: component
+catalog: ai
+group: trust
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: Short, persistent, linked statement that outputs may be wrong; a baseline, not a substitute for
+  citations or uncertainty signals.
+aliases:
+  - ChatGPT can make mistakes. Check important info.
+  - Claude can make mistakes. Please double-check responses.
+  - Caveat (Shape of AI)
+found_in:
+  - ChatGPT
+  - Claude
+  - Gemini
+  - Copilot
+  - Perplexity
+anatomy:
+  - part: one-line-beneath
+    description: one line beneath the composer
+  - part: link-to-limitations-how
+    description: link to limitations/how it works
+  - part: optional-stronger-variant
+    description: optional stronger variant in high-stakes domains
+states:
+  - id: enabled
+modes:
+  - id: default
+  - id: high-stakes
+api:
+  interactions:
+    - link opens limitations
+accessibility:
+  notes: Persistent text meets AA contrast; not a live region.
+tokens:
+  consumes:
+    - color.fg.muted
+    - type.label.sm
+    - size.measure.prose
+usage:
+  use_when:
+    - every generative surface
+  avoid_when:
+    - using it to excuse missing verification affordances
+  pairs_well_with:
+    - composer
+    - capability-empty-state
+    - inline-citation
+  reuses:
+    - text
+    - link
+  exemplars:
+    - Apple HIG — 'Clearly communicate that AI-generated content may contain errors'
+    - HAX G2 — make clear how well the system can do what it can do
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://developer.apple.com/design/human-interface-guidelines/generative-ai
+  - https://www.microsoft.com/en-us/haxtoolkit/library/

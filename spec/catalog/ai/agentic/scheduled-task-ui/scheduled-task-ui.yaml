@@ -1,0 +1,73 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: scheduled-task-ui
+name: Scheduled / recurring task UI
+kind: component
+catalog: ai
+group: agentic
+tier: 3
+maturity: emerging
+status: draft
+version: 0.1.0
+summary: "Management UI for agents that run on a schedule: plain-language cadence, run history, and distinct
+  failure states."
+aliases:
+  - Tasks (ChatGPT)
+  - scheduled tasks (Claude Code)
+  - cloud agent schedules (Cursor)
+found_in:
+  - ChatGPT
+  - Claude Code
+  - Cursor
+anatomy:
+  - part: list
+    description: "list: name, cadence in plain language, next run, last status"
+  - part: run-history
+    description: run history (job cards)
+  - part: editor
+    description: "editor: natural-language prompt + structured cadence picker"
+  - part: notification-preferences
+    description: notification preferences
+states:
+  - id: active
+modes:
+  - id: paused
+  - id: failed-last-run
+  - id: one-shot-fired
+api:
+  interactions:
+    - create
+    - pause/resume
+    - run now
+    - edit prompt
+    - delete
+accessibility:
+  notes: Table semantics; cadence stated as text; status not colour-only.
+tokens:
+  consumes:
+    - type.body.sm
+    - color.status.success
+    - color.status.error
+    - color.border.subtle
+usage:
+  use_when:
+    - recurring automations
+  avoid_when:
+    - one-off tasks
+  pairs_well_with:
+    - background-job-card
+    - activity-log
+  reuses:
+    - table
+    - form
+    - switch
+    - badge
+    - dialog
+  exemplars:
+    - ChatGPT Tasks; Claude Code scheduled tasks (product behaviour)
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://help.openai.com/en/articles/6825453-chatgpt-release-notes

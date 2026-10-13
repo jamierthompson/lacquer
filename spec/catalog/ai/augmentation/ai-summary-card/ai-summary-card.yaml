@@ -1,0 +1,83 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: ai-summary-card
+name: AI summary in lists and cards
+kind: component
+catalog: ai
+group: augmentation
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: A labelled summary that always keeps a path to the underlying content and marks itself stale when
+  sources change.
+aliases:
+  - AI review summaries (Amazon)
+  - Enhanced notes (Granola)
+  - thread summaries (Gmail, Notion, GitHub)
+  - Summary / Synthesis (Shape of AI)
+found_in:
+  - Amazon
+  - Granola
+  - Gmail
+  - Notion
+  - GitHub
+  - Linear
+anatomy:
+  - part: labelled-block
+    description: labelled block ('Summarized with AI')
+  - part: summary-text
+    description: summary text
+  - part: expand-to-source-links
+    description: expand-to-source / links back to source spans
+  - part: regenerate
+    description: regenerate
+  - part: feedback
+    description: feedback
+  - part: timestamp
+    description: timestamp
+states:
+  - id: error
+modes:
+  - id: generating
+  - id: ready
+  - id: stale
+    notes: stale (source changed)
+api:
+  interactions:
+    - open source
+    - regenerate
+    - collapse
+accessibility:
+  notes: Region with a heading naming it as AI-generated; source links are real links.
+tokens:
+  consumes:
+    - color.accent.ai-subtle
+    - color.border.ai
+    - radius.md
+    - type.body.sm
+usage:
+  use_when:
+    - long lists, threads, transcripts, reviews
+  avoid_when:
+    - summaries without access to the source
+  pairs_well_with:
+    - ai-label
+    - inline-citation
+    - feedback-control
+  reuses:
+    - card
+    - badge
+    - link
+    - disclosure
+    - button
+  exemplars:
+    - Granola — 'My notes' alongside 'Enhanced'
+    - NN/g — AI Summaries of Reviews
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.granola.ai/
+  - https://www.nngroup.com/articles/designing-ai-study-guide/

@@ -1,0 +1,78 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: ask-about-this-page
+name: "'Ask about this page' affordance"
+kind: component
+catalog: ai
+group: augmentation
+tier: 2
+maturity: emerging
+status: draft
+version: 0.1.0
+summary: A consistent, page-aware assistant entry point that shows what context it has.
+aliases:
+  - Ask Raycast AI about what you're looking at
+  - Copilot sidebar (Edge)
+  - Perplexity sidebar
+  - CopilotSidebar / CopilotPopup (CopilotKit)
+  - AssistantModal (assistant-ui)
+found_in:
+  - Raycast
+  - Microsoft Edge Copilot
+  - Perplexity
+  - CopilotKit
+  - assistant-ui
+anatomy:
+  - part: persistent-entry-point
+    description: persistent entry point (button or side panel)
+  - part: current-page-document-attached
+    description: current page/document attached as a context chip
+  - part: compact-composer
+    description: compact composer
+  - part: answer-with-citations
+    description: answer with citations into the page
+states:
+  - id: enabled
+modes:
+  - id: closed
+  - id: open
+  - id: context-attached
+  - id: answering
+api:
+  interactions:
+    - open from any page
+    - resize/dock
+    - continue in full chat
+accessibility:
+  notes: Panel is a complementary region or dialog; entry point consistent across pages; resizable by keyboard.
+tokens:
+  consumes:
+    - color.bg.surface-raised
+    - shadow.lg
+    - color.border.subtle
+    - radius.lg
+usage:
+  use_when:
+    - documentation, dashboards, any content-heavy product
+  avoid_when:
+    - "adding a second chatbot beside an existing one (NN/g: consolidate)"
+  pairs_well_with:
+    - context-chips
+    - composer
+    - inline-citation
+  reuses:
+    - drawer
+    - popover
+    - button
+    - tag
+  exemplars:
+    - NN/g (Apr 2026) — keep the chatbot accessible across pages; consolidate chats
+    - Raycast — 'leverage AI about whatever you're looking at'
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.nngroup.com/articles/ai-chatbots-design-guidelines/
+  - https://manual.raycast.com/ai
+  - https://docs.copilotkit.ai/

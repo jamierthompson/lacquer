@@ -1,0 +1,161 @@
+/*
+ * Tool-call card — reference implementation for the html renderer.
+ * Spec:    spec/catalog/ai/conversation/tool-call-card/tool-call-card.yaml
+ * Binding: spec/bindings/html.yaml
+ *
+ * State is an attribute from the tool machine (LQ-TOOLCARD-01): the card
+ * never inspects its output to decide how it looks. Effect is exposed as
+ * data-effect so writes look different from reads without expanding
+ * (LQ-TOOL-02). Every part carries data-slot (LQ-ANAT-01). The actions use
+ * the catalog button, so this file styles nothing inside [data-slot="actions"].
+ */
+
+[data-lacquer="tool-call-card"] {
+  /* anatomy: root — role="group", carries data-state and data-effect */
+  border: 1px solid var(--lq-color-border-subtle);
+  border-radius: var(--lq-radius-md);
+  background-color: var(--lq-color-bg-surface-secondary);
+  color: var(--lq-color-fg-default);
+  font: var(--lq-type-body-md);
+}
+
+/* --- effect (variant axis): visible while collapsed ----------------------- */
+
+[data-lacquer="tool-call-card"][data-effect="write"] {
+  border-inline-start: 2px solid var(--lq-color-status-running);
+}
+[data-lacquer="tool-call-card"][data-effect="destroy"] {
+  border-inline-start: 2px solid var(--lq-color-status-error);
+}
+
+/* --- header: the disclosure trigger, a native button ---------------------- */
+
+[data-lacquer="tool-call-card"] > [data-slot="header"] {
+  display: flex;
+  align-items: center;
+  gap: var(--lq-space-gap-sm);
+  inline-size: 100%;
+  padding: var(--lq-space-inset-sm);
+  border: 0;
+  border-radius: var(--lq-radius-md);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--lq-motion-duration-base) var(--lq-motion-easing-standard);
+}
+[data-lacquer="tool-call-card"] > [data-slot="header"]:hover,
+[data-lacquer="tool-call-card"] > [data-slot="header"][aria-expanded="true"] {
+  background-color: var(--lq-color-bg-surface-tertiary);
+}
+[data-lacquer="tool-call-card"] > [data-slot="header"]:focus-visible {
+  outline: var(--lq-focus-ring-width) solid var(--lq-color-border-focus);
+  outline-offset: var(--lq-focus-ring-offset);
+}
+[data-lacquer="tool-call-card"] > [data-slot="header"]:active {
+  translate: 0 1px;
+}
+
+[data-lacquer="tool-call-card"] [data-slot="icon"] {
+  inline-size: var(--lq-size-icon-md);
+  block-size: var(--lq-size-icon-md);
+  flex: none;
+  color: var(--lq-color-fg-muted);
+}
+
+[data-lacquer="tool-call-card"] [data-slot="name"] {
+  flex: 1 1 0;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* status: text first, colour second (LQ-STATE-02) */
+[data-lacquer="tool-call-card"] [data-slot="status"] {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--lq-space-gap-xs);
+  font: var(--lq-type-label-sm);
+  color: var(--lq-color-fg-muted);
+}
+[data-lacquer="tool-call-card"] [data-slot="status"] > [data-slot="spinner"] {
+  inline-size: var(--lq-size-icon-sm);
+  block-size: var(--lq-size-icon-sm);
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: var(--lq-radius-pill);
+  animation: lq-tool-spin 1s linear infinite;
+}
+
+/* chevron: rotation paired with the header background change (LQ-STATE-02) */
+[data-lacquer="tool-call-card"] [data-slot="chevron"] {
+  color: var(--lq-color-fg-muted);
+  transition: rotate var(--lq-motion-duration-base) var(--lq-motion-easing-standard);
+}
+[data-lacquer="tool-call-card"] > [data-slot="header"][aria-expanded="true"] [data-slot="chevron"] {
+  rotate: 90deg;
+}
+
+/* --- lifecycle states (data-state from the tool machine) ------------------ */
+
+[data-lacquer="tool-call-card"][data-state="input-streaming"] [data-slot="status"] { color: var(--lq-color-status-pending); }
+[data-lacquer="tool-call-card"][data-state="input-streaming"] [data-slot="name"] { animation: lq-tool-pulse 2s ease-in-out infinite; }
+[data-lacquer="tool-call-card"][data-state="input-available"] [data-slot="status"] { color: var(--lq-color-status-running); }
+[data-lacquer="tool-call-card"][data-state="approval-requested"] { outline: 1px solid var(--lq-color-status-warning); }
+[data-lacquer="tool-call-card"][data-state="approval-requested"] [data-slot="status"] { color: var(--lq-color-status-warning); }
+[data-lacquer="tool-call-card"][data-state="approval-responded"] [data-slot="status"] { color: var(--lq-color-fg-muted); }
+[data-lacquer="tool-call-card"][data-state="output-available"] [data-slot="status"] { color: var(--lq-color-status-success); }
+[data-lacquer="tool-call-card"][data-state="output-error"] [data-slot="status"] { color: var(--lq-color-status-error); }
+[data-lacquer="tool-call-card"][data-state="output-denied"] [data-slot="status"] { color: var(--lq-color-fg-muted); }
+
+/* --- body ------------------------------------------------------------------ */
+
+[data-lacquer="tool-call-card"] > [data-slot="body"] {
+  display: grid;
+  gap: var(--lq-space-gap-sm);
+  padding: var(--lq-space-inset-sm);
+  border-top: 1px solid var(--lq-color-border-subtle);
+}
+[data-lacquer="tool-call-card"] > [data-slot="body"][hidden] {
+  display: none;
+}
+
+[data-lacquer="tool-call-card"] [data-slot="input"],
+[data-lacquer="tool-call-card"] pre[data-slot="output"] {
+  margin: 0;
+  max-block-size: 16rem;
+  overflow: auto;
+  padding: var(--lq-space-gap-sm);
+  border-radius: var(--lq-radius-sm);
+  background-color: var(--lq-color-bg-surface-tertiary);
+  font: var(--lq-type-label-sm);
+  font-family: var(--lq-type-family-mono);
+  font-weight: 400;
+}
+
+/* error message: role="alert" on the message, not the card */
+[data-lacquer="tool-call-card"] [data-slot="output"][role="alert"] {
+  margin: 0;
+  color: var(--lq-color-status-error);
+}
+
+[data-lacquer="tool-call-card"] [data-slot="actions"] {
+  display: flex;
+  gap: var(--lq-space-gap-sm);
+}
+
+@keyframes lq-tool-spin { to { rotate: 1turn; } }
+@keyframes lq-tool-pulse { 50% { opacity: 0.5; } }
+
+/* reduced motion: opacity only, no spin, no rotate transition (LQ-MOTION-02) */
+@media (prefers-reduced-motion: reduce) {
+  [data-lacquer="tool-call-card"] > [data-slot="header"],
+  [data-lacquer="tool-call-card"] [data-slot="chevron"] {
+    transition: none;
+  }
+  [data-lacquer="tool-call-card"] [data-slot="status"] > [data-slot="spinner"] {
+    animation: none;
+  }
+}

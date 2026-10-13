@@ -1,0 +1,78 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: sandbox-browser-view
+name: Sandbox / browser-use view
+kind: component
+catalog: ai
+group: agentic
+tier: 3
+maturity: experimental
+status: draft
+version: 0.1.0
+summary: Shows what an agent is doing in a browser or sandbox, with narration, approvals and a take-over control.
+aliases:
+  - Sandbox, WebPreview (AI Elements)
+  - live browser window (ChatGPT Agent)
+  - in-editor browser (Cursor)
+  - computer-use screenshots
+found_in:
+  - ChatGPT Agent
+  - Cursor
+  - Claude (computer use)
+  - AI Elements
+anatomy:
+  - part: live-or-screenshot
+    description: live or screenshot stream
+  - part: agent-narration-alongside
+    description: agent narration alongside
+  - part: take-over
+    description: Take over / Give back control
+  - part: clear-boundary-between
+    description: clear boundary between agent and user actions
+  - part: url-and-navigation
+    description: URL and navigation
+states:
+  - id: enabled
+modes:
+  - id: agent-driving
+  - id: user-driving
+  - id: paused-for-approval
+  - id: ended
+api:
+  interactions:
+    - take over
+    - approve step
+    - stop
+    - open full size
+accessibility:
+  notes: Narration is text in a log region; screenshots have descriptions; take-over is a button with focus
+    management.
+tokens:
+  consumes:
+    - color.bg.surface
+    - color.border.strong
+    - radius.md
+usage:
+  use_when:
+    - browser or computer-use agents
+  avoid_when:
+    - a constrained viewport that hides what is being entered
+  pairs_well_with:
+    - approval-prompt
+    - activity-log
+    - agent-status
+  reuses:
+    - iframe
+    - image
+    - toolbar
+    - button
+    - badge
+  exemplars:
+    - NN/g (Aug 2025) — screenshots and narration built trust; constrained window limited visibility
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.nngroup.com/articles/impressions-chatgpt-agent/
+  - https://elements.ai-sdk.dev/components/web-preview

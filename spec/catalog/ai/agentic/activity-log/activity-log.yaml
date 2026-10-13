@@ -1,0 +1,82 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: activity-log
+name: Activity log / trace
+kind: component
+catalog: ai
+group: agentic
+tier: 2
+maturity: established
+status: draft
+version: 0.1.0
+summary: "The audit surface: every agent action with time, target and result, filterable and exportable; the
+  basis for undo and 'why did it do that'."
+aliases:
+  - transcript / tool log (Claude Code)
+  - agent trace (Cursor, Vercel)
+  - chain of thought (Chainlit)
+  - Action Audit (Smashing)
+  - Footprints (Shape of AI)
+found_in:
+  - Claude Code
+  - Cursor
+  - GitHub Copilot
+  - Chainlit
+  - Vercel agent runs
+anatomy:
+  - part: chronological-list
+    description: "chronological list: timestamp, action, target, result, cost"
+  - part: filters-by-type-status
+    description: filters by type/status
+  - part: collapsible-detail
+    description: collapsible detail
+  - part: export
+    description: export
+  - part: undo-affordance-per
+    description: undo affordance per reversible entry
+states:
+  - id: complete
+  - id: empty
+modes:
+  - id: live
+  - id: filtered
+api:
+  interactions:
+    - expand entry
+    - filter
+    - jump to message
+    - undo/compensate
+accessibility:
+  notes: Log region (polite) for live entries; table or list semantics; filters are form controls.
+tokens:
+  consumes:
+    - type.family.mono
+    - type.label.sm
+    - color.fg.muted
+    - color.border.subtle
+usage:
+  use_when:
+    - agents that act on files, data or external systems
+  avoid_when:
+    - read-only assistants
+  pairs_well_with:
+    - tool-call-card
+    - undo-rollback
+    - approval-prompt
+    - explainability-popover
+  reuses:
+    - table
+    - list
+    - disclosure
+    - badge
+    - filter-bar
+  exemplars:
+    - Smashing (Yocco 2026) — Action Audit & Undo
+    - HAX G11 — make clear why the system did what it did
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.smashingmagazine.com/2026/02/designing-agentic-ai-practical-ux-patterns/
+  - https://www.microsoft.com/en-us/haxtoolkit/library/

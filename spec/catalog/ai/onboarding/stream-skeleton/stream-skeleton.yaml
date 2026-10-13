@@ -1,0 +1,59 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: stream-skeleton
+name: Skeletons for streamed structured output
+kind: component
+catalog: ai
+group: onboarding
+tier: 2
+maturity: emerging
+status: draft
+version: 0.1.0
+summary: Use skeletons only when the output's shape is known; for prose use the thinking indicator instead.
+aliases:
+  - Shimmer (AI Elements)
+  - per-cell skeletons in variation grids
+  - artifact panel skeleton
+found_in:
+  - v0
+  - Lovable
+  - Midjourney
+  - AI Elements
+anatomy:
+  - part: shape-matched-skeletons
+    description: shape-matched skeletons for known structures (table, card grid, panel)
+  - part: progressive-replacement-as
+    description: progressive replacement as parts arrive
+states:
+  - id: skeleton
+  - id: filled
+modes:
+  - id: partially-filled
+api:
+  interactions: []
+accessibility:
+  notes: aria-busy on the container; no announcements for skeletons themselves.
+tokens:
+  consumes:
+    - color.bg.skeleton
+    - shimmer.duration
+    - radius.md
+usage:
+  use_when:
+    - tables, grids, panels being generated
+  avoid_when:
+    - fake paragraph skeletons for prose
+  pairs_well_with:
+    - thinking-indicator
+    - variation-grid
+    - generation-progress
+  reuses:
+    - skeleton
+  exemplars:
+    - AI Elements Plan — streaming shimmer loading states
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://elements.ai-sdk.dev/components/plan

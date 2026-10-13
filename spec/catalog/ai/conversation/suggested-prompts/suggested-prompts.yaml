@@ -1,0 +1,84 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: suggested-prompts
+name: Suggested prompts and follow-ups
+kind: component
+catalog: ai
+group: conversation
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: Specific, contextual prompt buttons at the start of a conversation and after answers; buttons, not text.
+aliases:
+  - Suggestion (AI Elements, assistant-ui)
+  - PromptSuggestion (prompt-kit)
+  - Follow up / Suggestions / Templates (Shape of AI Wayfinders)
+  - CopilotKit suggestions
+  - related questions
+found_in:
+  - ChatGPT
+  - Claude
+  - Gemini
+  - Copilot
+  - Perplexity
+  - AI Elements
+  - assistant-ui
+  - CopilotKit
+anatomy:
+  - part: group-label
+    description: group label (Suggested)
+  - part: row-of-2
+    description: row of 2–6 pill buttons (starter) or 2–4 (follow-up)
+  - part: optional-card-variant
+    description: optional card variant with icon and description for empty state
+states:
+  - id: loading
+modes:
+  - id: starter
+    notes: starter (empty state)
+  - id: follow-up
+    notes: follow-up (after answer)
+  - id: hidden
+api:
+  interactions:
+    - click sends the prompt (default) or fills the composer when the prompt has slots
+    - horizontal scroll on narrow screens
+accessibility:
+  notes: Real buttons inside a labelled group; keyboard reachable scroll row; sent suggestion appears as the
+    user's message.
+tokens:
+  consumes:
+    - radius.pill
+    - color.border.subtle
+    - color.bg.surface-raised
+    - type.body.sm
+    - space.gap.sm
+usage:
+  use_when:
+    - empty states
+    - after answers where a next step is likely
+    - onboarding to capabilities
+  avoid_when:
+    - generic suggestions ('Get ideas')
+    - engagement-bait follow-ups unrelated to the task
+  pairs_well_with:
+    - capability-empty-state
+    - composer
+    - message-actions
+  reuses:
+    - button
+    - tag
+    - scroll-area
+    - card
+  exemplars:
+    - NN/g (Jun 2025) — 'Easy family dinner ideas' beats generic
+    - NN/g (Apr 2026) — suggested questions as buttons, not text
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.nngroup.com/articles/designing-use-case-prompt-suggestions/
+  - https://www.nngroup.com/articles/ai-chatbots-design-guidelines/
+  - https://elements.ai-sdk.dev/components/suggestion

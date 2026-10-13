@@ -1,0 +1,66 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: generative-ui-rendering
+name: Generative UI rendering policy
+kind: method
+catalog: ai
+group: foundations
+tier: 2
+maturity: emerging
+status: draft
+version: 0.1.0
+summary: Three tiers of model-driven UI, ordered by safety; the catalog supports tier 1 and 2 with its own components.
+aliases:
+  - static generative UI (AG-UI / useFrontendTool)
+  - declarative (A2UI, Open-JSON-UI)
+  - open-ended (MCP Apps, OpenAI Apps SDK iframes)
+found_in:
+  - CopilotKit
+  - A2UI
+  - OpenAI Apps SDK
+  - assistant-ui ToolUI
+  - MCP Apps
+anatomy:
+  - part: tier-1
+    description: "tier 1: model selects and fills pre-built components (safest)"
+  - part: tier-2
+    description: "tier 2: model emits a JSON spec rendered with the product's catalog (A2UI: 'Agents can only use
+      pre-approved components')"
+  - part: tier-3
+    description: "tier 3: sandboxed iframe apps with system fonts/colors and max two actions per card (Apps SDK)"
+  - part: never-raw-model
+    description: never raw model HTML in the page
+states:
+  - id: enabled
+api:
+  interactions: []
+accessibility:
+  notes: Rendered components inherit the system's accessible components; iframes titled; no nested scrolling.
+tokens:
+  consumes:
+    - color.accent.ai
+    - color.bg.surface-raised
+usage:
+  use_when:
+    - tool results that are better shown than told
+  avoid_when:
+    - rendering model-supplied HTML directly
+    - "letting generated UI change constantly (NN/g: consistency problems)"
+  pairs_well_with:
+    - tool-call-card
+    - ai-accent-token
+  reuses:
+    - card
+    - list
+    - form
+    - iframe
+  exemplars:
+    - CopilotKit (Jan 2026) — static vs declarative vs open-ended generative UI
+    - OpenAI Apps SDK — inline/fullscreen/PiP; system colors and fonts; 'Limit actions per card to two'
+rules:
+  shared: []
+sources:
+  - https://www.copilotkit.ai/blog/the-developer-s-guide-to-generative-ui-in-2026
+  - https://a2ui.org/
+  - https://developers.openai.com/apps-sdk/concepts/ui-guidelines
+  - https://www.nngroup.com/articles/generative-ui/

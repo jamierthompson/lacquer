@@ -1,0 +1,78 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: ghost-text-completion
+name: Inline ghost-text completion
+kind: component
+catalog: ai
+group: generation
+tier: 2
+maturity: established
+status: draft
+version: 0.1.0
+summary: Predictive text rendered as dimmed ghost text; Tab accepts, anything else discards; never moves
+  existing text.
+aliases:
+  - Copilot inline suggestions
+  - Cursor Tab
+  - Next Edit Suggestions (VS Code)
+  - Smart Compose
+  - Auto-fill (Shape of AI)
+found_in:
+  - GitHub Copilot
+  - Cursor
+  - Windsurf
+  - Gmail
+  - Notion
+anatomy:
+  - part: dimmed-suggestion-after
+    description: dimmed suggestion after the caret
+  - part: gutter-arrow
+    description: gutter arrow for next-edit suggestions
+  - part: hover-toolbar
+    description: hover toolbar with alternatives
+states:
+  - id: enabled
+modes:
+  - id: hidden
+  - id: suggesting
+  - id: partially-accepted
+  - id: dismissed
+api:
+  interactions:
+    - Tab accepts
+    - Esc dismisses
+    - Cmd/Ctrl+Right accepts word/line
+    - typing discards
+    - hover cycles alternatives
+accessibility:
+  notes: Announce that a suggestion exists; accessible view to read it; never the only way to enter content; low
+    contrast acceptable only because transient.
+tokens:
+  consumes:
+    - color.fg.ghost
+    - type.family.mono
+    - type.body.md
+usage:
+  use_when:
+    - code editors
+    - long-form writing
+    - repetitive form entry
+  avoid_when:
+    - latency above ~300 ms
+    - fields where a wrong accept is costly
+  pairs_well_with:
+    - smart-autofill
+    - diff-review
+  reuses:
+    - textarea
+    - code-editor
+    - tooltip
+  exemplars:
+    - VS Code — 'dimmed ghost text… Accept a suggestion by pressing the Tab key'
+    - Next Edit Suggestions — gutter arrow
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://code.visualstudio.com/docs/copilot/ai-powered-suggestions

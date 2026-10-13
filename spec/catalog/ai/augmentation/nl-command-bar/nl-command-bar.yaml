@@ -1,0 +1,74 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: nl-command-bar
+name: Natural-language command bar
+kind: component
+catalog: ai
+group: augmentation
+tier: 2
+maturity: established
+status: draft
+version: 0.1.0
+summary: A command palette whose fallback is an AI answer or action, never displacing exact command matches.
+aliases:
+  - Quick AI (Raycast)
+  - Cmd+K with Ask row
+  - Copilot in-app command bar
+  - Open input + Madlibs (Shape of AI)
+found_in:
+  - Raycast
+  - Notion
+  - Linear
+  - Slack
+  - Microsoft 365 Copilot
+anatomy:
+  - part: command-palette-input
+    description: command palette input
+  - part: deterministic-command-matches
+    description: deterministic command matches first
+  - part: ai-row-as
+    description: AI row as fallback ('Ask about…')
+  - part: inline-answer-card
+    description: inline answer card
+  - part: continue-in-chat-escape-hatch
+    description: continue-in-chat escape hatch
+states:
+  - id: enabled
+modes:
+  - id: matching-commands
+  - id: ai-fallback
+  - id: answering
+  - id: answered
+api:
+  interactions:
+    - Tab or Enter on AI row
+    - expand to chat
+accessibility:
+  notes: Combobox/listbox semantics; AI row labelled as AI; answer announced once.
+tokens:
+  consumes:
+    - color.bg.surface-raised
+    - shadow.lg
+    - radius.lg
+    - type.body.sm
+usage:
+  use_when:
+    - products with an existing palette or search
+  avoid_when:
+    - making the AI row the default over deterministic commands
+  pairs_well_with:
+    - ask-about-this-page
+    - context-chips
+  reuses:
+    - command-palette
+    - list
+    - card
+    - kbd
+  exemplars:
+    - Raycast — 'Ask a one-off question from Root Search'
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://manual.raycast.com/ai

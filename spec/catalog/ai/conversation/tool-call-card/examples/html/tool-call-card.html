@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tool-call card — Lacquer reference implementation</title>
+  <!--
+    Reference implementation for the html renderer.
+    Spec: spec/catalog/ai/conversation/tool-call-card/tool-call-card.yaml
+
+    The markup pattern is:
+
+      <div role="group" aria-labelledby="{name-id}" data-lacquer="tool-call-card"
+           data-state="{lifecycle state}" data-effect="read|write|destroy">
+        <button type="button" data-slot="header" aria-expanded="false" aria-controls="{body-id}">
+          <span data-slot="icon" aria-hidden="true">…</span>        optional
+          <span data-slot="name" id="{name-id}">Reading src/app.tsx</span>
+          <span data-slot="status">Running</span>
+          <span data-slot="chevron" aria-hidden="true">›</span>
+        </button>
+        <div data-slot="body" id="{body-id}" role="region" aria-labelledby="{name-id}" hidden>
+          <pre data-slot="input">…</pre>                              optional
+          <pre data-slot="output">…</pre>  or  <p data-slot="output" role="alert">…</p>
+          <div data-slot="actions">…catalog buttons…</div>           optional
+        </div>
+      </div>
+
+    State comes from the tool machine and is written to data-state; the card
+    never infers it from content (LQ-TOOLCARD-01). output-error and
+    approval-requested ship with the body open (LQ-TOOLCARD-02). Output is
+    text, JSON or a registered component, never model HTML (LQ-TOOLCARD-03).
+    aria-busy sits on the root while running.
+
+    The disclosure toggle below is the only behaviour the reference adds; it
+    flips aria-expanded and hidden. Enter and Space come free from the native
+    button.
+  -->
+  <link rel="stylesheet" href="../../../../../../bindings/html.theme.css" />
+  <link rel="stylesheet" href="../../../../../core/actions/button/examples/html/button.css" />
+  <link rel="stylesheet" href="tool-call-card.css" />
+  <style>
+    /* Page chrome only. Not part of the component. */
+    body { margin: 0; padding: var(--lq-space-inset-lg); background: var(--lq-color-bg-surface); color: var(--lq-color-fg-default); font: var(--lq-type-body-md); }
+    h1 { font: var(--lq-type-heading-md); margin: 0 0 var(--lq-space-gap-lg); }
+    h2 { font: var(--lq-type-label-md); color: var(--lq-color-fg-muted); margin: var(--lq-space-gap-lg) 0 var(--lq-space-gap-sm); }
+    .stack { display: grid; gap: var(--lq-space-gap-sm); max-inline-size: 40rem; }
+  </style>
+</head>
+<body>
+  <h1>Tool-call card</h1>
+
+  <h2>Collapsed, completed (the common case)</h2>
+  <div class="stack">
+    <div role="group" aria-labelledby="t1-name" data-lacquer="tool-call-card" data-state="output-available" data-effect="read">
+      <button type="button" data-slot="header" aria-expanded="false" aria-controls="t1-body">
+        <span data-slot="name" id="t1-name">Read 3 files</span>
+        <span data-slot="status">Completed</span>
+        <span data-slot="chevron" aria-hidden="true">›</span>
+      </button>
+      <div data-slot="body" id="t1-body" role="region" aria-labelledby="t1-name" hidden>
+        <pre data-slot="input">{ "paths": ["src/app.tsx", "src/button.tsx", "src/index.css"] }</pre>
+        <pre data-slot="output">{ "files": 3, "lines": 412 }</pre>
+      </div>
+    </div>
+  </div>
+
+  <h2>Running (aria-busy on the root)</h2>
+  <div class="stack">
+    <div role="group" aria-labelledby="t2-name" aria-busy="true" data-lacquer="tool-call-card" data-state="input-available" data-effect="read">
+      <button type="button" data-slot="header" aria-expanded="false" aria-controls="t2-body">
+        <span data-slot="name" id="t2-name">Running npm test</span>
+        <span data-slot="status"><span data-slot="spinner" aria-hidden="true"></span>Running</span>
+        <span data-slot="chevron" aria-hidden="true">›</span>
+      </button>
+      <div data-slot="body" id="t2-body" role="region" aria-labelledby="t2-name" hidden>
+        <pre data-slot="input">{ "command": "npm test" }</pre>
+      </div>
+    </div>
+  </div>
+
+  <h2>Error (auto-expanded, alert on the message, Retry visible)</h2>
+  <div class="stack">
+    <div role="group" aria-labelledby="t3-name" data-lacquer="tool-call-card" data-state="output-error" data-effect="read">
+      <button type="button" data-slot="header" aria-expanded="true" aria-controls="t3-body">
+        <span data-slot="name" id="t3-name">Reading src/app.tsx</span>
+        <span data-slot="status">Error</span>
+        <span data-slot="chevron" aria-hidden="true">›</span>
+      </button>
+      <div data-slot="body" id="t3-body" role="region" aria-labelledby="t3-name">
+        <pre data-slot="input">{ "path": "src/app.tsx" }</pre>
+        <p data-slot="output" role="alert">Couldn't read src/app.tsx: permission denied</p>
+        <div data-slot="actions">
+          <button type="button" data-lacquer="button" data-emphasis="outline" data-size="xs"><span data-slot="label">Retry</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Approval requested (auto-expanded, safe option first, warning outline)</h2>
+  <div class="stack">
+    <div role="group" aria-labelledby="t4-name" data-lacquer="tool-call-card" data-state="approval-requested" data-effect="destroy">
+      <button type="button" data-slot="header" aria-expanded="true" aria-controls="t4-body">
+        <span data-slot="name" id="t4-name">Delete dist/ (14 files)</span>
+        <span data-slot="status">Needs approval</span>
+        <span data-slot="chevron" aria-hidden="true">›</span>
+      </button>
+      <div data-slot="body" id="t4-body" role="region" aria-labelledby="t4-name">
+        <pre data-slot="input">{ "path": "dist/", "recursive": true }</pre>
+        <div data-slot="actions">
+          <!-- Safe option first in DOM and focus order (LQ-GATE-01). -->
+          <button type="button" data-lacquer="button" data-emphasis="outline" data-size="xs" autofocus><span data-slot="label">Deny</span></button>
+          <button type="button" data-lacquer="button" data-emphasis="primary" data-size="xs"><span data-slot="label">Approve once</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Disclosure toggle: the only behaviour the reference adds.
+    for (const header of document.querySelectorAll('[data-lacquer="tool-call-card"] > [data-slot="header"]')) {
+      header.addEventListener("click", () => {
+        const open = header.getAttribute("aria-expanded") === "true"
+        header.setAttribute("aria-expanded", String(!open))
+        document.getElementById(header.getAttribute("aria-controls")).hidden = open
+      })
+    }
+  </script>
+</body>
+</html>

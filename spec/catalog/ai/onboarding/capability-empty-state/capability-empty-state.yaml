@@ -1,0 +1,75 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: capability-empty-state
+name: Capability and limitation pane (empty state)
+kind: component
+catalog: ai
+group: onboarding
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: "Where HAX G1/G2 live: what the system can do, how well, and a few specific ways to start."
+aliases:
+  - Examples / Capabilities / Limitations (early ChatGPT)
+  - greeting + suggestions (Claude, Gemini)
+  - Example gallery, Initial CTA, Nudges, Templates (Shape of AI Wayfinders)
+  - Thread welcome (assistant-ui)
+found_in:
+  - ChatGPT
+  - Claude
+  - Gemini
+  - Copilot
+  - assistant-ui
+anatomy:
+  - part: greeting
+    description: greeting
+  - part: part-3
+    description: 3–6 specific starter prompts as buttons
+  - part: one-line-limitations
+    description: one-line limitations with link
+  - part: centered-composer
+    description: centered composer that moves to bottom after first message
+states:
+  - id: enabled
+modes:
+  - id: first-run
+  - id: returning
+    notes: returning (personalised)
+  - id: project-scoped
+api:
+  interactions:
+    - click starter
+    - dismiss education
+accessibility:
+  notes: Heading structure; starters are buttons; composer focused on load.
+tokens:
+  consumes:
+    - size.measure.prose
+    - space.gap.lg
+    - type.body.lg
+    - color.fg.muted
+usage:
+  use_when:
+    - every new thread
+  avoid_when:
+    - vague greetings with no capabilities (NN/g)
+  pairs_well_with:
+    - suggested-prompts
+    - first-run-education
+    - mistakes-disclaimer
+  reuses:
+    - heading
+    - button
+    - card
+    - link
+  exemplars:
+    - NN/g (Apr 2026) — show what the chatbot can do through messages and suggested prompts
+    - Apple HIG — let people know limitations up front and how to get good results
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.nngroup.com/articles/ai-chatbots-design-guidelines/
+  - https://www.shapeof.ai/

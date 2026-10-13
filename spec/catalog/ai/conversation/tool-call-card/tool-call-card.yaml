@@ -1,0 +1,348 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: tool-call-card
+name: Tool-call card
+kind: component
+catalog: ai
+group: conversation
+tier: 1
+atomic_level: organism
+maturity: established
+status: draft
+version: 0.1.0
+summary: Collapsed-by-default card that shows one tool invocation with its seven-state lifecycle, inputs and outputs.
+aliases:
+  - Tool (AI Elements, prompt-kit)
+  - ToolUI / ToolFallback (assistant-ui)
+  - Step (Chainlit)
+  - tool rows (Cursor, Copilot, Claude Code)
+  - Footprints (Shape of AI)
+found_in:
+  - Claude Code
+  - Cursor
+  - GitHub Copilot
+  - ChatGPT
+  - AI Elements
+  - assistant-ui
+  - prompt-kit
+  - Chainlit
+  - CopilotKit
+anatomy:
+  - part: root
+    description: The card. Carries data-state (tool lifecycle) and data-effect (read | write | destroy).
+  - part: header
+    element: button
+    description: The disclosure trigger. Whole row is pressable; aria-expanded lives here.
+  - part: icon
+    required: false
+    description: Tool-category glyph (search, file, terminal, browser). Decorative.
+  - part: name
+    description: Humanised tool name plus target — "Searching the web for 'oklch contrast'", "Reading
+      src/app.tsx". Never the raw function name.
+  - part: status
+    description: State badge with text ("Running", "Completed", "Error"); colour is secondary.
+  - part: chevron
+    description: Rotates on expand; rotation is paired with the header background change (LQ-STATE-02).
+  - part: body
+    description: Collapsible region. Hidden by default except on error.
+  - part: input
+    required: false
+    description: Arguments as highlighted JSON in type.family.mono; truncated with "show all" past 20 lines.
+  - part: output
+    required: false
+    description: Result, error, or a registered generative-UI component. Never model-supplied HTML.
+  - part: actions
+    required: false
+    description: Retry (on error), Copy (on output), Approve / Deny (when approval-requested).
+variants:
+  - axis: density
+    values:
+      - row
+      - card
+    default: row
+    guidance: Row is a single line with the summary (Claude Code style); card adds a visible border and padding.
+      Grouped runs ("Searched 4 sources") are a row.
+  - axis: effect
+    values:
+      - read
+      - write
+      - destroy
+    default: read
+    guidance: Drives data-effect and the status token so writes look different from reads without expansion
+      (LQ-TOOL-02).
+modifiers:
+  - grouped
+states:
+  - id: input-streaming
+    treatment: Status "Pending" in color.status.pending; name may still be arriving; shimmer on the name,
+      opacity-only under reduced motion.
+    a11y: none until a name exists; then one announcement "Preparing {name}".
+  - id: input-available
+    treatment: Status "Running" in color.status.running with a spinner; elapsed time after 10 s (LQ-WAIT-01).
+    a11y: aria-busy="true" on root; one polite announcement "Running {name}".
+  - id: approval-requested
+    treatment: Body auto-expands; approval-prompt rendered inside; the card is outlined in color.status.warning.
+    a11y: 'Assertive announcement "Approval needed: {verb} {object}"; focus moves to the prompt.'
+  - id: approval-responded
+    treatment: Status "Approved" or "Denied"; the prompt collapses to one line recording the decision.
+    a11y: Polite announcement of the decision.
+  - id: output-available
+    treatment: Status "Completed" in color.status.success; collapses to a one-line summary ("Read 3 files");
+      spinner removed.
+    a11y: aria-busy removed; one polite announcement "{name} complete".
+  - id: output-error
+    treatment: Status "Error" in color.status.error with an icon; body auto-expands to show the message; Retry visible.
+    a11y: role="alert" on the message, not the whole card.
+  - id: output-denied
+    treatment: Status "Denied" in color.fg.muted; no output; one line explaining who denied it.
+    a11y: Polite announcement.
+  - id: expanded
+    treatment: Header background shifts one step; chevron rotates; body visible.
+    a11y: aria-expanded="true" on the header button; body has the header as aria-labelledby.
+  - id: focus-visible
+    treatment: Ring on the header button and on each action.
+    a11y: Implicit.
+  - id: hover
+    treatment: Header background one step.
+    a11y: none
+  - id: enabled
+    treatment: Base.
+    a11y: none
+  - id: active
+    required: false
+    treatment: Header inset.
+    a11y: none
+  - id: disabled
+    required: false
+    treatment: none — a tool card is never disabled; it is denied or errored.
+    a11y: none
+api:
+  props:
+    - name: state
+      type: enum(input-streaming|input-available|approval-requested|approval-responded|output-available|output-error|output-denied)
+      required: true
+      maps_to: data-state, aria-busy
+      description: Rendered from the tool machine, never inferred from content (message-state-machine).
+    - name: name
+      type: string
+      required: true
+      description: Humanised, with target. The implementation does not humanise; the caller does, so the mapping is
+        one place.
+    - name: effect
+      type: enum(read|write|destroy)
+      default: read
+      maps_to: data-effect
+    - name: input
+      type: unknown
+    - name: output
+      type: unknown | node
+      description: A registered component (a framework element, a custom element, a DOM node) may be passed for
+        generative UI.
+    - name: error
+      type: string
+    - name: defaultOpen
+      type: boolean
+      default: false
+      description: Forced true by the implementation when state is output-error or approval-requested.
+    - name: onRetry
+      type: () => void
+    - name: onApprove
+      type: () => void
+    - name: onDeny
+      type: () => void
+  slots:
+    - icon
+    - output
+  events:
+    - name: openChange
+      payload: boolean
+    - name: retry
+    - name: approve
+    - name: deny
+  composition: >
+    Built from disclosure + badge + code-block + spinner + card. Output is a slot so a product can render its
+    own component for a tool's result; the card never renders HTML strings.
+accessibility:
+  apg:
+    pattern: Disclosure
+    url: https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
+  role: group (root), button (header), region (body)
+  name: Root is labelled by the name part; the body is labelled by the header.
+  aria:
+    - attr: aria-expanded
+      on: header
+      value: true | false
+    - attr: aria-controls
+      on: header
+      value: id of body
+    - attr: aria-busy
+      on: root
+      when: input-available
+      value: "true"
+    - attr: role
+      on: error message
+      when: output-error
+      value: alert
+  keyboard:
+    - key: Enter / Space
+      action: Toggles the body.
+      when: focus on header
+    - key: Tab
+      action: Moves through header, then visible actions. Collapsed body contents are not in the tab order.
+  focus: On approval-requested, focus moves to the approval prompt's safe option (Deny). On output-error, focus
+    does not move; the alert role announces.
+  announcements: Exactly one announcement per state change, polite except approval-requested (assertive).
+    Batched when several cards change within 2 s (LQ-A11Y-01).
+tokens:
+  consumes:
+    - color.status.pending
+    - color.status.running
+    - color.status.success
+    - color.status.error
+    - color.status.warning
+    - color.bg.surface-secondary
+    - color.fg.default
+    - color.fg.muted
+    - color.border.subtle
+    - type.family.mono
+    - type.body.md
+    - type.label.sm
+    - radius.md
+    - space.inset.sm
+    - space.gap.sm
+    - motion.duration.base
+content:
+  label: "Humanised verb + target. \"Searching the web for 'x'\", \"Reading src/app.tsx\", \"Running npm test\".
+    Group repeats: \"Searched 4 sources\"."
+  voice: "Progressive while running (\"Reading\"), past tense when done (\"Read 3 files\"), plain on error
+    (\"Couldn't read src/app.tsx: permission denied\")."
+  limits: Never the raw function name or a UUID in the visible name. Never "Processing…" without a target.
+  strings:
+    pending: Pending
+    running: Running
+    approval: Needs approval
+    approved: Approved
+    denied: Denied
+    completed: Completed
+    error: Error
+    retry: Retry
+    show_all: Show all
+usage:
+  use_when:
+    - Any tool-using model or agent, one card per invocation, grouped when repeated.
+  avoid_when:
+    - Expanding every call by default (a wall of JSON).
+    - Rendering model-supplied HTML as the output.
+    - Showing a spinner without a name and target for more than 2 s (LQ-TOOL-01).
+  instead:
+    - when: Many steps over a long run that need scanning and jumping
+      use: activity-log
+    - when: The action needs a decision before it runs
+      use: approval-prompt
+  pairs_well_with:
+    - reasoning-disclosure
+    - approval-prompt
+    - activity-log
+    - agent-status
+    - message-state-machine
+  reuses:
+    - disclosure
+    - badge
+    - code-block
+    - spinner
+    - card
+  exemplars:
+    - AI Elements Tool — the seven-state vocabulary with badges; adopt the names, collapse completed by
+      default.
+    - Claude Code — one-line tool summaries in the transcript; the row density variant.
+    - CopilotKit — tool result rendered as a registered React component; the output slot.
+rules:
+  shared:
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+    - LQ-MOTION-02
+    - LQ-TOOL-01
+    - LQ-TOOL-02
+    - LQ-DISCLOSE-01
+    - LQ-A11Y-01
+    - LQ-ERR-01
+    - LQ-WAIT-01
+  local:
+    - id: LQ-TOOLCARD-01
+      level: MUST
+      polarity: require
+      title: Render from state, not content
+      statement: The card's visual state is driven by the `state` prop from the tool lifecycle; it is never inferred
+        from the output text (e.g. "contains 'error'" or "ends with ```").
+      detect:
+        static: No string matching on output/input in the state logic.
+      fix: Consume the machine's state; see message-state-machine.
+    - id: LQ-TOOLCARD-02
+      level: MUST
+      polarity: require
+      title: Error and approval auto-expand; everything else collapses
+      statement: output-error and approval-requested open the body automatically; all other states are collapsed by
+        default with a one-line summary visible.
+      detect:
+        runtime: For each state, assert the body's visibility matches the rule.
+      fix: Derive `open` from state unless the user has toggled it.
+    - id: LQ-TOOLCARD-03
+      level: MUST
+      polarity: forbid
+      title: Never render model HTML
+      statement: Output is JSON, text, or a component registered by the product; a string from the model is never
+        set as innerHTML.
+      detect:
+        static: dangerouslySetInnerHTML / v-html / innerHTML inside the output part.
+      fix: Render text, or map the tool name to a registered component.
+    - id: LQ-TOOLCARD-04
+      level: SHOULD
+      polarity: require
+      title: Group repeats
+      statement: Three or more consecutive calls to the same tool collapse into one grouped card ("Searched 4
+        sources") with the individual calls inside.
+      detect:
+        static: A grouping step exists before render.
+      fix: Group by tool name in the message renderer.
+examples:
+  good:
+    - id: seven-states
+      title: One card per lifecycle state
+      renderer: html
+      file: examples/html/seven-states.html
+      demonstrates:
+        - state:*
+        - rule:LQ-TOOLCARD-02
+    - id: write-vs-read
+      title: A read and a write side by side
+      renderer: html
+      file: examples/html/write-vs-read.html
+      demonstrates:
+        - variant:effect=*
+        - rule:LQ-TOOL-02
+  anti:
+    - id: infer-state-from-output
+      title: Deciding the state by searching the output for "error"
+      renderer: html
+      file: examples/anti/infer-state-from-output.html
+      violates:
+        - LQ-TOOLCARD-01
+        - LQ-TOOLCARD-03
+implementations:
+  - renderer: html
+    file: examples/html/tool-call-card.html
+    status: reference
+grading:
+  weight: 1.5
+  notes: In an agent transcript this is the most repeated component; the grader checks the state coverage of the
+    whole set, not each card.
+sources:
+  - https://elements.ai-sdk.dev/components/tool
+  - https://docs.chainlit.io/concepts/step
+  - https://docs.copilotkit.ai/
+  - https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/

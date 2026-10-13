@@ -1,0 +1,75 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: safety-interstitial
+name: Safety interstitial
+kind: component
+catalog: ai
+group: trust
+tier: 2
+maturity: established
+status: draft
+version: 0.1.0
+summary: A respectful block screen that coaches the user toward a permitted request instead of shaming or
+  exposing policy text.
+aliases:
+  - blocked request screen
+  - content policy notice
+  - Guardrails (Shape of AI)
+found_in:
+  - ChatGPT
+  - Claude
+  - Gemini
+  - Copilot
+anatomy:
+  - part: calm
+    description: calm, non-red panel
+  - part: reason-category
+    description: reason category
+  - part: what-is-allowed
+    description: what is allowed / how to rephrase
+  - part: appeal-or-feedback
+    description: appeal or feedback path
+  - part: resources-in-sensitive
+    description: resources in sensitive domains
+states:
+  - id: enabled
+modes:
+  - id: blocked
+  - id: partially-scoped
+  - id: appealed
+api:
+  interactions:
+    - rephrase
+    - report false positive
+    - learn more
+accessibility:
+  notes: Status region (polite), not an alert; content readable; no auto-dismiss.
+tokens:
+  consumes:
+    - color.bg.surface-secondary
+    - color.border.subtle
+    - type.body.sm
+    - color.status.warning
+usage:
+  use_when:
+    - policy blocks
+    - sensitive-domain scoping
+  avoid_when:
+    - red error styling
+    - dead ends without alternatives
+  pairs_well_with:
+    - error-refusal-state
+    - feedback-control
+  reuses:
+    - card
+    - alert
+    - button
+    - link
+  exemplars:
+    - Apple HIG — 'Minimize scoped or blocked output by coaching people how to be more successful next time'
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://developer.apple.com/design/human-interface-guidelines/generative-ai

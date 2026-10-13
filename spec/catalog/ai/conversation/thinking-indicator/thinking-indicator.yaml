@@ -1,0 +1,76 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: thinking-indicator
+name: Thinking / typing indicator
+kind: component
+catalog: ai
+group: conversation
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: Shimmering status text ('Thinking…', 'Searching the web') shown between submit and first token;
+  prefer specific status over anonymous dots.
+aliases:
+  - Shimmer (AI Elements; Loader deprecated 1.8.2)
+  - Loader (prompt-kit)
+  - Shimmering thinking text (ChatGPT, Claude, Cursor)
+  - typing dots
+found_in:
+  - ChatGPT
+  - Claude
+  - Cursor
+  - Gemini
+  - AI Elements
+  - prompt-kit
+anatomy:
+  - part: status-text
+    description: status text with shimmer sweep
+  - part: optional-pulsing-dot
+    description: optional pulsing dot
+  - part: elapsed-time-after
+    description: elapsed time after ~5 s
+states:
+  - id: enabled
+modes:
+  - id: thinking
+  - id: specific-status
+    notes: specific-status (e.g. Reading 4 files)
+  - id: hidden
+api:
+  interactions:
+    - appears within 300 ms of submit
+    - replaced by first token
+accessibility:
+  notes: Announce 'Thinking' once via status region; shimmer is aria-hidden decoration; static text under
+    reduced motion.
+tokens:
+  consumes:
+    - shimmer.duration
+    - shimmer.highlight
+    - color.fg.muted
+    - motion.reduce
+usage:
+  use_when:
+    - any latency between submit and first output
+  avoid_when:
+    - after content has arrived (shimmer must stop)
+    - as a fake delay
+  pairs_well_with:
+    - streaming-markdown
+    - reasoning-disclosure
+    - latency-patterns
+    - reduced-motion-streaming
+  reuses:
+    - skeleton
+    - spinner
+  exemplars:
+    - Apple HIG — 'Finding substitutions for ingredients' instead of 'Processing…'
+    - Jim Nielsen (2026) — shimmer text 'shows staying power as genuinely useful UX'
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://developer.apple.com/design/human-interface-guidelines/generative-ai
+  - https://github.com/vercel/ai-elements/releases

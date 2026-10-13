@@ -1,0 +1,92 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: inline-citation
+name: Inline citation
+kind: component
+catalog: ai
+group: conversation
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: A compact marker on the claim that reveals its source on hover/focus; cite claims, not paragraphs,
+  and show missing sources as missing.
+aliases:
+  - Inline Citation (AI Elements)
+  - Source (prompt-kit)
+  - Citations (Shape of AI)
+  - Perplexity citation chips
+  - NotebookLM numbered citations
+  - Copilot references
+found_in:
+  - Perplexity
+  - ChatGPT
+  - Gemini
+  - NotebookLM
+  - Copilot
+  - AI Elements
+  - prompt-kit
+anatomy:
+  - part: marker-attached
+    description: "marker attached to the claim: superscript number or publisher chip with favicon and +N"
+  - part: hover-focus-card
+    description: "hover/focus card: title, domain, snippet or quote"
+  - part: carousel-with-index
+    description: carousel with index (1/5) when several sources
+  - part: deep-link
+    description: deep link to passage
+states:
+  - id: enabled
+modes:
+  - id: single
+  - id: multiple
+    notes: multiple (+N)
+  - id: missing-broken
+    notes: missing/broken (shown explicitly)
+  - id: weak
+    notes: weak (optional strength indicator)
+api:
+  interactions:
+    - hover or focus opens card
+    - Enter/click opens source
+    - Esc closes
+    - paging through sources
+accessibility:
+  notes: "Marker is a button named 'Source 3: example.com'; card opens on focus and closes on Esc; not announced
+    live."
+tokens:
+  consumes:
+    - color.bg.citation-chip
+    - color.fg.muted
+    - type.label.sm
+    - radius.pill
+    - color.bg.surface-raised
+    - shadow.md
+usage:
+  use_when:
+    - retrieval- or search-grounded answers
+    - document Q&A
+  avoid_when:
+    - decorative citations without a real retrieval step
+    - hiding gaps when a source is missing
+  pairs_well_with:
+    - sources-panel
+    - feedback-control
+    - explainability-popover
+  reuses:
+    - hover-card
+    - popover
+    - badge
+    - link
+  exemplars:
+    - Perplexity — publisher-first chips with +N; three routes into sources
+    - NotebookLM — click reveals the exact passage
+    - AI Elements InlineCitationCarousel — 1/5 index
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://elements.ai-sdk.dev/components/inline-citation
+  - https://aiuxplayground.com/teardowns/perplexity/citations/
+  - https://www.shapeof.ai/patterns/citations

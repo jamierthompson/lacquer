@@ -1,0 +1,85 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: diff-review
+name: Diff view with accept/reject
+kind: component
+catalog: ai
+group: generation
+tier: 2
+maturity: established
+status: draft
+version: 0.1.0
+summary: Per-file, per-hunk acceptance of AI edits with a global accept/reject and a visible auto-accept policy.
+aliases:
+  - Review changes pane (Cursor)
+  - Keep/Undo (VS Code Copilot)
+  - Accept/Reject (Windsurf)
+  - tracked changes for prose
+  - Verification (Shape of AI)
+found_in:
+  - Cursor
+  - GitHub Copilot / VS Code
+  - Windsurf
+  - Claude Code
+  - GitHub PRs
+anatomy:
+  - part: file-list
+    description: file list with +/- counts
+  - part: per-file-unified
+    description: per-file unified or split diff
+  - part: per-hunk-accept
+    description: per-hunk Accept / Reject
+  - part: accept-all
+    description: Accept all / Reject all
+  - part: review-helper
+    description: review helper (Find issues)
+  - part: auto-accept-delay-setting
+    description: auto-accept delay setting (visible)
+states:
+  - id: input-streaming
+modes:
+  - id: accepted
+  - id: rejected
+  - id: auto-accepted
+  - id: conflict
+api:
+  interactions:
+    - navigate edits with arrows
+    - keyboard accept/reject
+    - toggle inline vs panel diffs
+accessibility:
+  notes: Hunks are named regions ('Change 2 of 5 in app.tsx'); +/- glyphs alongside colour; shortcuts for
+    accept/reject.
+tokens:
+  consumes:
+    - color.bg.diff-add
+    - color.bg.diff-remove
+    - color.fg.diff-add
+    - color.fg.diff-remove
+    - type.family.mono
+    - color.bg.code
+usage:
+  use_when:
+    - AI edits code or long prose
+  avoid_when:
+    - silent auto-apply without a review surface
+  pairs_well_with:
+    - version-history
+    - approval-prompt
+    - artifact-panel
+  reuses:
+    - code-block
+    - list
+    - button
+    - tabs
+    - badge
+  exemplars:
+    - VS Code — Keep/Undo per file or per edit, auto-accept delay setting
+    - Cursor 2.5 — inline diffs toggleable, review panel default
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://code.visualstudio.com/docs/agents/run/review-code-edits
+  - https://cursor.com/changelog/2-5

@@ -1,0 +1,92 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: selection-ai-menu
+name: Selection AI menu (inline AI on text selection)
+kind: component
+catalog: ai
+group: augmentation
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: "AI where the user already is: select, choose a verb, review the result next to the original, then
+  replace or discard."
+aliases:
+  - Edit with AI (Notion)
+  - Writing Tools (Apple)
+  - AI Commands (Raycast)
+  - Help me write (Google Docs)
+  - SelectionToolbar (assistant-ui)
+  - Inline Action / Restyle / Expand (Shape of AI)
+found_in:
+  - Notion
+  - Apple Writing Tools
+  - Raycast
+  - Google Docs
+  - Figma
+  - Microsoft 365 Copilot
+  - assistant-ui
+anatomy:
+  - part: floating-toolbar
+    description: floating toolbar or context-menu section on selection
+  - part: preset-verbs
+    description: "preset verbs: Improve, Shorten, Expand, Fix, Translate, Change tone"
+  - part: free-prompt-field
+    description: free prompt field
+  - part: result-preview-beside-below
+    description: result preview beside/below original
+  - part: actions
+    description: "actions: Replace / Insert below / Copy / Try again / Discard"
+states:
+  - id: enabled
+modes:
+  - id: hidden
+  - id: menu-open
+  - id: generating
+  - id: preview
+  - id: applied
+  - id: discarded
+api:
+  interactions:
+    - select text then open
+    - keyboard shortcut opens on current selection
+    - try again keeps original
+    - undo after replace
+accessibility:
+  notes: Toolbar reachable by shortcut and announced; preview is a dialog or live region; original never
+    replaced without confirmation.
+tokens:
+  consumes:
+    - color.bg.surface-raised
+    - shadow.md
+    - radius.md
+    - color.accent.ai
+    - type.body.sm
+usage:
+  use_when:
+    - editors and any text field with meaningful content
+  avoid_when:
+    - replacing text silently
+    - menus that hide the original
+  pairs_well_with:
+    - generate-button
+    - ai-label
+    - diff-review
+    - undo-rollback
+  reuses:
+    - toolbar
+    - popover
+    - dropdown-menu
+    - button
+    - textarea
+  exemplars:
+    - Notion — select text → Edit with AI; accept, discard, or try again
+    - Raycast — Improve Writing / Fix Spelling on selected text
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.notion.com/help/guides/notion-ai-for-docs
+  - https://manual.raycast.com/ai
+  - https://www.assistant-ui.com/docs/primitives

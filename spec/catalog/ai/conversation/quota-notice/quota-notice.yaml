@@ -1,0 +1,71 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: quota-notice
+name: Rate limit / quota notice
+kind: component
+catalog: ai
+group: conversation
+tier: 2
+maturity: established
+status: draft
+version: 0.1.0
+summary: "Honest quota communication: facts, reset time, alternatives, no fake urgency."
+aliases:
+  - usage limit banner (ChatGPT, Claude)
+  - credits (Lovable, v0)
+  - Cost estimates (Shape of AI)
+found_in:
+  - ChatGPT
+  - Claude
+  - Lovable
+  - v0
+  - Cursor
+anatomy:
+  - part: banner-or-inline
+    description: banner or inline notice
+  - part: what-is-limited
+    description: what is limited and when it resets
+  - part: alternative
+    description: alternative (smaller model, wait, upgrade)
+  - part: usage-meter
+    description: usage meter in settings
+states:
+  - id: enabled
+modes:
+  - id: approaching
+  - id: reached
+  - id: reset
+api:
+  interactions:
+    - dismiss
+    - switch model
+    - upgrade
+accessibility:
+  notes: Status region; send disabled state announced; draft preserved.
+tokens:
+  consumes:
+    - color.status.warning
+    - color.bg.surface-secondary
+    - type.body.sm
+usage:
+  use_when:
+    - metered products
+  avoid_when:
+    - countdown theatre or manufactured scarcity
+  pairs_well_with:
+    - context-meter
+    - model-mode-selector
+    - anti-dark-patterns
+  reuses:
+    - alert
+    - progress
+    - button
+  exemplars:
+    - Claude/ChatGPT — usage limit notices with reset time
+    - Lovable — credits and usage docs
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://docs.lovable.dev/llms.txt

@@ -1,0 +1,110 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: composer
+name: Composer (prompt input)
+kind: component
+catalog: ai
+group: conversation
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: "The single most-used control in an AI product: a form with a growing textarea, attachments, tools,
+  mode/model selection and a send/stop button."
+aliases:
+  - PromptInput (AI Elements, prompt-kit)
+  - Composer (assistant-ui)
+  - CopilotTextarea (CopilotKit)
+  - st.chat_input (Streamlit)
+  - Open input (Shape of AI)
+found_in:
+  - ChatGPT
+  - Claude
+  - Gemini
+  - Perplexity
+  - Cursor
+  - AI Elements
+  - assistant-ui
+  - prompt-kit
+  - CopilotKit
+anatomy:
+  - part: container
+    description: container (rounded, raised, pinned bottom or centered on empty state)
+  - part: attachment-header
+    description: attachment header with previews and remove
+  - part: auto-resizing-textarea
+    description: auto-resizing textarea (1 to ~8 lines, then scroll)
+  - part: footer-toolbar
+    description: "footer toolbar: attach, screenshot, slash/actions menu, mode selector, model selector"
+  - part: voice-dictation-button
+    description: voice/dictation button
+  - part: send-button
+    description: send button that becomes stop while generating
+  - part: disclaimer-line-beneath
+    description: disclaimer line beneath
+states:
+  - id: empty
+  - id: streaming
+  - id: error
+  - id: disabled
+modes:
+  - id: typing
+  - id: attachments-pending
+  - id: submitting
+api:
+  interactions:
+    - Enter submits, Shift+Enter newline (configurable to Cmd/Ctrl+Enter)
+    - drag-drop and paste files
+    - / opens command menu
+    - "@ opens context/mention picker"
+    - Esc stops generation
+    - draft persists per thread
+    - form resets on submit
+accessibility:
+  notes: Real textarea with accessible name; toolbar buttons are labelled buttons with tooltips; Stop reachable
+    within one Tab of the textarea; attachment add/remove announced via role=status; documented keyboard
+    shortcuts.
+tokens:
+  consumes:
+    - radius.lg
+    - color.bg.surface-raised
+    - color.border.subtle
+    - shadow.sm
+    - space.gap.sm
+    - space.gap.md
+    - type.body.md
+    - color.accent.brand
+    - size.measure.prose
+usage:
+  use_when:
+    - any conversational or prompt-driven surface
+    - inline 'ask' panels in augmented products (compact variant)
+  avoid_when:
+    - a single-line search or command palette is the right mental model (use the NL command bar instead)
+  pairs_well_with:
+    - message-list
+    - suggested-prompts
+    - context-chips
+    - model-mode-selector
+    - mistakes-disclaimer
+    - voice-input
+  reuses:
+    - textarea
+    - icon-button
+    - tooltip
+    - dropdown-menu
+    - select
+    - popover
+    - badge
+  exemplars:
+    - ChatGPT — pill composer with + menu, tools and dictation
+    - Gemini — Deep Think toggle inside the prompt bar (Feb 2026)
+    - AI Elements PromptInput — status-driven submit/stop button
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://elements.ai-sdk.dev/components/prompt-input
+  - https://www.assistant-ui.com/docs/primitives
+  - https://gemini.google/release-notes/

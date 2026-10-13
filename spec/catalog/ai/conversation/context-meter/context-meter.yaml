@@ -1,0 +1,72 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: context-meter
+name: Context / token meter
+kind: component
+catalog: ai
+group: conversation
+tier: 2
+maturity: emerging
+status: draft
+version: 0.1.0
+summary: Shows how much of the context window (and budget) a thread has used, with a breakdown on hover and a
+  compaction action.
+aliases:
+  - Context (AI Elements)
+  - /context and status line (Claude Code)
+  - context indicator (Cursor)
+  - credits (Lovable)
+  - Cost estimates (Shape of AI)
+found_in:
+  - Claude Code
+  - Cursor
+  - AI Elements
+  - Lovable
+anatomy:
+  - part: circular-progress-ring
+    description: circular progress ring with percentage
+  - part: hover-breakdown
+    description: "hover breakdown: input, output, reasoning, cached tokens, cost"
+  - part: warning-threshold
+    description: warning threshold with action (summarize / new chat)
+states:
+  - id: warning
+modes:
+  - id: normal
+  - id: full
+  - id: unknown
+api:
+  interactions:
+    - hover for breakdown
+    - click to summarize/compact
+accessibility:
+  notes: Progressbar semantics with value text; breakdown available on focus.
+tokens:
+  consumes:
+    - color.fg.muted
+    - color.status.warning
+    - type.label.sm
+usage:
+  use_when:
+    - long agent sessions
+    - developer tools
+    - metered products
+  avoid_when:
+    - consumer chat where the number has no actionable meaning
+  pairs_well_with:
+    - version-history
+    - quota-notice
+  reuses:
+    - progress
+    - hover-card
+    - tooltip
+  exemplars:
+    - AI Elements Context — SVG ring with token and cost breakdown
+    - Claude Code /rewind — Summarize from here / up to here
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://elements.ai-sdk.dev/components/context
+  - https://code.claude.com/docs/en/checkpointing

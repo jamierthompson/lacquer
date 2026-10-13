@@ -1,0 +1,88 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: background-job-card
+name: Background job card and run notifications
+kind: component
+catalog: ai
+group: agentic
+tier: 2
+maturity: emerging
+status: draft
+version: 0.1.0
+summary: "Runs the user can leave: a card with status and summary in an inbox, plus distinct done vs
+  needs-input notifications."
+aliases:
+  - cloud/background agents (Cursor, Codex, Claude Code on the web, Devin)
+  - Deep Research (Gemini, ChatGPT)
+  - builds (Lovable)
+  - tasks list (ChatGPT)
+found_in:
+  - Cursor
+  - Claude Code
+  - OpenAI Codex
+  - Gemini
+  - ChatGPT
+  - Lovable
+anatomy:
+  - part: card
+    description: "card: title, status, started-ago, progress, summary line when done"
+  - part: actions
+    description: "actions: Open, Stop, Retry"
+  - part: inbox-list-of-runs
+    description: inbox/list of runs
+  - part: notification-on-done
+    description: notification on done and on needs-input (distinct), deep-linked
+states:
+  - id: input-available
+  - id: cancelled
+modes:
+  - id: queued
+  - id: needs-input
+  - id: done
+  - id: failed
+api:
+  interactions:
+    - open run
+    - stop
+    - retry
+    - mark read
+accessibility:
+  notes: Card is an article with status text; notifications use platform channels plus an in-app status region;
+    needs-input is assertive.
+tokens:
+  consumes:
+    - color.status.pending
+    - color.status.running
+    - color.status.warning
+    - color.status.success
+    - color.status.error
+    - radius.md
+    - color.bg.surface-raised
+usage:
+  use_when:
+    - runs longer than ~30–60 s
+    - parallel agents
+  avoid_when:
+    - short interactive turns
+  pairs_well_with:
+    - agent-status
+    - multi-agent-view
+    - scheduled-task-ui
+    - generation-progress
+  reuses:
+    - card
+    - badge
+    - progress
+    - toast
+    - list
+    - button
+  exemplars:
+    - Cursor 3.0 — Agents Window for parallel local/cloud runs
+    - NN/g — ChatGPT Agent took 11 minutes for a 2-minute task; background it
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://cursor.com/changelog/3-0
+  - https://www.nngroup.com/articles/impressions-chatgpt-agent/

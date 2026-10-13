@@ -1,0 +1,79 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: error-refusal-state
+name: Error, refusal and scoped-answer states
+kind: component
+catalog: ai
+group: conversation
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: "Three distinct designs: transport errors (retry, keep draft), refusals (calm, offer alternatives)
+  and quota notices (facts and reset time)."
+aliases:
+  - Error primitive (assistant-ui)
+  - AI SDK error status
+  - blocked/scoped response
+  - Caveat (Shape of AI)
+found_in:
+  - ChatGPT
+  - Claude
+  - Gemini
+  - assistant-ui
+  - AI Elements
+anatomy:
+  - part: transport-error
+    description: "transport error: inline in assistant slot, message, Retry, user text preserved"
+  - part: refusal-scoped
+    description: "refusal/scoped: calm normal message with what can be done next"
+  - part: quota
+    description: "quota: banner with reset time and upgrade path, send disabled, draft kept"
+states:
+  - id: cancelled
+modes:
+  - id: network-error
+  - id: model-error
+  - id: refused
+  - id: scoped
+  - id: rate-limited
+api:
+  interactions:
+    - retry
+    - edit prompt
+    - report
+    - learn more
+accessibility:
+  notes: Errors use role=alert; refusals are ordinary messages (polite); quota banner is a status region.
+tokens:
+  consumes:
+    - color.status.error
+    - color.status.warning
+    - color.bg.surface-secondary
+    - radius.md
+usage:
+  use_when:
+    - always
+  avoid_when:
+    - rendering refusals in red error styling
+    - losing the user's draft on any error
+  pairs_well_with:
+    - message
+    - quota-notice
+    - safety-interstitial
+  reuses:
+    - alert
+    - alert
+    - button
+    - link
+  exemplars:
+    - assistant-ui Error — accessible alert role with automatic text
+    - Apple HIG — help people improve requests when blocked
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.assistant-ui.com/docs/primitives
+  - https://pair.withgoogle.com/chapter/errors-failing/
+  - https://developer.apple.com/design/human-interface-guidelines/generative-ai

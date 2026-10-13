@@ -1,0 +1,83 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: message-actions
+name: Message actions bar
+kind: component
+catalog: ai
+group: conversation
+tier: 1
+maturity: established
+status: draft
+version: 0.1.0
+summary: Copy, regenerate, feedback and share on every assistant message; the feedback signal must be
+  reason-coded, not a mere 'liked it'.
+aliases:
+  - ActionBar (assistant-ui)
+  - MessageActions (AI Elements)
+  - Feedback (prompt-kit)
+  - like/dislike (Gradio)
+found_in:
+  - ChatGPT
+  - Claude
+  - Gemini
+  - Perplexity
+  - AI Elements
+  - assistant-ui
+  - prompt-kit
+anatomy:
+  - part: copy
+    description: copy
+  - part: regenerate
+    description: regenerate (optional model/tone submenu)
+  - part: thumbs-up
+    description: thumbs up / thumbs down with reason picker
+  - part: share
+    description: share
+  - part: read-aloud
+    description: read aloud
+  - part: more
+    description: "more: report, export"
+states:
+  - id: enabled
+modes:
+  - id: visible
+    notes: visible (latest message)
+  - id: on-hover-focus
+    notes: on-hover/focus (older)
+  - id: feedback-given
+api:
+  interactions:
+    - one-click copy with toast
+    - regenerate creates branch
+    - thumbs-down opens reasons
+accessibility:
+  notes: Labelled icon buttons; visible on focus, not hover only; reachable from the message.
+tokens:
+  consumes:
+    - color.fg.muted
+    - radius.sm
+    - space.gap.xs
+usage:
+  use_when:
+    - every assistant message
+  avoid_when:
+    - treating thumbs-up as a training reward without qualitative checks (OpenAI sycophancy incident)
+  pairs_well_with:
+    - feedback-control
+    - branch-picker
+    - message
+  reuses:
+    - icon-button
+    - tooltip
+    - dropdown-menu
+    - toast
+  exemplars:
+    - Perplexity — 'Wrong sources' as a distinct reason
+    - OpenAI (May 2025) — thumbs data amplified agreeable responses
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://openai.com/index/expanding-on-sycophancy/
+  - https://www.assistant-ui.com/docs/primitives

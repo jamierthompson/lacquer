@@ -1,0 +1,78 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: memory-indicator
+name: Memory indicator and management
+kind: component
+catalog: ai
+group: conversation
+tier: 2
+maturity: emerging
+status: draft
+version: 0.1.0
+summary: "Makes silent personalisation visible: a chip when memory changes, a popover showing which memories
+  shaped an answer, and a management page."
+aliases:
+  - Memory updated (ChatGPT)
+  - Memory (Shape of AI Governors)
+  - memories (Gemini)
+  - project knowledge (Claude)
+  - Incognito / Temporary chat
+found_in:
+  - ChatGPT
+  - Gemini
+  - Claude
+anatomy:
+  - part: inline-chip
+    description: inline chip on the message ('Memory updated') opening what was saved with Forget
+  - part: settings-page-listing
+    description: settings page listing memories with delete and last-updated
+  - part: per-response-personalisation-sources
+    description: per-response personalisation sources popover
+  - part: temporary-chat-mode-toggle
+    description: temporary-chat mode toggle
+states:
+  - id: enabled
+modes:
+  - id: updated
+  - id: used-in-response
+  - id: temporary
+    notes: temporary (no memory)
+  - id: off
+api:
+  interactions:
+    - click chip to view/forget
+    - manage all in settings
+    - toggle temporary chat
+accessibility:
+  notes: Chip is a button; status announced once; settings list is a table/list with delete confirmations.
+tokens:
+  consumes:
+    - color.accent.ai-subtle
+    - type.label.sm
+    - radius.pill
+usage:
+  use_when:
+    - any product that persists user facts across sessions
+  avoid_when:
+    - saving memories silently (hidden data use dark pattern)
+  pairs_well_with:
+    - explainability-popover
+    - data-use-notice
+    - conversation-history
+  reuses:
+    - tag
+    - popover
+    - list
+    - switch
+    - dialog
+  exemplars:
+    - ChatGPT — book icon below a response lists sources used to personalise it; summary shows 'last updated 2
+      hours ago'
+    - Gemini — chat history renamed 'memories' (Mar 2026)
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://help.openai.com/en/articles/8590148-memory-faq
+  - https://gemini.google/release-notes/

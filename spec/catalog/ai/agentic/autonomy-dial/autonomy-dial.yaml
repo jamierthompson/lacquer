@@ -1,0 +1,80 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: autonomy-dial
+name: Autonomy dial / permission modes
+kind: component
+catalog: ai
+group: agentic
+tier: 2
+maturity: emerging
+status: draft
+version: 0.1.0
+summary: Lets the user set how much the agent does without asking, always visible, with a floor of actions
+  that never auto-approve.
+aliases:
+  - Autonomy Dial (Smashing)
+  - "permission modes (Claude Code: default, acceptEdits, plan, auto, dontAsk, bypassPermissions)"
+  - auto-run levels (Cursor)
+  - auto-continue (Windsurf)
+  - Modes (Shape of AI)
+found_in:
+  - Claude Code
+  - Cursor
+  - Windsurf
+  - GitHub Copilot
+anatomy:
+  - part: segmented-control
+    description: segmented control or menu of levels with plain descriptions
+  - part: always-visible-current-level
+    description: always-visible current level while an agent is active
+  - part: list-of-actions
+    description: list of actions never auto-approved
+  - part: shortcut-to-cycle
+    description: shortcut to cycle
+states:
+  - id: enabled
+modes:
+  - id: suggest-only
+  - id: ask-for-edits
+  - id: auto-edits
+  - id: auto-with-reviewer
+  - id: unrestricted
+    notes: unrestricted (warned)
+api:
+  interactions:
+    - switch mid-run
+    - prompt offers 'switch to auto' at approval time
+accessibility:
+  notes: Radio/segmented semantics; level change announced; warning for unrestricted levels.
+tokens:
+  consumes:
+    - color.bg.surface-secondary
+    - color.status.warning
+    - type.body.sm
+    - radius.pill
+usage:
+  use_when:
+    - agents that can act with varying risk
+  avoid_when:
+    - hiding the current level
+    - defaulting to unrestricted
+  pairs_well_with:
+    - approval-prompt
+    - agent-status
+    - plan-view
+  reuses:
+    - segmented-control
+    - dropdown-menu
+    - badge
+    - alert
+  exemplars:
+    - Claude Code — Shift+Tab cycles modes; status bar shows the mode; a classifier reviews actions in auto
+      mode
+    - Smashing — 'suggest-only through fully autonomous'
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://code.claude.com/docs/en/permission-modes
+  - https://www.smashingmagazine.com/2026/02/designing-agentic-ai-practical-ux-patterns/

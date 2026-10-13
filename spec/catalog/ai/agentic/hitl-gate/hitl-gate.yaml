@@ -1,0 +1,82 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: hitl-gate
+name: Human-in-the-loop gate / clarifying question
+kind: component
+catalog: ai
+group: agentic
+tier: 1
+maturity: emerging
+status: draft
+version: 0.1.0
+summary: The agent pauses and asks a structured question; the answer is folded back into the run and recorded
+  in the thread.
+aliases:
+  - useHumanInTheLoop / useInterrupt (CopilotKit)
+  - Escalation Pathway (Smashing)
+  - AskUserQuestion
+  - clarifying questions (Cursor)
+  - Deep Research plan review (Gemini)
+found_in:
+  - CopilotKit
+  - Claude Code
+  - Cursor
+  - Gemini
+  - ChatGPT Agent
+anatomy:
+  - part: inline-question-card
+    description: "inline question card: single-choice, multi-choice, free text or form"
+  - part: context-of-why
+    description: context of why it is asking
+  - part: submit-skip
+    description: submit / skip
+  - part: answer-becomes
+    description: answer becomes a user message
+states:
+  - id: input-streaming
+modes:
+  - id: answered
+  - id: skipped
+  - id: expired
+api:
+  interactions:
+    - answer without stopping unrelated work
+    - skip with default
+    - edit answer later
+accessibility:
+  notes: Form semantics with a group label; focus moved when it blocks; announced assertively when the run is
+    paused.
+tokens:
+  consumes:
+    - color.bg.surface-raised
+    - color.border.strong
+    - radius.md
+    - space.gap.md
+usage:
+  use_when:
+    - ambiguous requests
+    - high-stakes branches
+    - missing constraints
+  avoid_when:
+    - asking what the agent could safely infer or look up
+  pairs_well_with:
+    - approval-prompt
+    - plan-view
+    - agent-status
+  reuses:
+    - form
+    - radio-group
+    - checkbox
+    - textarea
+    - button
+    - card
+  exemplars:
+    - CopilotKit — 'lets an agent pause mid-run to collect input, confirmation, or a choice'
+    - NN/g — ChatGPT Agent failed to ask about constraints up front
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://docs.copilotkit.ai/agent-spec/human-in-the-loop
+  - https://www.nngroup.com/articles/impressions-chatgpt-agent/

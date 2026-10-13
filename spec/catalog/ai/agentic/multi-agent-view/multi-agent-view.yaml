@@ -1,0 +1,75 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: multi-agent-view
+name: Multi-agent views
+kind: component
+catalog: ai
+group: agentic
+tier: 3
+maturity: experimental
+status: draft
+version: 0.1.0
+summary: A list of runs is the baseline shape; graph canvases are a product in themselves.
+aliases:
+  - Agents Window / Agent Tabs (Cursor)
+  - agent teams (Claude Code)
+  - parallel tasks (Codex)
+  - "Workflow canvas (AI Elements: Canvas, Node, Edge, Connection, Controls, Panel, Toolbar)"
+found_in:
+  - Cursor
+  - Claude Code
+  - OpenAI Codex
+  - AI Elements
+anatomy:
+  - part: list-kanban-of-runs
+    description: list/kanban of runs (each a job card) grouped by status
+  - part: side-by-side-chat-tabs
+    description: side-by-side chat tabs or grid
+  - part: optional-graph-canvas
+    description: optional graph canvas for authored workflows
+  - part: compare-outputs
+    description: compare outputs (best-of-n)
+states:
+  - id: input-available
+modes:
+  - id: needs-input
+  - id: done
+  - id: comparing
+api:
+  interactions:
+    - open run
+    - compare
+    - merge/select winner
+    - stop all
+accessibility:
+  notes: List semantics for runs; canvas requires a list alternative; comparison as a table.
+tokens:
+  consumes:
+    - color.bg.surface-secondary
+    - color.border.subtle
+    - color.status.running
+    - color.status.success
+usage:
+  use_when:
+    - parallel agents on one task or many
+  avoid_when:
+    - building a graph canvas when a run list suffices
+  pairs_well_with:
+    - background-job-card
+    - agent-status
+  reuses:
+    - list
+    - kanban-board
+    - tabs
+    - card
+    - table
+  exemplars:
+    - Cursor 2.0/3.0 — up to eight agents in parallel, worktrees, /best-of-n
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://cursor.com/changelog/2-0
+  - https://cursor.com/changelog/3-0
+  - https://elements.ai-sdk.dev/overview

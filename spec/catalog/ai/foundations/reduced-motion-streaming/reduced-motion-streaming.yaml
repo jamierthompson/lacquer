@@ -1,0 +1,63 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: reduced-motion-streaming
+name: Streaming motion tokens and reduced-motion behaviour
+kind: method
+catalog: ai
+group: foundations
+tier: 1
+maturity: emerging
+status: draft
+version: 0.1.0
+summary: Three sanctioned streaming animations, each with a token and a reduced-motion fallback; decorative
+  gradient animation is prohibited.
+aliases:
+  - cursor blink
+  - chunk fade-in
+  - shimmer
+  - prefers-reduced-motion
+found_in:
+  - Streamdown
+  - ChatGPT
+  - Claude
+  - Cursor
+anatomy:
+  - part: stream-cursor-blink
+    description: "--stream-cursor-blink: 1 s step blink → static bar"
+  - part: stream-reveal-duration
+    description: "--stream-reveal-duration: 120–200 ms opacity per chunk → 0 ms"
+  - part: shimmer-duration
+    description: "--shimmer-duration: 1.5–2 s sweep → static muted text"
+  - part: no-per-token-fades
+    description: no per-token fades; no transform on text; scroll-behavior auto while streaming
+states:
+  - id: enabled
+api:
+  interactions: []
+accessibility:
+  notes: Respects prefers-reduced-motion; avoids strobing at high token rates (WCAG 2.2.2 spirit).
+tokens:
+  consumes:
+    - stream.cursor-blink
+    - stream.reveal-duration
+    - shimmer.duration
+    - motion.reduce
+usage:
+  use_when:
+    - any streaming UI
+  avoid_when:
+    - per-token fades
+    - typewriter that slows already-received text
+    - animated AI gradients
+  pairs_well_with:
+    - streaming-markdown
+    - thinking-indicator
+    - ai-accent-token
+  exemplars:
+    - Streamdown — built-in caret indicators and smooth animations
+    - Jim Nielsen (2026) — shimmer text is useful; decorative tropes are not
+rules:
+  shared: []
+sources:
+  - https://streamdown.ai/
+  - https://www.explainx.ai/blog/ai-aesthetic-design-patterns-jim-nielsen-2026

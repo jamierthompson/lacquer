@@ -1,0 +1,78 @@
+# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+
+id: voice-input
+name: Voice input, waveform and transcript
+kind: component
+catalog: ai
+group: augmentation
+tier: 2
+maturity: established
+status: draft
+version: 0.1.0
+summary: Dictation into the composer and full voice conversation, both with a visible transcript.
+aliases:
+  - Speech Input, Transcription, Audio Player, Mic Selector, Voice Selector, Persona (AI Elements Voice)
+  - Orb, Live Waveform, Voice Button (ElevenLabs UI)
+  - ChatGPT Voice
+  - Gemini Live
+  - dictation (assistant-ui Composer)
+found_in:
+  - ChatGPT
+  - Gemini
+  - Claude
+  - AI Elements
+  - ElevenLabs UI
+anatomy:
+  - part: dictation
+    description: "dictation: mic button, live transcript into composer, stop"
+  - part: conversation
+    description: "conversation: full-screen orb/waveform, mute, end, running transcript"
+  - part: mic-voice-selectors
+    description: mic/voice selectors
+  - part: captions-for-playback
+    description: captions for playback
+states:
+  - id: idle
+  - id: error
+modes:
+  - id: listening
+  - id: transcribing
+  - id: speaking
+  - id: muted
+api:
+  interactions:
+    - push-to-talk or toggle
+    - interrupt speaking
+    - switch to text
+accessibility:
+  notes: Transcript always available; orb/waveform aria-hidden with text status; permission errors explained.
+tokens:
+  consumes:
+    - color.accent.ai
+    - color.accent.brand
+    - radius.pill
+    - motion.reduce
+usage:
+  use_when:
+    - mobile, hands-free, accessibility
+  avoid_when:
+    - voice-only flows without transcript
+  pairs_well_with:
+    - composer
+    - reduced-motion-streaming
+  reuses:
+    - icon-button
+    - audio-player
+    - dialog
+    - select
+  exemplars:
+    - NN/g — 'please, please have a voice-to-text option'
+    - AI Elements Voice components (Jan 2026)
+rules:
+  shared:
+    - LQ-TOKEN-01
+    - LQ-ANAT-01
+sources:
+  - https://www.nngroup.com/articles/ai-chatbots-design-guidelines/
+  - https://elements.ai-sdk.dev/overview
+  - https://ui.elevenlabs.io/
