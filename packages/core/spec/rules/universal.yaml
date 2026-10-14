@@ -129,7 +129,18 @@ rules:
       static: The component accepts or renders a loading, empty and error branch.
       runtime: Drive the data source to each condition and assert distinct rendered output.
     fix: Add Skeleton, Empty State and an inline error with retry.
-    applies_to: ["group:data-display", "list-view", "table", "data-table", "combobox", "command-palette", "message-list", "conversation-history", "activity-log"]
+    applies_to:
+      [
+        "group:data-display",
+        "list-view",
+        "table",
+        "data-table",
+        "combobox",
+        "command-palette",
+        "message-list",
+        "conversation-history",
+        "activity-log",
+      ]
 
   - id: LQ-LAYER-01
     level: MUST
@@ -149,4 +160,11 @@ rules:
     detect:
       static: Button/menu-item text matches a stoplist or lacks a verb.
     fix: Rewrite as verb + object, sentence case, ≤3 words where possible.
-    applies_to: ["group:actions", "dialog", "alert-dialog", "approval-prompt", "hitl-gate"]
+    applies_to:
+      [
+        "group:actions",
+        "dialog",
+        "alert-dialog",
+        "approval-prompt",
+        "hitl-gate",
+      ]

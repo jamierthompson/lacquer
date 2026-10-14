@@ -24,7 +24,8 @@ dimensions:
   structure:
     weight: 1.0
     question: Is it built from the right components, with the right native elements and parts?
-    rule_prefixes: [LQ-SEM, LQ-ANAT, LQ-LAYER, LQ-BUTTON-01, LQ-BUTTON-04, LQ-DIALOG-03]
+    rule_prefixes:
+      [LQ-SEM, LQ-ANAT, LQ-LAYER, LQ-BUTTON-01, LQ-BUTTON-04, LQ-DIALOG-03]
   states:
     weight: 1.0
     question: Does every interactive thing look and behave differently in every state it can be in?
@@ -32,7 +33,16 @@ dimensions:
   accessibility:
     weight: 1.2
     question: Can it be used with a keyboard and a screen reader, and does every state reach the accessibility tree?
-    rule_prefixes: [LQ-FOCUS, LQ-NAME, LQ-A11Y, LQ-MOTION, LQ-DIALOG-01, LQ-DIALOG-02, LQ-BUTTON-05]
+    rule_prefixes:
+      [
+        LQ-FOCUS,
+        LQ-NAME,
+        LQ-A11Y,
+        LQ-MOTION,
+        LQ-DIALOG-01,
+        LQ-DIALOG-02,
+        LQ-BUTTON-05,
+      ]
   tokens:
     weight: 0.8
     question: Does it consume the consumer's design tokens through roles, or hard-code a look?
@@ -44,11 +54,25 @@ dimensions:
   composition:
     weight: 0.6
     question: Is emphasis disciplined, is the right thing primary, are decisions (dialog vs drawer, select vs combobox) honest?
-    rule_prefixes: [LQ-BUTTON-03, LQ-BUTTON-06, LQ-DIALOG-04, LQ-DISCLOSE, LQ-TOOLCARD-04]
+    rule_prefixes:
+      [LQ-BUTTON-03, LQ-BUTTON-06, LQ-DIALOG-04, LQ-DISCLOSE, LQ-TOOLCARD-04]
   ai-conduct:
     weight: 1.0
     question: For AI surfaces only — does it wait, stream, act, ask, recover and disclose the way a trustworthy agent should?
-    rule_prefixes: [LQ-WAIT, LQ-STREAM, LQ-TOOL-02, LQ-GATE-01, LQ-REVIEW, LQ-ERR, LQ-TRUST, LQ-RECOVER, LQ-MACHINE, LQ-TOOLCARD-01, LQ-TOOLCARD-03]
+    rule_prefixes:
+      [
+        LQ-WAIT,
+        LQ-STREAM,
+        LQ-TOOL-02,
+        LQ-GATE-01,
+        LQ-REVIEW,
+        LQ-ERR,
+        LQ-TRUST,
+        LQ-RECOVER,
+        LQ-MACHINE,
+        LQ-TOOLCARD-01,
+        LQ-TOOLCARD-03,
+      ]
     applies_when: any ai-catalog component is detected on the screen
 
 deductions:
@@ -76,7 +100,7 @@ detection:
   # Each detected instance is scored against its entry's resolved rules; the
   # universal rules run on everything.
   confidence_threshold: 0.6
-  unknown_component_finding: LQ-SEM-01   # markup that is interactive but matches no entry
+  unknown_component_finding: LQ-SEM-01 # markup that is interactive but matches no entry
 
 modes:
   static:

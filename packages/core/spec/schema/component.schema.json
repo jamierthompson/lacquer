@@ -8,11 +8,28 @@
   "required": ["id", "catalog", "group", "status"],
   "if": { "properties": { "status": { "const": "stable" } } },
   "then": {
-    "required": ["name", "kind", "tier", "version", "summary", "states", "accessibility", "usage", "rules"],
-    "properties": { "states": { "minItems": 1 }, "accessibility": { "required": ["name"] } }
+    "required": [
+      "name",
+      "kind",
+      "tier",
+      "version",
+      "summary",
+      "states",
+      "accessibility",
+      "usage",
+      "rules"
+    ],
+    "properties": {
+      "states": { "minItems": 1 },
+      "accessibility": { "required": ["name"] }
+    }
   },
   "properties": {
-    "id": { "type": "string", "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$", "description": "Kebab-case identifier. Folder name must match." },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "description": "Kebab-case identifier. Folder name must match."
+    },
     "name": { "type": "string", "minLength": 1 },
     "kind": { "type": "string", "x-vocab": "kinds" },
     "catalog": { "type": "string", "x-vocab": "catalogs" },
@@ -21,9 +38,22 @@
     "atomic_level": { "type": "string", "x-vocab": "atomic_levels" },
     "maturity": { "type": "string", "x-vocab": "maturity" },
     "status": { "type": "string", "x-vocab": "status" },
-    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "default": "0.1.0" },
-    "summary": { "type": "string", "minLength": 1, "maxLength": 240, "description": "One sentence. This is what search and MCP listings show." },
-    "aliases": { "type": "array", "items": { "type": "string" }, "description": "What other systems call it. Search matches on these." },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "default": "0.1.0"
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240,
+      "description": "One sentence. This is what search and MCP listings show."
+    },
+    "aliases": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "What other systems call it. Search matches on these."
+    },
     "found_in": { "type": "array", "items": { "type": "string" } },
 
     "anatomy": {
@@ -35,9 +65,16 @@
         "required": ["part"],
         "properties": {
           "part": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
-          "element": { "type": "string", "description": "Preferred native element, if one exists." },
+          "element": {
+            "type": "string",
+            "description": "Preferred native element, if one exists."
+          },
           "required": { "type": "boolean", "default": true },
-          "slot": { "type": "boolean", "default": false, "description": "Consumer-supplied content goes here." },
+          "slot": {
+            "type": "boolean",
+            "default": false,
+            "description": "Consumer-supplied content goes here."
+          },
           "description": { "type": "string" }
         }
       }
@@ -52,13 +89,21 @@
         "required": ["axis", "values"],
         "properties": {
           "axis": { "type": "string" },
-          "values": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+          "values": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1
+          },
           "default": { "type": "string" },
           "guidance": { "type": "string" }
         }
       }
     },
-    "modifiers": { "type": "array", "items": { "type": "string" }, "description": "Boolean switches that are not an axis (full-width, with-dividers)." },
+    "modifiers": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Boolean switches that are not an axis (full-width, with-dividers)."
+    },
 
     "states": {
       "type": "array",
@@ -148,14 +193,35 @@
               "default": {},
               "required": { "type": "boolean", "default": false },
               "description": { "type": "string" },
-              "maps_to": { "type": "string", "description": "The DOM/ARIA attribute this prop drives, if any." }
+              "maps_to": {
+                "type": "string",
+                "description": "The DOM/ARIA attribute this prop drives, if any."
+              }
             }
           }
         },
         "slots": { "type": "array", "items": { "type": "string" } },
-        "events": { "type": "array", "items": { "type": "object", "required": ["name"], "properties": { "name": { "type": "string" }, "payload": { "type": "string" }, "description": { "type": "string" } } } },
-        "interactions": { "type": "array", "items": { "type": "string" }, "description": "What the user can do with it, one action each. An empty list means none." },
-        "composition": { "type": "string", "description": "What is composed from children vs configured by props, and why." }
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string" },
+              "payload": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "interactions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "What the user can do with it, one action each. An empty list means none."
+        },
+        "composition": {
+          "type": "string",
+          "description": "What is composed from children vs configured by props, and why."
+        }
       }
     },
 
@@ -166,17 +232,31 @@
         "apg": {
           "type": "object",
           "additionalProperties": false,
-          "properties": { "pattern": { "type": "string" }, "url": { "type": "string", "format": "uri" } }
+          "properties": {
+            "pattern": { "type": "string" },
+            "url": { "type": "string", "format": "uri" }
+          }
         },
-        "role": { "type": "string", "description": "Implicit or explicit role of the root, or none." },
-        "name": { "type": "string", "description": "Where the accessible name comes from." },
+        "role": {
+          "type": "string",
+          "description": "Implicit or explicit role of the root, or none."
+        },
+        "name": {
+          "type": "string",
+          "description": "Where the accessible name comes from."
+        },
         "aria": {
           "type": "array",
           "items": {
             "type": "object",
             "additionalProperties": false,
             "required": ["attr"],
-            "properties": { "attr": { "type": "string" }, "on": { "type": "string" }, "when": { "type": "string" }, "value": { "type": "string" } }
+            "properties": {
+              "attr": { "type": "string" },
+              "on": { "type": "string" },
+              "when": { "type": "string" },
+              "value": { "type": "string" }
+            }
           }
         },
         "keyboard": {
@@ -185,11 +265,21 @@
             "type": "object",
             "additionalProperties": false,
             "required": ["key", "action"],
-            "properties": { "key": { "type": "string" }, "action": { "type": "string" }, "when": { "type": "string" } }
+            "properties": {
+              "key": { "type": "string" },
+              "action": { "type": "string" },
+              "when": { "type": "string" }
+            }
           }
         },
-        "focus": { "type": "string", "description": "Focus movement rules: on open, on close, trapping, restoration." },
-        "announcements": { "type": "string", "description": "Live-region behaviour, if any." },
+        "focus": {
+          "type": "string",
+          "description": "Focus movement rules: on open, on close, trapping, restoration."
+        },
+        "announcements": {
+          "type": "string",
+          "description": "Live-region behaviour, if any."
+        },
         "notes": { "type": "string" }
       }
     },
@@ -198,8 +288,19 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "consumes": { "type": "array", "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*(\\.([a-z0-9-]+|\\*))+$" }, "description": "Token roles, dotted. Never values." },
-        "defines": { "type": "array", "items": { "type": "string" }, "description": "Roles this entry introduces that others may consume (rare; principles mostly)." }
+        "consumes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*(\\.([a-z0-9-]+|\\*))+$"
+          },
+          "description": "Token roles, dotted. Never values."
+        },
+        "defines": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Roles this entry introduces that others may consume (rare; principles mostly)."
+        }
       }
     },
 
@@ -211,7 +312,11 @@
         "label": { "type": "string" },
         "voice": { "type": "string" },
         "limits": { "type": "string" },
-        "strings": { "type": "object", "additionalProperties": { "type": "string" }, "description": "Default strings an implementation must localise, keyed by purpose." }
+        "strings": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "Default strings an implementation must localise, keyed by purpose."
+        }
       }
     },
 
@@ -224,12 +329,31 @@
         "instead": {
           "type": "array",
           "description": "Decision rules: when a different entry is the honest answer.",
-          "items": { "type": "object", "additionalProperties": false, "required": ["when", "use"], "properties": { "when": { "type": "string" }, "use": { "type": "string" } } }
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["when", "use"],
+            "properties": {
+              "when": { "type": "string" },
+              "use": { "type": "string" }
+            }
+          }
         },
         "pairs_well_with": { "type": "array", "items": { "type": "string" } },
-        "reuses": { "type": "array", "items": { "type": "string" }, "description": "Catalog ids this entry is built from." },
-        "exemplars": { "type": "array", "items": { "type": "string" }, "description": "Shipping products that do it well, and what to look at." },
-        "ai_products_rely_on": { "type": "boolean", "description": "AI products depend on this core entry, directly or as a building block." }
+        "reuses": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Catalog ids this entry is built from."
+        },
+        "exemplars": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Shipping products that do it well, and what to look at."
+        },
+        "ai_products_rely_on": {
+          "type": "boolean",
+          "description": "AI products depend on this core entry, directly or as a building block."
+        }
       }
     },
 
@@ -238,7 +362,10 @@
       "additionalProperties": false,
       "description": "What the grader enforces. `shared` cites ids from spec/rules/*.yaml; `local` defines rules that only make sense for this entry. Forbidden usage is a local rule with polarity: forbid.",
       "properties": {
-        "shared": { "type": "array", "items": { "type": "string", "pattern": "^LQ-[A-Z0-9]+-\\d{2}$" } },
+        "shared": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^LQ-[A-Z0-9]+-\\d{2}$" }
+        },
         "local": { "type": "array", "items": { "$ref": "#/$defs/rule" } }
       }
     },
@@ -252,7 +379,10 @@
           "type": "array",
           "description": "Forbidden usage as code. Each must cite the rule(s) it violates so the grader can use it as a fixture.",
           "items": {
-            "allOf": [ { "$ref": "#/$defs/example" }, { "type": "object", "required": ["violates"] } ]
+            "allOf": [
+              { "$ref": "#/$defs/example" },
+              { "type": "object", "required": ["violates"] }
+            ]
           }
         }
       }
@@ -268,7 +398,10 @@
         "properties": {
           "renderer": { "type": "string", "x-vocab": "renderers" },
           "file": { "type": "string" },
-          "status": { "type": "string", "enum": ["sketch", "reference", "published"] }
+          "status": {
+            "type": "string",
+            "enum": ["sketch", "reference", "published"]
+          }
         }
       }
     },
@@ -277,7 +410,12 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "weight": { "type": "number", "minimum": 0, "default": 1, "description": "Relative weight when this entry appears in a graded screen." },
+        "weight": {
+          "type": "number",
+          "minimum": 0,
+          "default": 1,
+          "description": "Relative weight when this entry appears in a graded screen."
+        },
         "notes": { "type": "string" }
       }
     },
@@ -295,18 +433,46 @@
         "level": { "type": "string", "x-vocab": "rule_levels" },
         "polarity": { "type": "string", "enum": ["require", "forbid"] },
         "title": { "type": "string" },
-        "statement": { "type": "string", "description": "One testable sentence." },
+        "statement": {
+          "type": "string",
+          "description": "One testable sentence."
+        },
         "rationale": { "type": "string" },
         "detect": {
           "type": "object",
           "additionalProperties": false,
           "description": "How a tool would find a violation. `static` runs on source or a DOM snapshot; `runtime` needs a live page.",
-          "properties": { "static": { "type": "string" }, "runtime": { "type": "string" } }
+          "properties": {
+            "static": { "type": "string" },
+            "runtime": { "type": "string" }
+          }
         },
         "fix": { "type": "string" },
-        "applies_to": { "type": "array", "items": { "type": "string" }, "description": "Catalog ids, groups (group:actions) or `*`." },
-        "phase": { "type": "string", "enum": ["compose", "wait", "stream", "act", "approve", "review", "trust", "recover", "persist"], "description": "For AI-loop rules: the step of the agent loop the rule guards." },
-        "source": { "type": "string", "enum": ["apg", "wcag", "law"], "description": "External authority the rule restates, if any." }
+        "applies_to": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Catalog ids, groups (group:actions) or `*`."
+        },
+        "phase": {
+          "type": "string",
+          "enum": [
+            "compose",
+            "wait",
+            "stream",
+            "act",
+            "approve",
+            "review",
+            "trust",
+            "recover",
+            "persist"
+          ],
+          "description": "For AI-loop rules: the step of the agent loop the rule guards."
+        },
+        "source": {
+          "type": "string",
+          "enum": ["apg", "wcag", "law"],
+          "description": "External authority the rule restates, if any."
+        }
       }
     },
     "example": {
@@ -317,10 +483,17 @@
         "id": { "type": "string" },
         "title": { "type": "string" },
         "renderer": { "type": "string", "x-vocab": "renderers" },
-        "file": { "type": "string", "description": "Relative to the entry folder." },
+        "file": {
+          "type": "string",
+          "description": "Relative to the entry folder."
+        },
         "export": { "type": "string" },
         "description": { "type": "string" },
-        "demonstrates": { "type": "array", "items": { "type": "string" }, "description": "Tags: state:<id>, variant:<axis>=<value>, rule:<id>." },
+        "demonstrates": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Tags: state:<id>, variant:<axis>=<value>, rule:<id>."
+        },
         "violates": { "type": "array", "items": { "type": "string" } }
       }
     }

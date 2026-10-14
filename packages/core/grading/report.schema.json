@@ -18,7 +18,10 @@
         "language": { "type": "string" },
         "url": { "type": "string" },
         "binding": { "type": "string" },
-        "hash": { "type": "string", "description": "Content hash so reports can be compared across runs." }
+        "hash": {
+          "type": "string",
+          "description": "Content hash so reports can be compared across runs."
+        }
       }
     },
     "detected": {
@@ -32,7 +35,10 @@
           "id": { "type": "string" },
           "instances": { "type": "integer", "minimum": 1 },
           "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
-          "how": { "type": "string", "description": "data-slot | aria | heuristic | name" }
+          "how": {
+            "type": "string",
+            "description": "data-slot | aria | heuristic | name"
+          }
         }
       }
     },
@@ -43,10 +49,17 @@
       "properties": {
         "overall": { "type": "number", "minimum": 0, "maximum": 100 },
         "letter": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
-        "capped": { "type": "boolean", "description": "True when a MUST in structure/accessibility capped the letter." },
+        "capped": {
+          "type": "boolean",
+          "description": "True when a MUST in structure/accessibility capped the letter."
+        },
         "dimensions": {
           "type": "object",
-          "additionalProperties": { "type": "number", "minimum": 0, "maximum": 100 }
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          }
         }
       }
     },
@@ -55,14 +68,30 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "rule", "level", "dimension", "component", "message"],
+        "required": [
+          "id",
+          "rule",
+          "level",
+          "dimension",
+          "component",
+          "message"
+        ],
         "properties": {
-          "id": { "type": "string", "description": "Stable per report: <rule>#<n>." },
+          "id": {
+            "type": "string",
+            "description": "Stable per report: <rule>#<n>."
+          },
           "rule": { "type": "string", "pattern": "^LQ-[A-Z0-9]+-\\d{2}$" },
           "level": { "type": "string", "enum": ["MUST", "SHOULD", "MAY"] },
           "dimension": { "type": "string" },
-          "component": { "type": "string", "description": "Catalog id, or 'screen' for universal findings." },
-          "message": { "type": "string", "description": "The rule statement, made specific to this instance." },
+          "component": {
+            "type": "string",
+            "description": "Catalog id, or 'screen' for universal findings."
+          },
+          "message": {
+            "type": "string",
+            "description": "The rule statement, made specific to this instance."
+          },
           "location": {
             "type": "object",
             "additionalProperties": false,
@@ -74,13 +103,22 @@
               "snippet": { "type": "string" }
             }
           },
-          "evidence": { "type": "string", "description": "What the detector saw." },
+          "evidence": {
+            "type": "string",
+            "description": "What the detector saw."
+          },
           "fix": { "type": "string" },
           "instances": { "type": "integer", "minimum": 1 },
-          "reference": { "type": "string", "description": "Path to the catalog's reference implementation or example that does it right." }
+          "reference": {
+            "type": "string",
+            "description": "Path to the catalog's reference implementation or example that does it right."
+          }
         }
       }
     },
-    "summary": { "type": "string", "description": "Two or three sentences for a human: worst thing first, then what passes." }
+    "summary": {
+      "type": "string",
+      "description": "Two or three sentences for a human: worst thing first, then what passes."
+    }
   }
 }

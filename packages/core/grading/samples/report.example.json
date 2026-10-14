@@ -11,7 +11,12 @@
   "detected": [
     { "id": "dialog", "instances": 1, "confidence": 0.95, "how": "aria" },
     { "id": "button", "instances": 3, "confidence": 0.9, "how": "heuristic" },
-    { "id": "text-input", "instances": 1, "confidence": 0.85, "how": "heuristic" }
+    {
+      "id": "text-input",
+      "instances": 1,
+      "confidence": 0.85,
+      "how": "heuristic"
+    }
   ],
   "score": {
     "overall": 58,
@@ -34,7 +39,12 @@
       "dimension": "structure",
       "component": "dialog",
       "message": "The dialog has role=\"dialog\" but no aria-labelledby; its visible heading is not connected to it.",
-      "location": { "file": "rename-dialog.html", "line": 14, "selector": "div[role=dialog]", "snippet": "<div role=\"dialog\" aria-modal=\"true\" class=…>" },
+      "location": {
+        "file": "rename-dialog.html",
+        "line": 14,
+        "selector": "div[role=dialog]",
+        "snippet": "<div role=\"dialog\" aria-modal=\"true\" class=…>"
+      },
       "evidence": "role=dialog without aria-labelledby; <h2> found at line 16 with no id.",
       "fix": "Give the <h2> an id and set aria-labelledby on the dialog, or use the native <dialog> with the Title part.",
       "instances": 1,
@@ -47,7 +57,11 @@
       "dimension": "accessibility",
       "component": "button",
       "message": "outline: none on :focus removes keyboard focus on the Cancel button and nothing replaces it.",
-      "location": { "file": "rename-dialog.css", "line": 31, "snippet": ".cancel:focus { outline: none; }" },
+      "location": {
+        "file": "rename-dialog.css",
+        "line": 31,
+        "snippet": ".cancel:focus { outline: none; }"
+      },
       "evidence": "outline removed; no :focus-visible rule for the same element.",
       "fix": "Replace with a :focus-visible rule: outline: var(--lq-focus-ring-width) solid var(--lq-color-border-focus); outline-offset: var(--lq-focus-ring-offset).",
       "instances": 1,
@@ -73,7 +87,11 @@
       "dimension": "states",
       "component": "button",
       "message": "The Rename button swaps its label for a spinner while saving, so it changes width and loses its name.",
-      "location": { "file": "rename-dialog.html", "line": 35, "snippet": "<button class=\"submit\"><span class=\"spinner\"></span></button>" },
+      "location": {
+        "file": "rename-dialog.html",
+        "line": 35,
+        "snippet": "<button class=\"submit\"><span class=\"spinner\"></span></button>"
+      },
       "evidence": "The label is gone from the DOM while saving; no aria-busy.",
       "fix": "Keep the label, render the spinner in the leading-icon slot, set aria-busy and ignore presses while saving.",
       "instances": 1,

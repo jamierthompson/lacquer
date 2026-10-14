@@ -7,14 +7,14 @@
 version: 1
 
 kinds:
-  component:  A rendered, reusable UI unit with anatomy, states and an API.
-  pattern:    A composition of components that solves a recurring job (a settings page, an approval flow).
-  principle:  A rule set every component in a group obeys (the message state machine, live-region strategy).
-  method:     A way of working, not a thing on screen (latency patterns, disclosure conventions).
+  component: A rendered, reusable UI unit with anatomy, states and an API.
+  pattern: A composition of components that solves a recurring job (a settings page, an approval flow).
+  principle: A rule set every component in a group obeys (the message state machine, live-region strategy).
+  method: A way of working, not a thing on screen (latency patterns, disclosure conventions).
 
 catalogs:
   core: Product-agnostic UI.
-  ai:   What AI-native and AI-augmented products add.
+  ai: What AI-native and AI-augmented products add.
 
 # Catalog groups. Each entry lives at spec/catalog/<catalog>/<group>/<id>/.
 groups:
@@ -61,26 +61,29 @@ status:
 # names as aliases. `base` states are the five every interactive component
 # must implement (LQ-STATE-01).
 states:
-  enabled:       { base: true,  meaning: The resting, interactive default. }
-  hover:         { base: true,  meaning: Pointer is over the target. }
-  focus-visible: { base: true,  meaning: Keyboard (or other non-pointer) focus. }
-  active:        { base: true,  meaning: Held down mid-interaction., aliases: [pressed] }
-  disabled:      { base: true,  meaning: Not available now. }
-  selected:      { meaning: Chosen and stays chosen., aliases: [checked] }
+  enabled: { base: true, meaning: The resting, interactive default. }
+  hover: { base: true, meaning: Pointer is over the target. }
+  focus-visible: { base: true, meaning: Keyboard (or other non-pointer) focus. }
+  active:
+    { base: true, meaning: Held down mid-interaction., aliases: [pressed] }
+  disabled: { base: true, meaning: Not available now. }
+  selected: { meaning: Chosen and stays chosen., aliases: [checked] }
   indeterminate: { meaning: Some, but not all, descendants are checked. }
-  expanded:      { meaning: A disclosure is open. }
-  read-only:     { meaning: Visible and selectable but not editable., aliases: [readonly] }
-  loading:       { meaning: An operation is in flight. }
-  invalid:       { meaning: Validation or operation failed., aliases: [error] }
-  success:       { meaning: Completed or validated. }
-  warning:       { meaning: Allowed, but with consequences. }
-  dragging:      { meaning: The item is being moved. }
-  drop-target:   { meaning: A valid destination while dragging. }
-  current:       { meaning: Where you are in a navigation set., aliases: [active-page] }
-  placeholder:   { meaning: Empty input showing a format hint. }
-  filled:        { meaning: The input holds a value. }
-  empty:         { meaning: The container has no content to show. }
-  skeleton:      { meaning: Content is loading and its shape is known. }
+  expanded: { meaning: A disclosure is open. }
+  read-only:
+    { meaning: Visible and selectable but not editable., aliases: [readonly] }
+  loading: { meaning: An operation is in flight. }
+  invalid: { meaning: Validation or operation failed., aliases: [error] }
+  success: { meaning: Completed or validated. }
+  warning: { meaning: Allowed, but with consequences. }
+  dragging: { meaning: The item is being moved. }
+  drop-target: { meaning: A valid destination while dragging. }
+  current:
+    { meaning: Where you are in a navigation set., aliases: [active-page] }
+  placeholder: { meaning: Empty input showing a format hint. }
+  filled: { meaning: The input holds a value. }
+  empty: { meaning: The container has no content to show. }
+  skeleton: { meaning: Content is loading and its shape is known. }
   # AI lifecycle states (message and tool machines). Declared here so a
   # component may list them; the machines themselves live in the principle specs.
   idle: { ai: true }

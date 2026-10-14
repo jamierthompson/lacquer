@@ -19,7 +19,7 @@ rules:
     title: "No determinate bar without a denominator"
     statement: "No determinate progress bar without a known denominator."
     detect:
-      static: "role=\"progressbar\" requires aria-valuemax bound to a real count, else must be indeterminate."
+      static: 'role="progressbar" requires aria-valuemax bound to a real count, else must be indeterminate.'
   - id: LQ-STREAM-01
     level: MUST
     polarity: require
@@ -59,15 +59,15 @@ rules:
     title: "Writes look different from reads"
     statement: "Write and destructive tool calls are visually distinct from reads without expansion."
     detect:
-      static: "Tool cards carry data-effect=\"read|write|destroy\" mapped to distinct tokens."
+      static: 'Tool cards carry data-effect="read|write|destroy" mapped to distinct tokens.'
   - id: LQ-GATE-01
     level: MUST
     polarity: require
     phase: approve
     title: "Per-action approval for destructive actions"
-    statement: "Destructive agent actions (delete, send, pay, deploy, post, overwrite) require explicit per-action approval with a preview; \"always allow\" may not be the default option or initial focus."
+    statement: 'Destructive agent actions (delete, send, pay, deploy, post, overwrite) require explicit per-action approval with a preview; "always allow" may not be the default option or initial focus.'
     detect:
-      static: "Approval dialog has a preview region; the default-focused button is not always-allow; no batch approval for data-effect=\"destroy\"."
+      static: 'Approval dialog has a preview region; the default-focused button is not always-allow; no batch approval for data-effect="destroy".'
   - id: LQ-GATE-02
     level: MUST
     polarity: require
@@ -105,9 +105,9 @@ rules:
     polarity: require
     phase: stream
     title: "Polite, throttled live regions"
-    statement: "Streaming regions use aria-live=\"polite\" and announce status changes at most once per 2 s."
+    statement: 'Streaming regions use aria-live="polite" and announce status changes at most once per 2 s.'
     detect:
-      runtime: "Live region present; no aria-live=\"assertive\" on streams; throttled updates."
+      runtime: 'Live region present; no aria-live="assertive" on streams; throttled updates.'
   - id: LQ-MOTION-01
     level: MUST
     polarity: require
