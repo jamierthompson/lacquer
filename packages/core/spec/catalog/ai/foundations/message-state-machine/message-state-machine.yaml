@@ -24,13 +24,35 @@ found_in:
   - Streamlit
 states:
   - id: idle
+    treatment: Nothing pending. No assistant slot is rendered; the composer shows Send, disabled while the draft is empty.
+    a11y: none
   - id: submitted
+    treatment: The user message is rendered and the assistant slot shows the thinking indicator; the composer shows Stop.
+    a11y: One polite announcement, "Thinking".
   - id: streaming
+    treatment:
+      The sub-state picks the component. reasoning opens the reasoning disclosure, tool renders a tool card
+      in input-available, text renders markdown progressively with a caret. The composer shows Stop throughout.
+    a11y:
+      One polite announcement on entering each sub-state ("Reasoning", "Running {tool}"); text is batched
+      into sentences, at most one announcement per 2 s (LQ-A11Y-01).
     notes: Sub-states reasoning | tool | text are rendered by different components but share one composer control.
   - id: awaiting-approval
+    treatment:
+      The approval prompt is shown and everything else pauses, including the stream; the composer still
+      shows Stop, because the turn is not over.
+    a11y: 'The only assertive announcement, "Approval needed: {action}". Focus moves to the prompt''s safe option.'
   - id: complete
+    treatment: The caret is removed and the actions bar appears; the composer returns to Send.
+    a11y: Polite "Response complete", then the message's focus rules apply.
   - id: error
+    treatment:
+      An inline error with Retry replaces the assistant slot's pending indicator; the user's draft is
+      preserved (LQ-ERR-01); the composer shows Send.
+    a11y: role="alert" on the error message, not on the whole message.
   - id: cancelled
+    treatment: Partial output stays on screen, marked "Stopped" (LQ-MACHINE-03); the composer shows Send.
+    a11y: Polite "Stopped".
 machine:
   initial: idle
   states:
@@ -149,11 +171,48 @@ machine:
     - from: cancelled
       to: submitted
       on: regenerate
+    - from: complete
+      to: submitted
+      on: send
+    - from: error
+      to: submitted
+      on: send
+    - from: cancelled
+      to: submitted
+      on: send
 api:
+  events:
+    - name: send
+      description:
+        The user submits the composer. idle → submitted; from a terminal state a new turn starts the same
+        way, which is why the composer shows Send there.
+    - name: reasoning-delta
+      description: First reasoning token. submitted → streaming:reasoning.
+    - name: tool-input-start
+      description: A tool part begins. Enters streaming:tool from any streaming state or from submitted.
+    - name: approval-requested
+      description: A tool needs a decision. streaming:tool → awaiting-approval; the stream pauses.
+    - name: approval-responded
+      description: The user allowed or denied. awaiting-approval → streaming:tool.
+    - name: text-delta
+      description: First text token. Enters streaming:text from submitted, reasoning or tool.
+    - name: finish
+      description: The transport ends the turn. streaming:text or streaming:tool → complete.
+    - name: error
+      description: The transport fails. Any non-terminal state except idle → error.
+    - name: stop
+      description: The user presses Stop. Any non-terminal state except idle → cancelled.
+    - name: retry
+      description: From error, back to submitted with the same input.
+    - name: regenerate
+      description: From complete or cancelled, back to submitted with the same input.
   composition: >
     Expose one `status` value per thread and one `state` per tool part, from the transport (AI SDK `status`,
     assistant-ui `isRunning`, or your own reducer). Components receive it as a prop. No component may compute
-    its state from message text.
+    its state from message text. The reducer is a lookup in the transitions table above: the status only
+    changes on a listed (from, on) pair, and every other event is ignored (LQ-MACHINE-04). The React
+    implementation in @lacquer/react reads the table from the compiled spec, so the code cannot drift from
+    this file.
 accessibility:
   name: Not applicable; this principle defines the announcements other components make.
   announcements:
@@ -214,6 +273,35 @@ rules:
       detect:
         runtime: Stop mid-stream; the message body is non-empty and carries data-state="cancelled".
       fix: Transition to cancelled, do not reset the message.
+    - id: LQ-MACHINE-04
+      level: MUST
+      polarity: forbid
+      title: No transition outside the table
+      statement:
+        The status changes only through a row of the transitions table; an event with no row for the
+        current status is ignored, never handled by an extra branch beside the table.
+      rationale:
+        Every "just this once" branch is a state the spec does not know about, and every component downstream
+        renders it wrong.
+      detect:
+        static: The reducer is a lookup over the transitions table; no assignment to status exists outside it.
+        runtime: Dispatch every event in every status; the status changes only on the listed pairs.
+      fix: Add the row to the spec first, then the table follows. Never the other way round.
+    - id: LQ-MACHINE-05
+      level: MUST
+      polarity: forbid
+      title: No second source of truth for the lifecycle
+      statement:
+        A thread holds one status value; no `isLoading`, `isStreaming` or `done` flag lives beside it that
+        could disagree with it.
+      detect:
+        static: A loading, streaming or done boolean stored in thread state alongside a status.
+      fix: Derive the boolean from status at the point of use (`status !== "idle" && !terminal`).
+implementations:
+  - renderer: react
+    package: "@lacquer/react"
+    export: useMessageMachine
+    status: reference
 grading:
   weight: 2
   notes: Violations here cascade into every component in the transcript; graded once per screen, weighted high.
