@@ -2,6 +2,7 @@
   id: seven-states — every lifecycle state for the same call.
   Only output-error and approval-requested ship open (LQ-TOOLCARD-02); the
   rest collapse to one line. Status is text first; colour follows data-state.
+  The approval prompt sits in the approval slot and is one line once decided.
 -->
 <div style="display: grid; gap: var(--lq-space-gap-sm)">
   <div
@@ -10,6 +11,7 @@
     data-lacquer="tool-call-card"
     data-state="input-streaming"
     data-effect="read"
+    data-density="row"
   >
     <button
       type="button"
@@ -39,6 +41,7 @@
     data-lacquer="tool-call-card"
     data-state="input-available"
     data-effect="read"
+    data-density="row"
   >
     <button
       type="button"
@@ -69,6 +72,7 @@
     data-lacquer="tool-call-card"
     data-state="approval-requested"
     data-effect="read"
+    data-density="row"
   >
     <button
       type="button"
@@ -82,24 +86,40 @@
     </button>
     <div data-slot="body" id="s3-body" role="region" aria-labelledby="s3-name">
       <pre data-slot="input">{ "path": "src/app.tsx" }</pre>
-      <div data-slot="actions">
-        <button
-          type="button"
-          data-lacquer="button"
-          data-emphasis="outline"
-          data-size="xs"
-          autofocus
+      <div data-slot="approval">
+        <form
+          data-lacquer="approval-prompt"
+          data-state="approval-requested"
+          data-effect="read"
+          aria-labelledby="s3-title"
         >
-          <span data-slot="label">Deny</span>
-        </button>
-        <button
-          type="button"
-          data-lacquer="button"
-          data-emphasis="primary"
-          data-size="xs"
-        >
-          <span data-slot="label">Approve once</span>
-        </button>
+          <div data-slot="title" id="s3-title" role="alert">
+            <span data-slot="eyebrow">Approval needed</span>
+            Read src/app.tsx outside the sandbox
+          </div>
+          <pre data-slot="payload" data-format="command">cat src/app.tsx</pre>
+          <div data-slot="actions">
+            <button
+              type="submit"
+              data-lacquer="button"
+              data-slot="allow"
+              data-emphasis="primary"
+              data-size="sm"
+              autofocus
+            >
+              <span data-slot="label">Allow once</span>
+            </button>
+            <button
+              type="button"
+              data-lacquer="button"
+              data-slot="deny"
+              data-emphasis="outline"
+              data-size="sm"
+            >
+              <span data-slot="label">Deny</span>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -110,6 +130,7 @@
     data-lacquer="tool-call-card"
     data-state="approval-responded"
     data-effect="read"
+    data-density="row"
   >
     <button
       type="button"
@@ -129,6 +150,20 @@
       hidden
     >
       <pre data-slot="input">{ "path": "src/app.tsx" }</pre>
+      <div data-slot="approval">
+        <form
+          data-lacquer="approval-prompt"
+          data-state="approval-responded"
+          data-effect="read"
+          data-decision="allow-once"
+          aria-labelledby="s4-title"
+        >
+          <div data-slot="title" id="s4-title">
+            Read src/app.tsx outside the sandbox
+          </div>
+          <p data-slot="decision" role="status" tabindex="-1">Allowed once</p>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -138,6 +173,7 @@
     data-lacquer="tool-call-card"
     data-state="output-available"
     data-effect="read"
+    data-density="row"
   >
     <button
       type="button"
@@ -167,6 +203,7 @@
     data-lacquer="tool-call-card"
     data-state="output-error"
     data-effect="read"
+    data-density="row"
   >
     <button
       type="button"
@@ -202,6 +239,7 @@
     data-lacquer="tool-call-card"
     data-state="output-denied"
     data-effect="read"
+    data-density="row"
   >
     <button
       type="button"
@@ -220,7 +258,20 @@
       aria-labelledby="s7-name"
       hidden
     >
-      <p data-slot="output">Denied by you.</p>
+      <div data-slot="approval">
+        <form
+          data-lacquer="approval-prompt"
+          data-state="approval-responded"
+          data-effect="read"
+          data-decision="deny"
+          aria-labelledby="s7-title"
+        >
+          <div data-slot="title" id="s7-title">
+            Read src/app.tsx outside the sandbox
+          </div>
+          <p data-slot="decision" role="status" tabindex="-1">Denied</p>
+        </form>
+      </div>
     </div>
   </div>
 </div>

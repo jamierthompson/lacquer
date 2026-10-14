@@ -29,7 +29,9 @@ found_in:
   - CopilotKit
 anatomy:
   - part: root
-    description: The card. Carries data-state (tool lifecycle) and data-effect (read | write | destroy).
+    description: >-
+      The card, role="group" named by the name part. Carries data-state (tool lifecycle), data-effect
+      (read | write | destroy) and data-density.
   - part: header
     element: button
     description: The disclosure trigger. Whole row is pressable; aria-expanded lives here.
@@ -37,47 +39,60 @@ anatomy:
     required: false
     description: Tool-category glyph (search, file, terminal, browser). Decorative.
   - part: name
-    description:
+    description: >-
       Humanised tool name plus target — "Searching the web for 'oklch contrast'", "Reading
       src/app.tsx". Never the raw function name.
   - part: status
-    description: State badge with text ("Running", "Completed", "Error"); colour is secondary.
+    description: State as text ("Running", "Completed", "Error") with the spinner inside it while running; colour is secondary.
+  - part: spinner
+    required: false
+    description: Inside the status while input-available. Decorative; still under reduced motion.
+  - part: elapsed
+    required: false
+    description: Seconds since the call started, shown after 10 s while running (LQ-WAIT-01). Outside any live region.
   - part: chevron
     description: Rotates on expand; rotation is paired with the header background change (LQ-STATE-02).
   - part: body
     description: Collapsible region. Hidden by default except on error.
   - part: input
     required: false
-    description: Arguments as highlighted JSON in type.family.mono; truncated with "show all" past 20 lines.
+    description: Arguments as JSON in type.family.mono; truncated with "show all" past 20 lines.
+  - part: approval
+    slot: true
+    required: false
+    description: >-
+      The approval-prompt, consumer-supplied, rendered after the input while the state is
+      approval-requested and as its decision line once responded or denied. The card never answers
+      it (LQ-GATE-01).
   - part: output
     required: false
     description: Result, error, or a registered generative-UI component. Never model-supplied HTML.
   - part: actions
     required: false
-    description: Retry (on error), Copy (on output), Approve / Deny (when approval-requested).
+    description: Retry (on error), Copy (on text output). Catalog buttons.
 variants:
   - axis: density
     values:
       - row
       - card
     default: row
-    guidance:
-      Row is a single line with the summary (Claude Code style); card adds a visible border and padding.
-      Grouped runs ("Searched 4 sources") are a row.
+    guidance: >-
+      Row is a single line with the summary and no border (Claude Code style); card adds a visible border,
+      a surface and padding. Grouped runs ("Searched 4 sources") are a row.
   - axis: effect
     values:
       - read
       - write
       - destroy
     default: read
-    guidance:
+    guidance: >-
       Drives data-effect and the status token so writes look different from reads without expansion
       (LQ-TOOL-02).
 modifiers:
   - grouped
 states:
   - id: input-streaming
-    treatment:
+    treatment: >-
       Status "Pending" in color.status.pending; name may still be arriving; shimmer on the name,
       opacity-only under reduced motion.
     a11y: none until a name exists; then one announcement "Preparing {name}".
@@ -85,13 +100,13 @@ states:
     treatment: Status "Running" in color.status.running with a spinner; elapsed time after 10 s (LQ-WAIT-01).
     a11y: aria-busy="true" on root; one polite announcement "Running {name}".
   - id: approval-requested
-    treatment: Body auto-expands; approval-prompt rendered inside; the card is outlined in color.status.warning.
-    a11y: 'Assertive announcement "Approval needed: {verb} {object}"; focus moves to the prompt.'
+    treatment: Body auto-expands; the approval slot is rendered after the input; the card is outlined in color.status.warning.
+    a11y: 'The prompt announces assertively, "Approval needed: {title}"; focus moves to its default option. The card itself is silent.'
   - id: approval-responded
-    treatment: Status "Approved" or "Denied"; the prompt collapses to one line recording the decision.
-    a11y: Polite announcement of the decision.
+    treatment: Status "Approved" or "Denied"; the body collapses; the prompt inside it is one line recording the decision.
+    a11y: The prompt's decision line announces politely; the card itself is silent.
   - id: output-available
-    treatment:
+    treatment: >-
       Status "Completed" in color.status.success; collapses to a one-line summary ("Read 3 files");
       spinner removed.
     a11y: aria-busy removed; one polite announcement "{name} complete".
@@ -99,8 +114,8 @@ states:
     treatment: Status "Error" in color.status.error with an icon; body auto-expands to show the message; Retry visible.
     a11y: role="alert" on the message, not the whole card.
   - id: output-denied
-    treatment: Status "Denied" in color.fg.muted; no output; one line explaining who denied it.
-    a11y: Polite announcement.
+    treatment: Status "Denied" in color.fg.muted; no output; the prompt's decision line, or one line saying who denied it when there is no prompt.
+    a11y: none of its own; the prompt's decision line announced the denial.
   - id: expanded
     treatment: Header background shifts one step; chevron rotates; body visible.
     a11y: aria-expanded="true" on the header button; body has the header as aria-labelledby.
@@ -131,7 +146,7 @@ api:
     - name: name
       type: string
       required: true
-      description:
+      description: >-
         Humanised, with target. The implementation does not humanise; the caller does, so the mapping is
         one place.
     - name: effect
@@ -142,33 +157,38 @@ api:
       type: unknown
     - name: output
       type: unknown | node
-      description:
+      description: >-
         A registered component (a framework element, a custom element, a DOM node) may be passed for
         generative UI.
     - name: error
       type: string
+    - name: density
+      type: enum(row|card)
+      default: row
+      maps_to: data-density
     - name: defaultOpen
       type: boolean
       default: false
       description: Forced true by the implementation when state is output-error or approval-requested.
     - name: onRetry
       type: () => void
-    - name: onApprove
-      type: () => void
-    - name: onDeny
-      type: () => void
+      description: When given, Retry is rendered in the actions while the state is output-error.
+    - name: strings
+      type: Partial<Record<pending|running|approval|approved|denied|completed|error|retry|copy|show_all|denied_by, string>>
+      description: Localised strings; the defaults are in `content.strings`.
   slots:
     - icon
+    - approval
     - output
   events:
     - name: openChange
       payload: boolean
     - name: retry
-    - name: approve
-    - name: deny
   composition: >
-    Built from disclosure + badge + code-block + spinner + card. Output is a slot so a product can render its
-    own component for a tool's result; the card never renders HTML strings.
+    A disclosure (a native button header and a labelled region) with the catalog button for its actions.
+    Output is a slot so a product can render its own component for a tool's result; the card never
+    renders HTML strings. The approval prompt is a slot so it carries the product's risk framing and
+    scope, and so the card has no approve or deny of its own.
 accessibility:
   apg:
     pattern: Disclosure
@@ -196,10 +216,12 @@ accessibility:
       when: focus on header
     - key: Tab
       action: Moves through header, then visible actions. Collapsed body contents are not in the tab order.
-  focus:
-    On approval-requested, focus moves to the approval prompt's safe option (Deny). On output-error, focus
-    does not move; the alert role announces.
-  announcements:
+  focus: >-
+    On approval-requested, focus moves into the approval prompt, to its default option (Allow once, or
+    Deny when the effect is destroy; LQ-APPROVAL-02). On approval-responded the body collapses; if focus
+    was inside it, the header takes focus, as a disclosure does when it closes around the focus. On
+    output-error, focus does not move; the alert role announces.
+  announcements: >-
     Exactly one announcement per state change, polite except approval-requested (assertive).
     Batched when several cards change within 2 s (LQ-A11Y-01).
 tokens:
@@ -237,7 +259,9 @@ content:
     completed: Completed
     error: Error
     retry: Retry
+    copy: Copy
     show_all: Show all
+    denied_by: Denied by you.
 usage:
   use_when:
     - Any tool-using model or agent, one card per invocation, grouped when repeated.
@@ -257,11 +281,7 @@ usage:
     - agent-status
     - message-state-machine
   reuses:
-    - disclosure
-    - badge
-    - code-block
-    - spinner
-    - card
+    - button
   exemplars:
     - AI Elements Tool — the seven-state vocabulary with badges; adopt the names, collapse completed by
       default.
@@ -288,7 +308,7 @@ rules:
       level: MUST
       polarity: require
       title: Render from state, not content
-      statement:
+      statement: >-
         The card's visual state is driven by the `state` prop from the tool lifecycle; it is never inferred
         from the output text (e.g. "contains 'error'" or "ends with ```").
       detect:
@@ -298,7 +318,7 @@ rules:
       level: MUST
       polarity: require
       title: Error and approval auto-expand; everything else collapses
-      statement:
+      statement: >-
         output-error and approval-requested open the body automatically; all other states are collapsed by
         default with a one-line summary visible.
       detect:
@@ -308,7 +328,7 @@ rules:
       level: MUST
       polarity: forbid
       title: Never render model HTML
-      statement:
+      statement: >-
         Output is JSON, text, or a component registered by the product; a string from the model is never
         set as innerHTML.
       detect:
@@ -318,7 +338,7 @@ rules:
       level: SHOULD
       polarity: require
       title: Group repeats
-      statement:
+      statement: >-
         Three or more consecutive calls to the same tool collapse into one grouped card ("Searched 4
         sources") with the individual calls inside.
       detect:
@@ -352,9 +372,13 @@ implementations:
   - renderer: html
     file: examples/html/tool-call-card.html
     status: reference
+  - renderer: react
+    package: "@lacquer/react"
+    export: ToolCallCard
+    status: reference
 grading:
   weight: 1.5
-  notes:
+  notes: >-
     In an agent transcript this is the most repeated component; the grader checks the state coverage of the
     whole set, not each card.
 sources:

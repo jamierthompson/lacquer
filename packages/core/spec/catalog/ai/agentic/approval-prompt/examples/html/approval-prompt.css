@@ -1,0 +1,135 @@
+/*
+ * Approval prompt — reference implementation for the html renderer.
+ * Spec:    spec/catalog/ai/agentic/approval-prompt/approval-prompt.yaml
+ * Binding: spec/bindings/html.yaml
+ * Reuses:  button (the three options) and textarea (the correction).
+ *
+ * Inline in the turn, never a modal (LQ-APPROVAL-05): a bordered form with
+ * an edge coloured by effect, so a write and a destroy read differently
+ * before the payload is read (LQ-TOOL-02). Once responded it is one line
+ * with no box. This file styles nothing inside the buttons or the
+ * textarea; those are the catalog's.
+ */
+
+[data-lacquer="approval-prompt"] {
+  /* anatomy: root — the <form>; data-state, data-effect, data-decision live here */
+  display: grid;
+  gap: var(--lq-space-gap-sm);
+  padding: var(--lq-space-inset-sm);
+  border: 1px solid var(--lq-color-border-default);
+  border-inline-start-width: 3px;
+  border-radius: var(--lq-radius-md);
+  background: var(--lq-color-bg-surface);
+  color: var(--lq-color-fg-default);
+  font: var(--lq-type-body-md);
+}
+
+/* --- effect (variant axis): the edge, before anything is read ------------- */
+
+[data-lacquer="approval-prompt"][data-effect="write"] {
+  border-inline-start-color: var(--lq-color-status-warning);
+}
+[data-lacquer="approval-prompt"][data-effect="destroy"] {
+  border-inline-start-color: var(--lq-color-status-error);
+}
+
+/* --- parts ---------------------------------------------------------------- */
+
+[data-lacquer="approval-prompt"] [data-slot="title"] {
+  /* anatomy: title — role="alert" while requested; the form's name */
+  display: grid;
+  gap: var(--lq-space-gap-xs);
+  margin: 0;
+  font: var(--lq-type-label-md);
+}
+[data-lacquer="approval-prompt"] [data-slot="eyebrow"] {
+  font: var(--lq-type-label-sm);
+  color: var(--lq-color-fg-muted);
+}
+[data-lacquer="approval-prompt"][data-effect="write"] [data-slot="eyebrow"] {
+  color: var(--lq-color-status-warning);
+}
+[data-lacquer="approval-prompt"][data-effect="destroy"] [data-slot="eyebrow"] {
+  color: var(--lq-color-status-error);
+}
+
+[data-lacquer="approval-prompt"] [data-slot="payload"] {
+  /* anatomy: payload — verbatim, never summarised (LQ-APPROVAL-01) */
+  margin: 0;
+  max-block-size: 16rem;
+  overflow: auto;
+  padding: var(--lq-space-gap-sm);
+  border-radius: var(--lq-radius-sm);
+  background: var(--lq-color-bg-surface-tertiary);
+  font: var(--lq-type-label-sm);
+  font-family: var(--lq-type-family-mono);
+  font-weight: 400;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+[data-lacquer="approval-prompt"] [data-slot="payload"][data-format="text"] {
+  font: var(--lq-type-body-md);
+}
+
+[data-lacquer="approval-prompt"] [data-slot="risk"] {
+  /* anatomy: risk — three rows of fact */
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--lq-space-gap-xs) var(--lq-space-gap-sm);
+  margin: 0;
+  font: var(--lq-type-label-sm);
+}
+[data-lacquer="approval-prompt"] [data-slot="risk"] > dt {
+  color: var(--lq-color-fg-muted);
+  font-weight: 400;
+}
+[data-lacquer="approval-prompt"] [data-slot="risk"] > dd {
+  margin: 0;
+}
+
+[data-lacquer="approval-prompt"] [data-slot="actions"] {
+  /* anatomy: actions — allow, always, deny, in DOM order; nothing trapped */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--lq-space-gap-sm);
+}
+
+[data-lacquer="approval-prompt"] [data-slot="autonomy"] {
+  margin-inline-start: auto;
+  font: var(--lq-type-label-sm);
+}
+
+/* --- responded: one line, no box ------------------------------------------- */
+
+[data-lacquer="approval-prompt"][data-state="approval-responded"] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--lq-space-gap-sm);
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+[data-lacquer="approval-prompt"][data-state="approval-responded"]
+  [data-slot="title"] {
+  font: var(--lq-type-body-md);
+  color: var(--lq-color-fg-muted);
+}
+
+[data-lacquer="approval-prompt"] [data-slot="decision"] {
+  /* anatomy: decision — role="status"; text first, colour second (LQ-STATE-02) */
+  margin: 0;
+  font: var(--lq-type-label-sm);
+  color: var(--lq-color-fg-muted);
+}
+[data-lacquer="approval-prompt"] [data-slot="decision"]:focus-visible {
+  outline: var(--lq-focus-ring-width) solid var(--lq-color-border-focus);
+  outline-offset: var(--lq-focus-ring-offset);
+}
+[data-lacquer="approval-prompt"][data-decision="allow-once"]
+  [data-slot="decision"],
+[data-lacquer="approval-prompt"][data-decision="allow-always"]
+  [data-slot="decision"] {
+  color: var(--lq-color-status-success);
+}

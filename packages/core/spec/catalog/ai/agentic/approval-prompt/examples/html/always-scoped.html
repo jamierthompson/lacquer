@@ -1,0 +1,71 @@
+<!--
+  id: always-scoped — a write prompt. The title names verb, object and scope
+  (LQ-GATE-02); the Always option is rendered because a scope can be stated,
+  and its label says exactly what the rule will cover (LQ-APPROVAL-03).
+  Allow once holds the default focus for a write (LQ-APPROVAL-02).
+-->
+<form
+  data-lacquer="approval-prompt"
+  data-state="approval-requested"
+  data-effect="write"
+  aria-labelledby="a1-title"
+  aria-describedby="a1-risk"
+>
+  <div data-slot="title" id="a1-title" role="alert">
+    <span data-slot="eyebrow">Approval needed</span>
+    Run npm test in this repo
+  </div>
+  <pre data-slot="payload" data-format="command">npm test</pre>
+  <dl data-slot="risk" id="a1-risk">
+    <dt>Touches</dt>
+    <dd>node_modules/.cache, the test runner's temp files</dd>
+    <dt>Reversible</dt>
+    <dd>Yes</dd>
+    <dt>Reach</dt>
+    <dd>Inside this repo</dd>
+  </dl>
+  <div data-slot="actions">
+    <button
+      type="submit"
+      data-lacquer="button"
+      data-slot="allow"
+      data-emphasis="primary"
+      data-size="sm"
+      autofocus
+    >
+      <span data-slot="label">Allow once</span>
+    </button>
+    <button
+      type="button"
+      data-lacquer="button"
+      data-slot="always"
+      data-emphasis="outline"
+      data-size="sm"
+    >
+      <span data-slot="label">Always allow npm test in this repo</span>
+    </button>
+    <button
+      type="button"
+      data-lacquer="button"
+      data-slot="deny"
+      data-emphasis="outline"
+      data-size="sm"
+    >
+      <span data-slot="label">Deny</span>
+    </button>
+  </div>
+  <div
+    data-lacquer="textarea"
+    data-slot="correction"
+    data-sizing="autosize"
+    data-frame="outlined"
+    data-size="sm"
+  >
+    <textarea
+      data-slot="control"
+      rows="1"
+      aria-label="What should it do instead?"
+      placeholder="What should it do instead?"
+    ></textarea>
+  </div>
+</form>

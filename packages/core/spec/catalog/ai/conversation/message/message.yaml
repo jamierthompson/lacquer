@@ -6,16 +6,18 @@ kind: component
 catalog: ai
 group: conversation
 tier: 1
+atomic_level: organism
 maturity: established
 status: draft
 version: 0.1.0
 summary:
-  User messages are right-aligned bubbles; assistant messages are full-width, unbubbled containers for
-  ordered parts (reasoning, tools, text, sources, actions).
+  "The container for one turn: a right-aligned user bubble, or a full-width assistant article that
+  carries the thread status as data-state and holds its parts in order."
 aliases:
   - Message (AI Elements, prompt-kit)
   - UserMessage / AssistantMessage (assistant-ui)
   - st.chat_message (Streamlit)
+  - gr.ChatMessage (Gradio)
 found_in:
   - ChatGPT
   - Claude
@@ -24,62 +26,288 @@ found_in:
   - assistant-ui
   - prompt-kit
 anatomy:
-  - part: identity-row
-    description: identity row (optional name / AI label)
-  - part: parts-in-order
-    description: "parts in order: reasoning, tool cards, streamed content, media, sources row"
-  - part: actions-bar
-    description: actions bar
-  - part: branch-picker
-    description: branch picker
-  - part: user-variant
-    description: "user variant: bubble with edit affordance and attachment chips"
+  - part: root
+    element: article
+    description: >-
+      The turn. Carries data-from (user | assistant) and, on an assistant message, data-state (the
+      thread status, written through unchanged). Named by aria-label ("You said", "Assistant said").
+  - part: identity
+    slot: true
+    required: false
+    description: >-
+      A name, avatar or AI label above the content. Consumer-supplied. A sparkle alone is not a label
+      (LQ-STYLE-02).
+  - part: status
+    required: false
+    description: >-
+      The turn's one polite live region, visually hidden, on assistant messages only. Its text is derived
+      from the status and changes at most once per 2 s (LQ-A11Y-01). Nothing that counts lives in it.
+  - part: content
+    slot: true
+    description: >-
+      The parts in order, consumer-supplied: the thinking indicator, reasoning, tool cards (with an
+      approval prompt inside one), streamed text, sources. Each renders from the status or a tool
+      part's state, never from the text.
+  - part: note
+    required: false
+    description: >-
+      One line after the content while data-state is cancelled ("Stopped"), so the partial output is
+      marked and never cleared (LQ-MACHINE-03).
+  - part: actions
+    slot: true
+    required: false
+    description: >-
+      The actions bar after the content, consumer-supplied (message-actions). A product renders it in
+      terminal states; the message does not decide what is in it.
+variants:
+  - axis: from
+    values:
+      - user
+      - assistant
+    default: assistant
+    guidance: >-
+      User is a bubble at the end of the line, at most 70% wide. Assistant is full width, capped at
+      size.measure.prose, with no bubble, so prose has a reading measure and tool cards have room.
 states:
+  - id: submitted
+    treatment: >-
+      The content holds the thinking indicator and nothing else. No caret, no actions, no note. The
+      article is already on screen so the slot does not jump when the first token lands.
+    a11y: The status region says "Thinking" once, or the activity the transport named.
   - id: streaming
+    treatment: >-
+      The content grows in place as parts arrive, in order: reasoning, tool cards, text with a caret.
+      Previously rendered parts never move (LQ-STREAM-02). No actions.
+    a11y:
+      The status region says "Reasoning" or "Running {activity}" once on entering each sub-state;
+      streamed text is announced in batches by streaming-markdown, at most one per 2 s (LQ-A11Y-01).
+  - id: awaiting-approval
+    treatment: >-
+      Nothing in the message changes; the approval prompt inside its tool card holds focus and the
+      stream is paused. The message never scrolls or dims around it.
+    a11y: None from the message. The prompt's own alert is the thread's one assertive announcement.
   - id: complete
+    treatment: The caret is gone; the actions slot is rendered after the content.
+    a11y: The status region says "Response complete" once.
   - id: error
+    treatment: >-
+      The pending indicator is gone; the inline error with Retry (error-refusal-state) renders in the
+      content, after whatever had already arrived. The actions slot is rendered.
+    a11y: None from the status region; role="alert" sits on the error, not on the message (LQ-ERR-01).
   - id: cancelled
-modes:
-  - id: edited
-  - id: branch-n-of-m
-    notes: branch n-of-m
+    treatment: >-
+      Everything already rendered stays exactly as it was; the note "Stopped" in color.fg.muted follows
+      it (LQ-MACHINE-03). The actions slot is rendered so Regenerate is reachable (LQ-RECOVER-01).
+    a11y: The status region says "Stopped" once.
 api:
-  interactions:
-    - hover/focus reveals actions
-    - edit turns user bubble into inline composer
-    - regenerate creates sibling branch
+  props:
+    - name: from
+      type: enum(user|assistant)
+      default: assistant
+      maps_to: data-from
+    - name: status
+      type: enum(idle|submitted|streaming:reasoning|streaming:tool|streaming:text|awaiting-approval|complete|error|cancelled)
+      maps_to: data-state
+      description: >-
+        The thread status from message-state-machine, required on an assistant message. Written to
+        data-state unchanged and used for the announcement; never derived from the content
+        (LQ-MESSAGE-01). Ignored on a user message.
+    - name: activity
+      type: string
+      description: >-
+        What the transport says it is doing, humanised ("Running npm test"). Used only in the status
+        region's text while the status is submitted or streaming:tool.
+    - name: label
+      type: string
+      maps_to: aria-label
+      description: The accessible name. Defaults to the `you` or `assistant` string by `from`.
+    - name: strings
+      type: Partial<Record<you|assistant|thinking|reasoning|running|tool|complete|stopped, string>>
+      description: Localised strings; the defaults are in `content.strings`.
+  slots:
+    - identity
+    - content
+    - actions
+  interactions: []
+  composition: >
+    The message owns the container, the status attribute, the announcement and the stopped note. Every
+    visible part is a child, because the set of parts differs by product and by turn; the message does
+    not know whether a tool card or a sources row is inside it. It receives the status rather than the
+    message object because its only decisions, what to announce and whether to show the note, are
+    functions of the status (message-state-machine).
 accessibility:
-  notes: Article with accessible name (You said / Assistant said); actions visible on focus; edit is a real form.
+  role: article (root); status (the status part)
+  name: >-
+    From aria-label on the root, "You said" or "Assistant said" by default, so a screen reader moving by
+    article hears who is speaking before the content.
+  aria:
+    - attr: aria-label
+      on: root
+      value: label
+    - attr: role
+      on: status
+      value: status
+      when: from=assistant
+  focus: >-
+    Never takes focus and never moves it. The approval prompt inside a tool card moves focus by its own
+    rule; nothing else in a message does.
+  announcements: >-
+    One polite status region per assistant message, visually hidden, whose text follows the status:
+    "Thinking" (or the activity) on submitted, "Reasoning" and "Running {activity}" on entering those
+    sub-states, "Response complete" on complete, "Stopped" on cancelled; silent in streaming:text, in
+    awaiting-approval and in error, where streaming-markdown, the approval prompt's alert and the
+    error's alert announce instead. Changes are throttled to one per 2 s (LQ-A11Y-01). Elapsed time is
+    never in it (LQ-THINK-04).
 tokens:
   consumes:
-    - color.bg.user-bubble
-    - radius.bubble
-    - color.bg.assistant
-    - space.gap.message
+    - color.bg.secondary
+    - color.fg.on-secondary
+    - color.fg.default
+    - color.fg.muted
+    - radius.lg
+    - space.gap.xs
+    - space.gap.sm
+    - space.inset.sm
     - type.body.md
+    - type.label.sm
     - size.measure.prose
+content:
+  label: The accessible name says who spoke ("You said", "Assistant said"); a product name may replace "Assistant".
+  voice: Announcements are one or two words that say what happened, never what the user should do.
+  limits: Never "Loading", "Please wait" or "Generating response" in the status region; never a count-up.
+  strings:
+    you: You said
+    assistant: Assistant said
+    thinking: Thinking
+    reasoning: Reasoning
+    running: Running {activity}
+    tool: a tool
+    complete: Response complete
+    stopped: Stopped
 usage:
   use_when:
-    - any thread
+    - Any thread, one message per turn.
   avoid_when:
-    - symmetric bubble layouts that make assistant prose narrow and hard to read
+    - Symmetric bubble layouts that make assistant prose narrow and hard to read.
+    - A single-shot generation surface with no turns; that is a generation-canvas, not a thread.
   pairs_well_with:
+    - message-list
+    - thinking-indicator
+    - tool-call-card
+    - approval-prompt
     - streaming-markdown
     - message-actions
-    - branch-picker
+    - error-refusal-state
     - reasoning-disclosure
-    - tool-call-card
-  reuses:
-    - avatar
-    - badge
-    - icon-button
-    - textarea
+    - branch-picker
+    - composer
+    - message-state-machine
   exemplars:
-    - AI Elements Message — from='user|assistant' switches bubble vs full-width
-    - ChatGPT/Claude — assistant text without bubble, no avatar required
+    - AI Elements Message — `from="user|assistant"` switches bubble vs full width; adopt the axis.
+    - ChatGPT, Claude — assistant text without a bubble and without an avatar; the measure does the work.
+    - Claude — a stopped turn keeps everything it had and adds one line; nothing is replaced.
 rules:
   shared:
     - LQ-TOKEN-01
     - LQ-ANAT-01
+    - LQ-NAME-01
+    - LQ-SEM-01
+    - LQ-A11Y-01
+    - LQ-STREAM-02
+    - LQ-RECOVER-01
+    - LQ-ERR-01
+  local:
+    - id: LQ-MESSAGE-01
+      level: MUST
+      polarity: require
+      title: The status is on the container
+      statement: >-
+        An assistant message writes the thread status to data-state unchanged, and everything inside it
+        renders from that status or from a tool part's state; the message never computes a state from
+        its content.
+      detect:
+        static: data-state is bound to the status prop; no regex, includes or endsWith on children or text in the message's render.
+        runtime: Drive every status; [data-lacquer="message"][data-from="assistant"] carries data-state equal to it.
+      fix: Pass the status in; see message-state-machine.
+    - id: LQ-MESSAGE-02
+      level: MUST
+      polarity: require
+      title: One status region per turn
+      statement: >-
+        An assistant message has exactly one role="status" region for the lifecycle, visually hidden,
+        whose text is a function of the status and changes at most once per 2 s; the only other live
+        regions inside it announce their own event once (the approval prompt's alert and decision, the
+        error's alert).
+      detect:
+        runtime: Count [role="status"] inside the message; assert 1 on assistant messages and 0 on user messages; assert no element inside it has text that changes every second.
+      fix: Give the message the region and take live regions off the indicator, the caret and the tool cards.
+    - id: LQ-MESSAGE-03
+      level: MUST
+      polarity: forbid
+      title: Nothing clears on stop or error
+      statement: >-
+        Entering cancelled or error never removes or replaces content already rendered; cancelled appends
+        the stopped note and error appends the inline error.
+      rationale: The partial is the user's; it may be most of the answer. Clearing it is LQ-MACHINE-03's defect at the component level.
+      detect:
+        runtime: Stop mid-stream; the content's child count is unchanged and [data-slot="note"] is present. Error mid-stream; the content's child count has grown by one.
+      fix: Render the note and the error after the content; never reset the content on a status change.
+    - id: LQ-MESSAGE-04
+      level: SHOULD
+      polarity: forbid
+      title: No bubble for the assistant
+      statement: >-
+        An assistant message is full width within size.measure.prose, with no bubble background; only
+        the user message is a bubble.
+      rationale: Bubbles are for short turns. Assistant turns hold prose, code and tool cards, which need the measure and the room.
+      detect:
+        static: '[data-from="assistant"] has no background or max-inline-size below size.measure.prose.'
+      fix: Drop the bubble from the assistant variant; keep the user bubble.
+examples:
+  good:
+    - id: user-and-assistant
+      title: A user bubble and a complete assistant turn
+      renderer: html
+      file: examples/html/user-and-assistant.html
+      demonstrates:
+        - variant:from=*
+        - state:complete
+        - rule:LQ-MESSAGE-04
+    - id: cancelled-keeps-partial
+      title: A stopped turn with its partial output and the note
+      renderer: html
+      file: examples/html/cancelled-keeps-partial.html
+      demonstrates:
+        - state:cancelled
+        - rule:LQ-MESSAGE-03
+        - rule:LQ-MACHINE-03
+  anti:
+    - id: state-from-content
+      title: A message that decides it is streaming by reading its own text
+      renderer: html
+      file: examples/anti/state-from-content.html
+      violates:
+        - LQ-MESSAGE-01
+        - LQ-MACHINE-01
+    - id: cleared-on-stop
+      title: Stop replaces the partial output with a notice
+      renderer: html
+      file: examples/anti/cleared-on-stop.html
+      violates:
+        - LQ-MESSAGE-03
+        - LQ-MACHINE-03
+implementations:
+  - renderer: html
+    file: examples/html/message.html
+    status: reference
+  - renderer: react
+    package: "@lacquer/react"
+    export: Message
+    status: reference
+grading:
+  weight: 1.5
+  notes: One per turn, so a defect here repeats down the whole thread; the status region is graded once per turn.
 sources:
   - https://elements.ai-sdk.dev/components/message
+  - https://www.assistant-ui.com/docs/primitives
+  - https://developer.apple.com/design/human-interface-guidelines/generative-ai

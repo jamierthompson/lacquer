@@ -1,0 +1,64 @@
+<!--
+  ANTI-EXAMPLE — violates LQ-APPROVAL-03, LQ-APPROVAL-05, LQ-GATE-02.
+  A grader fixture: this file must FAIL. Do not copy.
+
+  What is wrong:
+   - It is a modal dialog with a scrim. The turn is paused, the page is not;
+     the composer's Stop is now unreachable (LQ-APPROVAL-05).
+   - "Always allow" has no scope in its label; the user cannot tell whether
+     it covers this command, this tool or everything (LQ-APPROVAL-03).
+   - The title has no verb, object or scope: "Allow this?" says nothing a
+     grader or a user can check (LQ-GATE-02).
+-->
+<div
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="x2-title"
+  style="
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: var(--lq-color-bg-scrim);
+  "
+>
+  <form
+    data-lacquer="approval-prompt"
+    data-state="approval-requested"
+    data-effect="write"
+    aria-labelledby="x2-title"
+  >
+    <div data-slot="title" id="x2-title">Allow this?</div>
+    <pre data-slot="payload" data-format="command">npm test</pre>
+    <div data-slot="actions">
+      <button
+        type="submit"
+        data-lacquer="button"
+        data-slot="allow"
+        data-emphasis="primary"
+        data-size="sm"
+        autofocus
+      >
+        <span data-slot="label">Allow once</span>
+      </button>
+      <button
+        type="button"
+        data-lacquer="button"
+        data-slot="always"
+        data-emphasis="outline"
+        data-size="sm"
+      >
+        <span data-slot="label">Always allow</span>
+      </button>
+      <button
+        type="button"
+        data-lacquer="button"
+        data-slot="deny"
+        data-emphasis="outline"
+        data-size="sm"
+      >
+        <span data-slot="label">Deny</span>
+      </button>
+    </div>
+  </form>
+</div>

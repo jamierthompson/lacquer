@@ -10,6 +10,7 @@
     data-lacquer="tool-call-card"
     data-state="output-available"
     data-effect="read"
+    data-density="row"
   >
     <button
       type="button"
@@ -38,6 +39,7 @@
     data-lacquer="tool-call-card"
     data-state="output-available"
     data-effect="write"
+    data-density="row"
   >
     <button
       type="button"
@@ -66,6 +68,7 @@
     data-lacquer="tool-call-card"
     data-state="approval-requested"
     data-effect="destroy"
+    data-density="row"
   >
     <button
       type="button"
@@ -79,24 +82,40 @@
     </button>
     <div data-slot="body" id="w3-body" role="region" aria-labelledby="w3-name">
       <pre data-slot="input">{ "path": "dist/" }</pre>
-      <div data-slot="actions">
-        <button
-          type="button"
-          data-lacquer="button"
-          data-emphasis="outline"
-          data-size="xs"
-          autofocus
+      <div data-slot="approval">
+        <form
+          data-lacquer="approval-prompt"
+          data-state="approval-requested"
+          data-effect="destroy"
+          aria-labelledby="w3a-title"
         >
-          <span data-slot="label">Deny</span>
-        </button>
-        <button
-          type="button"
-          data-lacquer="button"
-          data-emphasis="primary"
-          data-size="xs"
-        >
-          <span data-slot="label">Approve once</span>
-        </button>
+          <div data-slot="title" id="w3a-title" role="alert">
+            <span data-slot="eyebrow">Approval needed</span>
+            Delete dist/ (14 files) in this repo
+          </div>
+          <pre data-slot="payload" data-format="command">rm -rf dist/</pre>
+          <div data-slot="actions">
+            <button
+              type="submit"
+              data-lacquer="button"
+              data-slot="allow"
+              data-emphasis="destructive"
+              data-size="sm"
+            >
+              <span data-slot="label">Allow once</span>
+            </button>
+            <button
+              type="button"
+              data-lacquer="button"
+              data-slot="deny"
+              data-emphasis="outline"
+              data-size="sm"
+              autofocus
+            >
+              <span data-slot="label">Deny</span>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

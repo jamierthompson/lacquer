@@ -1,0 +1,33 @@
+<!--
+  id: decided — two responded prompts, one line each. The saved rule and the
+  correction the agent received are both on the record; the decision line is
+  role="status" so it was announced once, and focusable so focus was not
+  dropped when the buttons went away.
+-->
+<form
+  data-lacquer="approval-prompt"
+  data-state="approval-responded"
+  data-effect="write"
+  data-decision="allow-always"
+  aria-labelledby="r1-title"
+>
+  <div data-slot="title" id="r1-title">Run npm test in this repo</div>
+  <p data-slot="decision" role="status" tabindex="-1">
+    Always allowed: npm test in this repo
+  </p>
+</form>
+
+<form
+  data-lacquer="approval-prompt"
+  data-state="approval-responded"
+  data-effect="destroy"
+  data-decision="deny"
+  aria-labelledby="r2-title"
+>
+  <div data-slot="title" id="r2-title">
+    Delete dist/ (14 files) in this repo
+  </div>
+  <p data-slot="decision" role="status" tabindex="-1">
+    Denied: leave dist/, clean only .cache
+  </p>
+</form>

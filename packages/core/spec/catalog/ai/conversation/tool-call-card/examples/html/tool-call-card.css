@@ -11,12 +11,18 @@
  */
 
 [data-lacquer="tool-call-card"] {
-  /* anatomy: root — role="group", carries data-state and data-effect */
-  border: 1px solid var(--lq-color-border-subtle);
+  /* anatomy: root — role="group", carries data-state, data-effect and data-density */
+  border: 1px solid transparent;
   border-radius: var(--lq-radius-md);
-  background-color: var(--lq-color-bg-surface-secondary);
   color: var(--lq-color-fg-default);
   font: var(--lq-type-body-md);
+}
+
+/* --- density (variant axis): row is a line, card is a surface ------------- */
+
+[data-lacquer="tool-call-card"][data-density="card"] {
+  border-color: var(--lq-color-border-subtle);
+  background-color: var(--lq-color-bg-surface-secondary);
 }
 
 /* --- effect (variant axis): visible while collapsed ----------------------- */
@@ -78,6 +84,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--lq-space-gap-xs);
+  flex: none;
   font: var(--lq-type-label-sm);
   color: var(--lq-color-fg-muted);
 }
@@ -88,6 +95,13 @@
   border-top-color: transparent;
   border-radius: var(--lq-radius-pill);
   animation: lq-tool-spin 1s linear infinite;
+}
+
+/* elapsed: after 10 s while running; outside any live region (LQ-WAIT-01) */
+[data-lacquer="tool-call-card"] [data-slot="elapsed"] {
+  font: var(--lq-type-label-sm);
+  color: var(--lq-color-fg-muted);
+  font-variant-numeric: tabular-nums;
 }
 
 /* chevron: rotation paired with the header background change (LQ-STATE-02) */
@@ -150,6 +164,10 @@
 }
 [data-lacquer="tool-call-card"] > [data-slot="body"][hidden] {
   display: none;
+}
+
+[data-lacquer="tool-call-card"] > [data-slot="body"] > * {
+  margin: 0;
 }
 
 [data-lacquer="tool-call-card"] [data-slot="input"],

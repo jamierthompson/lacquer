@@ -1,0 +1,43 @@
+<!--
+  id: user-and-assistant — the two shapes side by side. The user message is
+  the only bubble; the assistant is full width within the prose measure
+  (LQ-MESSAGE-04) and, in complete, renders its actions slot.
+-->
+<article data-lacquer="message" data-from="user" aria-label="You said">
+  <div data-slot="content">
+    <p>What does section 3 commit us to?</p>
+  </div>
+</article>
+
+<article
+  data-lacquer="message"
+  data-from="assistant"
+  data-state="complete"
+  aria-label="Assistant said"
+>
+  <p data-slot="status" role="status">Response complete</p>
+  <div data-slot="content">
+    <p>
+      Section 3 commits the supplier to a 99.9% monthly uptime target, with
+      service credits of 10% per 0.1% below it, capped at half the monthly fee.
+    </p>
+  </div>
+  <div data-slot="actions">
+    <button
+      type="button"
+      data-lacquer="button"
+      data-emphasis="ghost"
+      data-size="xs"
+    >
+      <span data-slot="label">Copy</span>
+    </button>
+    <button
+      type="button"
+      data-lacquer="button"
+      data-emphasis="ghost"
+      data-size="xs"
+    >
+      <span data-slot="label">Regenerate</span>
+    </button>
+  </div>
+</article>

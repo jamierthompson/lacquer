@@ -1,0 +1,53 @@
+<!--
+  ANTI-EXAMPLE — violates LQ-GATE-01, LQ-APPROVAL-01, LQ-APPROVAL-02.
+  A grader fixture: this file must FAIL. Do not copy.
+
+  What is wrong:
+   - "Always allow" is the primary button and holds the initial focus, so
+     Enter saves a standing rule for a destroy. LQ-GATE-01 forbids it as the
+     default option or focus; LQ-APPROVAL-02 puts the default on Deny for a
+     destroy.
+   - There is no payload part. "Clean up build files" is a summary; the user
+     cannot see that it is `rm -rf dist/` (LQ-APPROVAL-01).
+-->
+<form
+  data-lacquer="approval-prompt"
+  data-state="approval-requested"
+  data-effect="destroy"
+  aria-labelledby="x1-title"
+>
+  <div data-slot="title" id="x1-title" role="alert">
+    <span data-slot="eyebrow">Approval needed</span>
+    Clean up build files
+  </div>
+  <div data-slot="actions">
+    <button
+      type="submit"
+      data-lacquer="button"
+      data-slot="always"
+      data-emphasis="primary"
+      data-size="sm"
+      autofocus
+    >
+      <span data-slot="label">Always allow</span>
+    </button>
+    <button
+      type="button"
+      data-lacquer="button"
+      data-slot="allow"
+      data-emphasis="outline"
+      data-size="sm"
+    >
+      <span data-slot="label">Just once</span>
+    </button>
+    <button
+      type="button"
+      data-lacquer="button"
+      data-slot="deny"
+      data-emphasis="ghost"
+      data-size="sm"
+    >
+      <span data-slot="label">No</span>
+    </button>
+  </div>
+</form>

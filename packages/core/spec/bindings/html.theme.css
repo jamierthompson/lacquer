@@ -73,6 +73,7 @@
   --lq-size-control-lg: 2.5rem;
   --lq-size-icon-sm: 0.875rem;
   --lq-size-icon-md: 1rem;
+  --lq-size-measure-prose: 65ch;
 
   /* type.* — text roles are `font` shorthands */
   --lq-type-family-sans: ui-sans-serif, system-ui, sans-serif;

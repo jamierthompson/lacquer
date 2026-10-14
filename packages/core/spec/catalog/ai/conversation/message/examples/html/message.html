@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Message — Lacquer reference implementation</title>
+    <!--
+    Reference implementation for the html renderer.
+    Spec: spec/catalog/ai/conversation/message/message.yaml
+
+    The markup pattern is:
+
+      <article data-lacquer="message" data-from="assistant" data-state="streaming:tool" aria-label="Assistant said">
+        <div data-slot="identity">…</div>                 optional slot
+        <p data-slot="status" role="status">Running npm test</p>   assistant only; visually hidden
+        <div data-slot="content">
+          …the parts, in order: thinking indicator, tool cards, text…
+        </div>
+        <p data-slot="note">Stopped</p>                   only while data-state="cancelled"
+        <div data-slot="actions">…</div>                  optional slot
+      </article>
+
+      <article data-lacquer="message" data-from="user" aria-label="You said">
+        <div data-slot="content"><p>…</p></div>
+      </article>
+
+    data-state is the thread status written through (LQ-MESSAGE-01); the
+    message never reads its content to decide it. The status region's text
+    is a function of the status, throttled to one change per 2 s
+    (LQ-MESSAGE-02). Cancelled adds the note and removes nothing
+    (LQ-MESSAGE-03). This page is static; the site drives the React
+    implementation through every status.
+  -->
+    <link rel="stylesheet" href="../../../../../../bindings/html.theme.css" />
+    <link
+      rel="stylesheet"
+      href="../../thinking-indicator/examples/html/thinking-indicator.css"
+    />
+    <link rel="stylesheet" href="message.css" />
+    <style>
+      /* Page chrome only. Not part of the component. */
+      body {
+        margin: 0;
+        padding: var(--lq-space-inset-lg);
+        background: var(--lq-color-bg-surface);
+        color: var(--lq-color-fg-default);
+        font: var(--lq-type-body-md);
+      }
+      h1 {
+        font: var(--lq-type-heading-md);
+        margin: 0 0 var(--lq-space-gap-lg);
+      }
+      h2 {
+        font: var(--lq-type-label-md);
+        color: var(--lq-color-fg-muted);
+        margin: var(--lq-space-gap-lg) 0 var(--lq-space-gap-sm);
+      }
+      .thread {
+        display: grid;
+        gap: var(--lq-space-gap-md);
+        max-inline-size: 44rem;
+        padding: var(--lq-space-inset-md);
+        border: 1px solid var(--lq-color-border-subtle);
+        border-radius: var(--lq-radius-md);
+      }
+      .part {
+        padding: var(--lq-space-inset-sm);
+        border: 1px dashed var(--lq-color-border-default);
+        border-radius: var(--lq-radius-md);
+        color: var(--lq-color-fg-muted);
+        font: var(--lq-type-label-sm);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Message</h1>
+
+    <h2>A turn: user bubble, then the assistant in submitted</h2>
+    <div class="thread">
+      <article data-lacquer="message" data-from="user" aria-label="You said">
+        <div data-slot="content">
+          <p>Run the tests and tell me what fails.</p>
+        </div>
+      </article>
+      <article
+        data-lacquer="message"
+        data-from="assistant"
+        data-state="submitted"
+        aria-label="Assistant said"
+      >
+        <p data-slot="status" role="status">Thinking</p>
+        <div data-slot="content">
+          <div data-lacquer="thinking-indicator" data-mode="thinking">
+            <span data-slot="dot" aria-hidden="true"></span>
+            <span data-slot="status-text">Thinking</span>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <h2>streaming:tool — the content holds a tool card; the region names it</h2>
+    <div class="thread">
+      <article
+        data-lacquer="message"
+        data-from="assistant"
+        data-state="streaming:tool"
+        aria-label="Assistant said"
+      >
+        <p data-slot="status" role="status">Running npm test</p>
+        <div data-slot="content">
+          <div class="part">
+            tool-call-card · input-available · Running npm test
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <h2>complete — the actions slot appears; the caret is gone</h2>
+    <div class="thread">
+      <article
+        data-lacquer="message"
+        data-from="assistant"
+        data-state="complete"
+        aria-label="Assistant said"
+      >
+        <div data-slot="identity">Assistant</div>
+        <p data-slot="status" role="status">Response complete</p>
+        <div data-slot="content">
+          <div class="part">
+            tool-call-card · output-available · Ran npm test
+          </div>
+          <p>
+            Two tests fail, both in <code>button.test.tsx</code>: the loading
+            state no longer reserves its width.
+          </p>
+        </div>
+        <div data-slot="actions">
+          <div class="part">message-actions</div>
+        </div>
+      </article>
+    </div>
+
+    <h2>cancelled — everything stays; the note follows it (LQ-MESSAGE-03)</h2>
+    <div class="thread">
+      <article
+        data-lacquer="message"
+        data-from="assistant"
+        data-state="cancelled"
+        aria-label="Assistant said"
+      >
+        <p data-slot="status" role="status">Stopped</p>
+        <div data-slot="content">
+          <div class="part">
+            tool-call-card · output-available · Ran npm test
+          </div>
+          <p>Two tests fail, both in <code>button.test.tsx</code>: the</p>
+        </div>
+        <p data-slot="note">Stopped</p>
+        <div data-slot="actions">
+          <div class="part">message-actions</div>
+        </div>
+      </article>
+    </div>
+
+    <h2>error — the inline error is appended; the region is silent</h2>
+    <div class="thread">
+      <article
+        data-lacquer="message"
+        data-from="assistant"
+        data-state="error"
+        aria-label="Assistant said"
+      >
+        <p data-slot="status" role="status"></p>
+        <div data-slot="content">
+          <div class="part">
+            tool-call-card · output-error · Running npm test
+          </div>
+          <div class="part" role="alert">error-refusal-state · Retry</div>
+        </div>
+      </article>
+    </div>
+  </body>
+</html>

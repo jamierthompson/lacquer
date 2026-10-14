@@ -1,0 +1,56 @@
+<!--
+  id: cancelled-keeps-partial — Stop was pressed mid-sentence. The tool card
+  and the partial paragraph are exactly as they were; the note is appended
+  and the actions slot renders so Regenerate is reachable (LQ-MESSAGE-03,
+  LQ-MACHINE-03, LQ-RECOVER-01).
+-->
+<article
+  data-lacquer="message"
+  data-from="assistant"
+  data-state="cancelled"
+  aria-label="Assistant said"
+>
+  <p data-slot="status" role="status">Stopped</p>
+  <div data-slot="content">
+    <div
+      role="group"
+      aria-labelledby="c1-name"
+      data-lacquer="tool-call-card"
+      data-state="output-available"
+      data-effect="read"
+      data-density="row"
+    >
+      <button
+        type="button"
+        data-slot="header"
+        aria-expanded="false"
+        aria-controls="c1-body"
+      >
+        <span data-slot="name" id="c1-name">Ran npm test</span>
+        <span data-slot="status">Completed</span>
+        <span data-slot="chevron" aria-hidden="true">›</span>
+      </button>
+      <div
+        data-slot="body"
+        id="c1-body"
+        role="region"
+        aria-labelledby="c1-name"
+        hidden
+      >
+        <pre data-slot="output">{ "passed": 41, "failed": 2 }</pre>
+      </div>
+    </div>
+    <p>Two tests fail, both in <code>button.test.tsx</code>: the</p>
+  </div>
+  <p data-slot="note">Stopped</p>
+  <div data-slot="actions">
+    <button
+      type="button"
+      data-lacquer="button"
+      data-emphasis="ghost"
+      data-size="xs"
+    >
+      <span data-slot="label">Regenerate</span>
+    </button>
+  </div>
+</article>

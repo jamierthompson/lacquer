@@ -385,6 +385,10 @@ implementations:
   - renderer: html
     file: examples/html/button.html
     status: reference
+  - renderer: react
+    package: "@lacquer/react"
+    export: Button
+    status: reference
 grading:
   weight: 1
   notes:

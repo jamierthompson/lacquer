@@ -11,15 +11,17 @@
     The markup pattern is:
 
       <div role="group" aria-labelledby="{name-id}" data-lacquer="tool-call-card"
-           data-state="{lifecycle state}" data-effect="read|write|destroy">
+           data-state="{lifecycle state}" data-effect="read|write|destroy" data-density="row|card">
         <button type="button" data-slot="header" aria-expanded="false" aria-controls="{body-id}">
           <span data-slot="icon" aria-hidden="true">…</span>        optional
           <span data-slot="name" id="{name-id}">Reading src/app.tsx</span>
-          <span data-slot="status">Running</span>
+          <span data-slot="status"><span data-slot="spinner" aria-hidden="true"></span>Running</span>
+          <span data-slot="elapsed">12s</span>                        after 10 s while running
           <span data-slot="chevron" aria-hidden="true">›</span>
         </button>
         <div data-slot="body" id="{body-id}" role="region" aria-labelledby="{name-id}" hidden>
           <pre data-slot="input">…</pre>                              optional
+          <div data-slot="approval"><form data-lacquer="approval-prompt" …></form></div>   while approval-requested
           <pre data-slot="output">…</pre>  or  <p data-slot="output" role="alert">…</p>
           <div data-slot="actions">…catalog buttons…</div>           optional
         </div>
@@ -29,7 +31,8 @@
     never infers it from content (LQ-TOOLCARD-01). output-error and
     approval-requested ship with the body open (LQ-TOOLCARD-02). Output is
     text, JSON or a registered component, never model HTML (LQ-TOOLCARD-03).
-    aria-busy sits on the root while running.
+    The approval prompt is a slot: the card has no approve or deny of its
+    own (approval-prompt). aria-busy sits on the root while running.
 
     The disclosure toggle below is the only behaviour the reference adds; it
     flips aria-expanded and hidden. Enter and Space come free from the native
@@ -39,6 +42,10 @@
     <link
       rel="stylesheet"
       href="../../../../../core/actions/button/examples/html/button.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../../agentic/approval-prompt/examples/html/approval-prompt.css"
     />
     <link rel="stylesheet" href="tool-call-card.css" />
     <style>
@@ -77,6 +84,7 @@
         data-lacquer="tool-call-card"
         data-state="output-available"
         data-effect="read"
+        data-density="row"
       >
         <button
           type="button"
@@ -111,6 +119,7 @@
         data-lacquer="tool-call-card"
         data-state="input-available"
         data-effect="read"
+        data-density="row"
       >
         <button
           type="button"
@@ -122,6 +131,7 @@
           <span data-slot="status"
             ><span data-slot="spinner" aria-hidden="true"></span>Running</span
           >
+          <span data-slot="elapsed">12s</span>
           <span data-slot="chevron" aria-hidden="true">›</span>
         </button>
         <div
@@ -144,6 +154,7 @@
         data-lacquer="tool-call-card"
         data-state="output-error"
         data-effect="read"
+        data-density="row"
       >
         <button
           type="button"
@@ -179,9 +190,7 @@
       </div>
     </div>
 
-    <h2>
-      Approval requested (auto-expanded, safe option first, warning outline)
-    </h2>
+    <h2>Approval requested (auto-expanded, the prompt in the approval slot)</h2>
     <div class="stack">
       <div
         role="group"
@@ -189,6 +198,7 @@
         data-lacquer="tool-call-card"
         data-state="approval-requested"
         data-effect="destroy"
+        data-density="row"
       >
         <button
           type="button"
@@ -207,26 +217,73 @@
           aria-labelledby="t4-name"
         >
           <pre data-slot="input">{ "path": "dist/", "recursive": true }</pre>
-          <div data-slot="actions">
-            <!-- Safe option first in DOM and focus order (LQ-GATE-01). -->
-            <button
-              type="button"
-              data-lacquer="button"
-              data-emphasis="outline"
-              data-size="xs"
-              autofocus
+          <div data-slot="approval">
+            <form
+              data-lacquer="approval-prompt"
+              data-state="approval-requested"
+              data-effect="destroy"
+              aria-labelledby="t4a-title"
             >
-              <span data-slot="label">Deny</span>
-            </button>
-            <button
-              type="button"
-              data-lacquer="button"
-              data-emphasis="primary"
-              data-size="xs"
-            >
-              <span data-slot="label">Approve once</span>
-            </button>
+              <div data-slot="title" id="t4a-title" role="alert">
+                <span data-slot="eyebrow">Approval needed</span>
+                Delete dist/ (14 files) in this repo
+              </div>
+              <pre data-slot="payload" data-format="command">rm -rf dist/</pre>
+              <div data-slot="actions">
+                <button
+                  type="submit"
+                  data-lacquer="button"
+                  data-slot="allow"
+                  data-emphasis="destructive"
+                  data-size="sm"
+                >
+                  <span data-slot="label">Allow once</span>
+                </button>
+                <button
+                  type="button"
+                  data-lacquer="button"
+                  data-slot="deny"
+                  data-emphasis="outline"
+                  data-size="sm"
+                  autofocus
+                >
+                  <span data-slot="label">Deny</span>
+                </button>
+              </div>
+            </form>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <h2>density=card: a bordered surface</h2>
+    <div class="stack">
+      <div
+        role="group"
+        aria-labelledby="t5-name"
+        data-lacquer="tool-call-card"
+        data-state="output-available"
+        data-effect="write"
+        data-density="card"
+      >
+        <button
+          type="button"
+          data-slot="header"
+          aria-expanded="false"
+          aria-controls="t5-body"
+        >
+          <span data-slot="name" id="t5-name">Wrote src/button.css</span>
+          <span data-slot="status">Completed</span>
+          <span data-slot="chevron" aria-hidden="true">›</span>
+        </button>
+        <div
+          data-slot="body"
+          id="t5-body"
+          role="region"
+          aria-labelledby="t5-name"
+          hidden
+        >
+          <pre data-slot="output">{ "bytes": 2048 }</pre>
         </div>
       </div>
     </div>

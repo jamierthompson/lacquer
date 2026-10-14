@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Approval prompt — Lacquer reference implementation</title>
+    <!--
+    Reference implementation for the html renderer.
+    Spec: spec/catalog/ai/agentic/approval-prompt/approval-prompt.yaml
+    Reuses: button (the options), textarea (the correction)
+
+    The markup pattern is:
+
+      <form data-lacquer="approval-prompt" data-state="approval-requested" data-effect="destroy"
+            aria-labelledby="{title-id}" aria-describedby="{risk-id}">
+        <div data-slot="title" id="{title-id}" role="alert">
+          <span data-slot="eyebrow">Approval needed</span>
+          Delete dist/ (14 files) in this repo
+        </div>
+        <pre data-slot="payload" data-format="command">rm -rf dist/</pre>
+        <dl data-slot="risk" id="{risk-id}"><dt>Touches</dt><dd>…</dd>…</dl>
+        <div data-slot="actions">
+          <button type="submit" data-lacquer="button" data-slot="allow" …>Allow once</button>
+          <button type="button" data-lacquer="button" data-slot="always" …>Always allow npm test in this repo</button>   only with a scope
+          <button type="button" data-lacquer="button" data-slot="deny" …>Deny</button>
+          <span data-slot="autonomy">…</span>                                                   optional slot
+        </div>
+        <div data-lacquer="textarea" data-slot="correction" …><textarea data-slot="control" …></textarea></div>
+      </form>
+
+      <form data-lacquer="approval-prompt" data-state="approval-responded" data-decision="allow-always" …>
+        <div data-slot="title" id="…">Run npm test</div>
+        <p data-slot="decision" role="status" tabindex="-1">Always allowed: npm test in this repo</p>
+      </form>
+
+    State comes from the tool part (LQ-TOOLCARD-01) and is written to
+    data-state. The title is the thread's one assertive announcement. The
+    default focus is Allow once, or Deny when the effect is destroy, never
+    Always allow (LQ-APPROVAL-02, LQ-GATE-01). The Always option exists only
+    with a scope in its label (LQ-APPROVAL-03). Nothing here is modal
+    (LQ-APPROVAL-05). The autofocus attributes below stand in for the
+    implementation's focus rule; the site drives the React implementation.
+  -->
+    <link rel="stylesheet" href="../../../../../../bindings/html.theme.css" />
+    <link
+      rel="stylesheet"
+      href="../../../../../core/actions/button/examples/html/button.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../../../../core/inputs/textarea/examples/html/textarea.css"
+    />
+    <link rel="stylesheet" href="approval-prompt.css" />
+    <style>
+      /* Page chrome only. Not part of the component. */
+      body {
+        margin: 0;
+        padding: var(--lq-space-inset-lg);
+        background: var(--lq-color-bg-surface);
+        color: var(--lq-color-fg-default);
+        font: var(--lq-type-body-md);
+      }
+      h1 {
+        font: var(--lq-type-heading-md);
+        margin: 0 0 var(--lq-space-gap-lg);
+      }
+      h2 {
+        font: var(--lq-type-label-md);
+        color: var(--lq-color-fg-muted);
+        margin: var(--lq-space-gap-lg) 0 var(--lq-space-gap-sm);
+      }
+      .stack {
+        display: grid;
+        gap: var(--lq-space-gap-sm);
+        max-inline-size: 40rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Approval prompt</h1>
+
+    <h2>destroy: Deny is the default focus; no Always option</h2>
+    <div class="stack">
+      <form
+        data-lacquer="approval-prompt"
+        data-state="approval-requested"
+        data-effect="destroy"
+        aria-labelledby="p1-title"
+        aria-describedby="p1-risk"
+      >
+        <div data-slot="title" id="p1-title" role="alert">
+          <span data-slot="eyebrow">Approval needed</span>
+          Delete dist/ (14 files) in this repo
+        </div>
+        <pre data-slot="payload" data-format="command">rm -rf dist/</pre>
+        <dl data-slot="risk" id="p1-risk">
+          <dt>Touches</dt>
+          <dd>dist/, 14 files</dd>
+          <dt>Reversible</dt>
+          <dd>No. dist/ is build output and is not in git.</dd>
+          <dt>Reach</dt>
+          <dd>Inside this repo</dd>
+        </dl>
+        <div data-slot="actions">
+          <button
+            type="submit"
+            data-lacquer="button"
+            data-slot="allow"
+            data-emphasis="destructive"
+            data-size="sm"
+          >
+            <span data-slot="label">Allow once</span>
+          </button>
+          <button
+            type="button"
+            data-lacquer="button"
+            data-slot="deny"
+            data-emphasis="outline"
+            data-size="sm"
+            autofocus
+          >
+            <span data-slot="label">Deny</span>
+          </button>
+        </div>
+        <div
+          data-lacquer="textarea"
+          data-slot="correction"
+          data-sizing="autosize"
+          data-frame="outlined"
+          data-size="sm"
+        >
+          <textarea
+            data-slot="control"
+            rows="1"
+            aria-label="What should it do instead?"
+            placeholder="What should it do instead?"
+          ></textarea>
+        </div>
+      </form>
+    </div>
+
+    <h2>
+      write: Allow once is the default focus; Always allow names its scope
+    </h2>
+    <div class="stack">
+      <form
+        data-lacquer="approval-prompt"
+        data-state="approval-requested"
+        data-effect="write"
+        aria-labelledby="p2-title"
+        aria-describedby="p2-risk"
+      >
+        <div data-slot="title" id="p2-title" role="alert">
+          <span data-slot="eyebrow">Approval needed</span>
+          Run npm test in this repo
+        </div>
+        <pre data-slot="payload" data-format="command">npm test</pre>
+        <dl data-slot="risk" id="p2-risk">
+          <dt>Touches</dt>
+          <dd>node_modules/.cache, the test runner's temp files</dd>
+          <dt>Reversible</dt>
+          <dd>Yes</dd>
+          <dt>Reach</dt>
+          <dd>Inside this repo</dd>
+        </dl>
+        <div data-slot="actions">
+          <button
+            type="submit"
+            data-lacquer="button"
+            data-slot="allow"
+            data-emphasis="primary"
+            data-size="sm"
+            autofocus
+          >
+            <span data-slot="label">Allow once</span>
+          </button>
+          <button
+            type="button"
+            data-lacquer="button"
+            data-slot="always"
+            data-emphasis="outline"
+            data-size="sm"
+          >
+            <span data-slot="label">Always allow npm test in this repo</span>
+          </button>
+          <button
+            type="button"
+            data-lacquer="button"
+            data-slot="deny"
+            data-emphasis="outline"
+            data-size="sm"
+          >
+            <span data-slot="label">Deny</span>
+          </button>
+          <span data-slot="autonomy">
+            <button
+              type="button"
+              data-lacquer="button"
+              data-emphasis="link"
+              data-size="xs"
+            >
+              <span data-slot="label">Stop asking for test runs</span>
+            </button>
+          </span>
+        </div>
+        <div
+          data-lacquer="textarea"
+          data-slot="correction"
+          data-sizing="autosize"
+          data-frame="outlined"
+          data-size="sm"
+        >
+          <textarea
+            data-slot="control"
+            rows="1"
+            aria-label="What should it do instead?"
+            placeholder="What should it do instead?"
+          ></textarea>
+        </div>
+      </form>
+    </div>
+
+    <h2>text payload: an email body is body type, not code</h2>
+    <div class="stack">
+      <form
+        data-lacquer="approval-prompt"
+        data-state="approval-requested"
+        data-effect="write"
+        aria-labelledby="p3-title"
+      >
+        <div data-slot="title" id="p3-title" role="alert">
+          <span data-slot="eyebrow">Approval needed</span>
+          Send an email to pat@example.com
+        </div>
+        <pre data-slot="payload" data-format="text">
+Hi Pat, the uptime figures for Q3 are attached. Section 3 of the contract
+commits us to 99.9% monthly; we were at 99.94%.</pre>
+        <div data-slot="actions">
+          <button
+            type="submit"
+            data-lacquer="button"
+            data-slot="allow"
+            data-emphasis="primary"
+            data-size="sm"
+            autofocus
+          >
+            <span data-slot="label">Allow once</span>
+          </button>
+          <button
+            type="button"
+            data-lacquer="button"
+            data-slot="deny"
+            data-emphasis="outline"
+            data-size="sm"
+          >
+            <span data-slot="label">Deny</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <h2>approval-responded: one line each</h2>
+    <div class="stack">
+      <form
+        data-lacquer="approval-prompt"
+        data-state="approval-responded"
+        data-effect="write"
+        data-decision="allow-once"
+        aria-labelledby="p4-title"
+      >
+        <div data-slot="title" id="p4-title">Run npm test in this repo</div>
+        <p data-slot="decision" role="status" tabindex="-1">Allowed once</p>
+      </form>
+      <form
+        data-lacquer="approval-prompt"
+        data-state="approval-responded"
+        data-effect="write"
+        data-decision="allow-always"
+        aria-labelledby="p5-title"
+      >
+        <div data-slot="title" id="p5-title">Run npm test in this repo</div>
+        <p data-slot="decision" role="status" tabindex="-1">
+          Always allowed: npm test in this repo
+        </p>
+      </form>
+      <form
+        data-lacquer="approval-prompt"
+        data-state="approval-responded"
+        data-effect="destroy"
+        data-decision="deny"
+        aria-labelledby="p6-title"
+      >
+        <div data-slot="title" id="p6-title">
+          Delete dist/ (14 files) in this repo
+        </div>
+        <p data-slot="decision" role="status" tabindex="-1">
+          Denied: leave dist/, clean only .cache
+        </p>
+      </form>
+      <form
+        data-lacquer="approval-prompt"
+        data-state="approval-responded"
+        data-effect="write"
+        data-decision="timed-out"
+        aria-labelledby="p7-title"
+      >
+        <div data-slot="title" id="p7-title">Run npm test in this repo</div>
+        <p data-slot="decision" role="status" tabindex="-1">
+          Timed out, denied
+        </p>
+      </form>
+    </div>
+  </body>
+</html>

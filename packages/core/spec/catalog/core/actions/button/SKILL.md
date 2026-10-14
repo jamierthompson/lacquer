@@ -194,6 +194,7 @@ What the grader enforces. MUST = defect, SHOULD = deduction.
 ## Implementations
 
 - html: `examples/html/button.html` (reference)
+- react: `@lacquer/react#Button` (reference)
 
 ## Exemplars
 

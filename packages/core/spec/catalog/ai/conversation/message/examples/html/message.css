@@ -1,0 +1,91 @@
+/*
+ * Message — reference implementation for the html renderer.
+ * Spec:    spec/catalog/ai/conversation/message/message.yaml
+ * Binding: spec/bindings/html.yaml
+ *
+ * The container for one turn. data-from picks the shape (a user bubble, or
+ * a full-width assistant article capped at the prose measure); data-state
+ * carries the thread status through unchanged (LQ-MESSAGE-01). The status
+ * part is the turn's one polite live region and is visually hidden. The
+ * note is the only thing cancelled adds; nothing is ever removed
+ * (LQ-MESSAGE-03). Every part carries data-slot (LQ-ANAT-01).
+ */
+
+[data-lacquer="message"] {
+  /* anatomy: root — the <article>; data-from and data-state live here */
+  display: grid;
+  gap: var(--lq-space-gap-sm);
+  color: var(--lq-color-fg-default);
+  font: var(--lq-type-body-md);
+}
+
+/* --- from (variant axis) ---------------------------------------------------- */
+
+/* user: a bubble at the end of the line (the only bubble, LQ-MESSAGE-04) */
+[data-lacquer="message"][data-from="user"] {
+  justify-self: end;
+  max-inline-size: 70%;
+  padding: var(--lq-space-gap-xs) var(--lq-space-inset-sm);
+  border-radius: var(--lq-radius-lg);
+  background: var(--lq-color-bg-secondary);
+  color: var(--lq-color-fg-on-secondary);
+}
+
+/* assistant: full width within the prose measure, no bubble */
+[data-lacquer="message"][data-from="assistant"] {
+  inline-size: 100%;
+  max-inline-size: var(--lq-size-measure-prose);
+}
+
+/* --- parts ---------------------------------------------------------------- */
+
+[data-lacquer="message"] > [data-slot="identity"] {
+  display: flex;
+  align-items: center;
+  gap: var(--lq-space-gap-xs);
+  font: var(--lq-type-label-sm);
+  color: var(--lq-color-fg-muted);
+}
+
+/* status: the live region, present for assistive tech and nothing else */
+[data-lacquer="message"] > [data-slot="status"] {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+[data-lacquer="message"] > [data-slot="content"] {
+  display: grid;
+  gap: var(--lq-space-gap-sm);
+  min-inline-size: 0;
+}
+[data-lacquer="message"] > [data-slot="content"] > * {
+  margin: 0;
+}
+
+/* note: the stopped marker; text with a glyph, never colour alone (LQ-STATE-02) */
+[data-lacquer="message"] > [data-slot="note"] {
+  display: flex;
+  align-items: center;
+  gap: var(--lq-space-gap-xs);
+  margin: 0;
+  font: var(--lq-type-label-sm);
+  color: var(--lq-color-fg-muted);
+}
+[data-lacquer="message"] > [data-slot="note"]::before {
+  content: "";
+  inline-size: calc(var(--lq-size-icon-sm) / 2);
+  block-size: calc(var(--lq-size-icon-sm) / 2);
+  background: currentColor;
+}
+
+[data-lacquer="message"] > [data-slot="actions"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--lq-space-gap-xs);
+}

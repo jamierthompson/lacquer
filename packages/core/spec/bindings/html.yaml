@@ -70,6 +70,7 @@ roles:
   size.control.lg: { var: --lq-size-control-lg }
   size.icon.sm: { var: --lq-size-icon-sm }
   size.icon.md: { var: --lq-size-icon-md }
+  size.measure.prose: { var: --lq-size-measure-prose } # the widest an assistant message grows
 
   type.label.sm: { var: --lq-type-label-sm } # `font` shorthand
   type.label.md: { var: --lq-type-label-md }

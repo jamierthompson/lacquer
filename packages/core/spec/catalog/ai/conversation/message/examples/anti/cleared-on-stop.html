@@ -1,0 +1,22 @@
+<!--
+  ANTI-EXAMPLE — violates LQ-MESSAGE-03, LQ-MACHINE-03.
+  A grader fixture: this file must FAIL. Do not copy.
+
+  What is wrong:
+   - Stop was pressed after a tool had completed and half a paragraph had
+     streamed. The implementation replaced the whole content with a notice.
+     The partial, which the user may have wanted, is gone.
+   - The correct cancelled message keeps the content and appends the note
+     (see examples/html/cancelled-keeps-partial.html).
+-->
+<article
+  data-lacquer="message"
+  data-from="assistant"
+  data-state="cancelled"
+  aria-label="Assistant said"
+>
+  <p data-slot="status" role="status">Stopped</p>
+  <div data-slot="content">
+    <p>Generation stopped.</p>
+  </div>
+</article>

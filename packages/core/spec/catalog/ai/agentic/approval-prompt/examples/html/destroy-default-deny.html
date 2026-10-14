@@ -1,0 +1,64 @@
+<!--
+  id: destroy-default-deny — a destroy prompt. Deny holds the default focus
+  (LQ-APPROVAL-02, LQ-GATE-01), Allow once has the destructive emphasis so
+  the consequence is visible, there is no Always option because a destroy
+  cannot be scoped (LQ-APPROVAL-03), and the payload is the exact command
+  (LQ-APPROVAL-01). The autofocus attribute stands in for the implementation's
+  focus rule.
+-->
+<form
+  data-lacquer="approval-prompt"
+  data-state="approval-requested"
+  data-effect="destroy"
+  aria-labelledby="d1-title"
+  aria-describedby="d1-risk"
+>
+  <div data-slot="title" id="d1-title" role="alert">
+    <span data-slot="eyebrow">Approval needed</span>
+    Delete dist/ (14 files) in this repo
+  </div>
+  <pre data-slot="payload" data-format="command">rm -rf dist/</pre>
+  <dl data-slot="risk" id="d1-risk">
+    <dt>Touches</dt>
+    <dd>dist/, 14 files</dd>
+    <dt>Reversible</dt>
+    <dd>No. dist/ is build output and is not in git.</dd>
+    <dt>Reach</dt>
+    <dd>Inside this repo</dd>
+  </dl>
+  <div data-slot="actions">
+    <button
+      type="submit"
+      data-lacquer="button"
+      data-slot="allow"
+      data-emphasis="destructive"
+      data-size="sm"
+    >
+      <span data-slot="label">Allow once</span>
+    </button>
+    <button
+      type="button"
+      data-lacquer="button"
+      data-slot="deny"
+      data-emphasis="outline"
+      data-size="sm"
+      autofocus
+    >
+      <span data-slot="label">Deny</span>
+    </button>
+  </div>
+  <div
+    data-lacquer="textarea"
+    data-slot="correction"
+    data-sizing="autosize"
+    data-frame="outlined"
+    data-size="sm"
+  >
+    <textarea
+      data-slot="control"
+      rows="1"
+      aria-label="What should it do instead?"
+      placeholder="What should it do instead?"
+    ></textarea>
+  </div>
+</form>

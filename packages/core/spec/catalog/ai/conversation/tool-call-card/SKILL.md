@@ -22,7 +22,7 @@ Also called: Tool (AI Elements, prompt-kit), ToolUI / ToolFallback (assistant-ui
 - If many steps over a long run that need scanning and jumping → use `activity-log`
 - If the action needs a decision before it runs → use `approval-prompt`
 
-Built from: `disclosure`, `badge`, `code-block`, `spinner`, `card`.
+Built from: `button`.
 
 Pairs with: `reasoning-disclosure`, `approval-prompt`, `activity-log`, `agent-status`, `message-state-machine`.
 
@@ -32,20 +32,23 @@ Parts in DOM order; each renders with `data-slot="<part>"`.
 
 | Part | Element | Req. | Notes |
 | --- | --- | --- | --- |
-| `root` |  | required | The card. Carries data-state (tool lifecycle) and data-effect (read \| write \| destroy). |
+| `root` |  | required | The card, role="group" named by the name part. Carries data-state (tool lifecycle), data-effect (read \| write \| destroy) and data-density. |
 | `header` | button | required | The disclosure trigger. Whole row is pressable; aria-expanded lives here. |
 | `icon` |  | optional | Tool-category glyph (search, file, terminal, browser). Decorative. |
 | `name` |  | required | Humanised tool name plus target — "Searching the web for 'oklch contrast'", "Reading src/app.tsx". Never the raw function name. |
-| `status` |  | required | State badge with text ("Running", "Completed", "Error"); colour is secondary. |
+| `status` |  | required | State as text ("Running", "Completed", "Error") with the spinner inside it while running; colour is secondary. |
+| `spinner` |  | optional | Inside the status while input-available. Decorative; still under reduced motion. |
+| `elapsed` |  | optional | Seconds since the call started, shown after 10 s while running (LQ-WAIT-01). Outside any live region. |
 | `chevron` |  | required | Rotates on expand; rotation is paired with the header background change (LQ-STATE-02). |
 | `body` |  | required | Collapsible region. Hidden by default except on error. |
-| `input` |  | optional | Arguments as highlighted JSON in type.family.mono; truncated with "show all" past 20 lines. |
+| `input` |  | optional | Arguments as JSON in type.family.mono; truncated with "show all" past 20 lines. |
+| `approval` |  | optional | slot. The approval-prompt, consumer-supplied, rendered after the input while the state is approval-requested and as its decision line once responded or denied. The card never answers it (LQ-GATE-01). |
 | `output` |  | optional | Result, error, or a registered generative-UI component. Never model-supplied HTML. |
-| `actions` |  | optional | Retry (on error), Copy (on output), Approve / Deny (when approval-requested). |
+| `actions` |  | optional | Retry (on error), Copy (on text output). Catalog buttons. |
 
 ## Variants
 
-- **density**: row | card (default `row`) — Row is a single line with the summary (Claude Code style); card adds a visible border and padding. Grouped runs ("Searched 4 sources") are a row.
+- **density**: row | card (default `row`) — Row is a single line with the summary and no border (Claude Code style); card adds a visible border, a surface and padding. Grouped runs ("Searched 4 sources") are a row.
 - **effect**: read | write | destroy (default `read`) — Drives data-effect and the status token so writes look different from reads without expansion (LQ-TOOL-02).
 - Modifiers: grouped
 
@@ -57,11 +60,11 @@ Every listed state needs a visual treatment **and** an accessibility expression 
 | --- | --- | --- | --- |
 | `input-streaming` | Status "Pending" in color.status.pending; name may still be arriving; shimmer on the name, opacity-only under reduced motion. | none until a name exists; then one announcement "Preparing {name}". |  |
 | `input-available` | Status "Running" in color.status.running with a spinner; elapsed time after 10 s (LQ-WAIT-01). | aria-busy="true" on root; one polite announcement "Running {name}". |  |
-| `approval-requested` | Body auto-expands; approval-prompt rendered inside; the card is outlined in color.status.warning. | Assertive announcement "Approval needed: {verb} {object}"; focus moves to the prompt. |  |
-| `approval-responded` | Status "Approved" or "Denied"; the prompt collapses to one line recording the decision. | Polite announcement of the decision. |  |
+| `approval-requested` | Body auto-expands; the approval slot is rendered after the input; the card is outlined in color.status.warning. | The prompt announces assertively, "Approval needed: {title}"; focus moves to its default option. The card itself is silent. |  |
+| `approval-responded` | Status "Approved" or "Denied"; the body collapses; the prompt inside it is one line recording the decision. | The prompt's decision line announces politely; the card itself is silent. |  |
 | `output-available` | Status "Completed" in color.status.success; collapses to a one-line summary ("Read 3 files"); spinner removed. | aria-busy removed; one polite announcement "{name} complete". |  |
 | `output-error` | Status "Error" in color.status.error with an icon; body auto-expands to show the message; Retry visible. | role="alert" on the message, not the whole card. |  |
-| `output-denied` | Status "Denied" in color.fg.muted; no output; one line explaining who denied it. | Polite announcement. |  |
+| `output-denied` | Status "Denied" in color.fg.muted; no output; the prompt's decision line, or one line saying who denied it when there is no prompt. | none of its own; the prompt's decision line announced the denial. |  |
 | `expanded` | Header background shifts one step; chevron rotates; body visible. | aria-expanded="true" on the header button; body has the header as aria-labelledby. |  |
 | `focus-visible` | Ring on the header button and on each action. | Implicit. |  |
 | `hover` | Header background one step. | none |  |
@@ -79,15 +82,15 @@ Every listed state needs a visual treatment **and** an accessibility expression 
 | `input` | `unknown` |  |  |  |
 | `output` | `unknown \| node` |  |  | A registered component (a framework element, a custom element, a DOM node) may be passed for generative UI. |
 | `error` | `string` |  |  |  |
+| `density` | `enum(row\|card)` | `row` | data-density |  |
 | `defaultOpen` | `boolean` | `false` |  | Forced true by the implementation when state is output-error or approval-requested. |
-| `onRetry` | `() => void` |  |  |  |
-| `onApprove` | `() => void` |  |  |  |
-| `onDeny` | `() => void` |  |  |  |
+| `onRetry` | `() => void` |  |  | When given, Retry is rendered in the actions while the state is output-error. |
+| `strings` | `Partial<Record<pending\|running\|approval\|approved\|denied\|completed\|error\|retry\|copy\|show_all\|denied_by, string>>` |  |  | Localised strings; the defaults are in `content.strings`. |
 
-Slots: `icon`, `output`.
-Events: `openChange`, `retry`, `approve`, `deny`.
+Slots: `icon`, `approval`, `output`.
+Events: `openChange`, `retry`.
 
-Built from disclosure + badge + code-block + spinner + card. Output is a slot so a product can render its own component for a tool's result; the card never renders HTML strings.
+A disclosure (a native button header and a labelled region) with the catalog button for its actions. Output is a slot so a product can render its own component for a tool's result; the card never renders HTML strings. The approval prompt is a slot so it carries the product's risk framing and scope, and so the card has no approve or deny of its own.
 
 ## Accessibility
 
@@ -104,7 +107,7 @@ Built from disclosure + badge + code-block + spinner + card. Output is a slot so
 | `Enter / Space` | Toggles the body. (focus on header) |
 | `Tab` | Moves through header, then visible actions. Collapsed body contents are not in the tab order. |
 
-Focus: On approval-requested, focus moves to the approval prompt's safe option (Deny). On output-error, focus does not move; the alert role announces.
+Focus: On approval-requested, focus moves into the approval prompt, to its default option (Allow once, or Deny when the effect is destroy; LQ-APPROVAL-02). On approval-responded the body collapses; if focus was inside it, the header takes focus, as a disclosure does when it closes around the focus. On output-error, focus does not move; the alert role announces.
 
 Announcements: Exactly one announcement per state change, polite except approval-requested (assertive). Batched when several cards change within 2 s (LQ-A11Y-01).
 
@@ -119,7 +122,7 @@ Consumes: `color.status.pending`, `color.status.running`, `color.status.success`
 - Label: Humanised verb + target. "Searching the web for 'x'", "Reading src/app.tsx", "Running npm test". Group repeats: "Searched 4 sources".
 - Voice: Progressive while running ("Reading"), past tense when done ("Read 3 files"), plain on error ("Couldn't read src/app.tsx: permission denied").
 - Never: Never the raw function name or a UUID in the visible name. Never "Processing…" without a target.
-- Default strings: pending="Pending", running="Running", approval="Needs approval", approved="Approved", denied="Denied", completed="Completed", error="Error", retry="Retry", show_all="Show all"
+- Default strings: pending="Pending", running="Running", approval="Needs approval", approved="Approved", denied="Denied", completed="Completed", error="Error", retry="Retry", copy="Copy", show_all="Show all", denied_by="Denied by you."
 
 ## Rules
 
@@ -170,6 +173,7 @@ What the grader enforces. MUST = defect, SHOULD = deduction.
 ## Implementations
 
 - html: `examples/html/tool-call-card.html` (reference)
+- react: `@lacquer/react#ToolCallCard` (reference)
 
 ## Exemplars
 

@@ -1,0 +1,25 @@
+<!--
+  ANTI-EXAMPLE — violates LQ-MESSAGE-01, LQ-MACHINE-01.
+  A grader fixture: this file must FAIL. Do not copy.
+
+  What is wrong:
+   - The message decides it is streaming because its text does not end with
+     a full stop and shows a caret on that basis. A finished answer that ends
+     with a code block keeps the caret forever; a stopped turn looks alive.
+   - No data-state is written, so nothing downstream can render from the
+     status either. The status belongs on the container, from the thread.
+-->
+<article
+  data-lacquer="message"
+  data-from="assistant"
+  aria-label="Assistant said"
+>
+  <div data-slot="content">
+    <p id="text">Two tests fail, both in button.test.tsx: the</p>
+  </div>
+</article>
+<script>
+  const text = document.getElementById("text");
+  const streaming = !/[.!?]$/.test(text.textContent.trim());
+  if (streaming) text.insertAdjacentHTML("beforeend", "<span>▍</span>");
+</script>

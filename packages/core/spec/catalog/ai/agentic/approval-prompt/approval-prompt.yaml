@@ -6,12 +6,13 @@ kind: component
 catalog: ai
 group: agentic
 tier: 1
+atomic_level: organism
 maturity: emerging
 status: draft
 version: 0.1.0
 summary:
-  "Gate for side-effecting actions: exact payload, risk framing, and allow-once / always-scoped /
-  deny-with-correction."
+  "The gate for a side-effecting action, inline in the turn: the exact payload, three rows of risk, and
+  Allow once, Always allow (scoped) or Deny with a correction."
 aliases:
   - Confirmation (AI Elements)
   - permission prompt (Claude Code)
@@ -28,70 +29,421 @@ found_in:
   - AI Elements
   - CopilotKit
 anatomy:
-  - part: title-naming
-    description: title naming the action in plain language
-  - part: exact-payload
-    description: exact payload (monospace when a command)
-  - part: risk-framing
-    description: "risk framing: what it touches, reversibility, leaves sandbox/repo?"
+  - part: root
+    element: form
+    description: >-
+      The prompt, inline in the turn, never a modal. Carries data-state (approval-requested |
+      approval-responded), data-effect (read | write | destroy) and, once responded, data-decision.
+      Named by the title through aria-labelledby.
+  - part: title
+    description: >-
+      The action in plain language, with verb, object and scope ("Delete dist/ (14 files) in this repo",
+      LQ-GATE-02). Carries role="alert" so entering approval-requested is the thread's one assertive
+      announcement, "Approval needed: {title}".
+  - part: eyebrow
+    description: The "Approval needed" kicker inside the title, so the announcement and the name both start with it.
+  - part: payload
+    element: pre
+    description: >-
+      What will run, verbatim: the command, the paths, the request body. Never a summary
+      (LQ-APPROVAL-01). Carries data-format (command | text); command is set in type.family.mono.
+  - part: risk
+    element: dl
+    required: false
+    description: Three short rows of fact, what it touches, whether it can be undone, how far it reaches.
   - part: actions
-    description: "actions: Allow once (default focus), Always allow [scoped], Deny (+ correction field)"
-  - part: optional-switch
-    description: optional 'switch to auto mode'
+    description: The decision row, in DOM order allow, always, deny.
+  - part: allow
+    element: button
+    description: >-
+      "Allow once" (reuses button). Primary for read and write, destructive emphasis for destroy. The
+      form's submit, so Enter on the default focus allows.
+  - part: always
+    element: button
+    required: false
+    description: >-
+      "Always allow {scope}" (reuses button). Rendered only when a scope is given and named with it
+      (LQ-APPROVAL-03). Never the default focus (LQ-GATE-01).
+  - part: deny
+    element: button
+    description: >-
+      "Deny" (reuses button). The default focus when the effect is destroy (LQ-APPROVAL-02); Esc
+      reaches it from anywhere in the prompt.
+  - part: correction
+    element: textarea
+    required: false
+    description: >-
+      "What should it do instead?" (reuses textarea). Sent with Deny; Enter inside it denies with the
+      text. One line, autosize.
+  - part: decision
+    description: >-
+      The one line that replaces the actions once responded ("Allowed once", "Always allowed: npm test",
+      "Denied: use pnpm", "Timed out, denied"). role="status"; takes focus so it is not lost.
+  - part: autonomy
+    slot: true
+    required: false
+    description: A "switch to auto mode" or "don't ask for reads" control, consumer-supplied (autonomy-dial).
+variants:
+  - axis: effect
+    values:
+      - read
+      - write
+      - destroy
+    default: write
+    guidance: >-
+      Drives data-effect, the edge colour (none, color.status.warning, color.status.error), the emphasis of
+      Allow and the default focus (LQ-APPROVAL-02). Writes look different from reads without reading the
+      payload (LQ-TOOL-02).
 states:
   - id: approval-requested
-  - id: output-denied
+    treatment: >-
+      Open. Title, payload, risk and the actions are visible; the edge is coloured by effect; the
+      default option holds focus. Everything around it is paused; nothing is dimmed or covered.
+    a11y:
+      'The title is announced assertively once as "Approval needed: {title}". Focus moves to Allow once,
+      or to Deny when the effect is destroy, never to Always allow.'
+  - id: approval-responded
+    treatment: >-
+      Collapsed to one line: the title and the decision, with no edge, no box and no controls. The
+      payload and risk are gone; the tool card's input still shows what ran.
+    a11y: >-
+      The decision line is role="status" and is announced politely once; it takes focus (tabindex -1)
+      if focus was inside the prompt and the line is visible, else the collapsing card's header does.
+  - id: enabled
+    treatment: Base. The three buttons and the correction field are live.
+    a11y: Default semantics; the form is named by the title.
+  - id: hover
+    treatment: The button under the pointer takes its own hover treatment (button); the prompt itself has none.
+    a11y: none
+  - id: focus-visible
+    treatment: The ring on the focused button or on the correction field's frame (button, textarea).
+    a11y: Implicit. Never outline none without a replacement (LQ-FOCUS-01).
+  - id: active
+    treatment: The pressed button's active treatment (button).
+    a11y: none (transient)
+  - id: disabled
+    treatment: none. A prompt is never disabled; once responded the controls are gone.
+    a11y: none
 modes:
-  - id: approved
-  - id: approved-always
-    notes: approved-always (rule saved)
-  - id: denied-with-correction
+  - id: allow-once
+    treatment: 'data-decision="allow-once"; the decision line reads "Allowed once" in color.status.success.'
+    a11y: Announced politely once.
+  - id: allow-always
+    treatment: 'data-decision="allow-always"; the line reads "Always allowed: {scope}", so the rule that was saved is visible.'
+    a11y: Announced politely once, with the scope.
+  - id: deny
+    treatment: 'data-decision="deny"; the line reads "Denied" in color.fg.muted.'
+    a11y: Announced politely once.
+  - id: deny-with-correction
+    treatment: 'data-decision="deny"; the line reads "Denied: {correction}", so the instruction the agent received is on the record.'
+    a11y: Announced politely once, with the correction.
   - id: timed-out
+    treatment: 'data-decision="timed-out"; the line reads "Timed out, denied". A time-out is a deny, never an allow (LQ-APPROVAL-04).'
+    a11y: Announced politely once.
 api:
+  props:
+    - name: state
+      type: enum(approval-requested|approval-responded)
+      required: true
+      maps_to: data-state
+      description: From the tool part's state (message-state-machine); never inferred.
+    - name: title
+      type: string
+      required: true
+      description: Verb, object and scope in one phrase (LQ-GATE-02). The accessible name of the form.
+    - name: payload
+      type: string
+      description: What will run, verbatim. Required for write and destroy (LQ-APPROVAL-01).
+    - name: payloadFormat
+      type: enum(command|text)
+      default: command
+      maps_to: data-format
+      description: command is monospace; text (an email body, a message) is body type.
+    - name: risk
+      type: "{ touches?: string; reversible?: string; reach?: string }"
+      description: The three risk rows; each is rendered only when given.
+    - name: effect
+      type: enum(read|write|destroy)
+      default: write
+      maps_to: data-effect
+    - name: alwaysScope
+      type: string
+      description: >-
+        When given, the Always option is rendered and named "Always allow {alwaysScope}". Absent means no
+        Always option (LQ-APPROVAL-03).
+    - name: decision
+      type: enum(allow-once|allow-always|deny|timed-out)
+      maps_to: data-decision
+      description: Required when the state is approval-responded.
+    - name: correction
+      type: string
+      description: The correction recorded with a deny, shown in the decision line.
+    - name: autoFocus
+      type: boolean
+      default: true
+      description: Move focus to the default option on entering approval-requested (LQ-APPROVAL-02). Off when the product moves focus itself.
+    - name: strings
+      type: Partial<Record<needed|allow|always|deny|correction|allowed|allowed_always|denied|denied_with|timed_out|touches|reversible|reach, string>>
+      description: Localised strings; the defaults are in `content.strings`.
+  slots:
+    - autonomy
+  events:
+    - name: decide
+      payload: "{ decision: allow-once | allow-always | deny; correction?: string }"
+      description: The user's decision, from a button or a key and from nothing else (LQ-APPROVAL-04).
   interactions:
-    - Enter = allow once
-    - Esc = deny
-    - type a correction
-    - view what a saved rule would cover
+    - Enter on the default option allows once (read, write) or denies (destroy)
+    - Esc denies, from anywhere in the prompt
+    - Type a correction and press Enter to deny with it
+    - Tab moves through Allow once, Always allow, Deny, the correction field, the autonomy slot
+  composition: >
+    The prompt owns the decision: the three options, the correction and the keyboard contract. The
+    title, payload and risk rows are props because the grader reads them (LQ-GATE-02, LQ-APPROVAL-01);
+    the Always option exists only as a function of its scope so an unscoped rule cannot be rendered.
+    It is inline because the turn is paused, not the page: the composer's Stop stays reachable
+    (LQ-APPROVAL-05). It normally lives in a tool card's approval slot (tool-call-card).
 accessibility:
-  notes: Assertive announcement; focus moves into the prompt; safest option is default; fully keyboard operable.
+  role: form (root, named by the title); alert (title); status (decision)
+  name: >-
+    From the title through aria-labelledby on the form, so the name is "Approval needed: {title}".
+  aria:
+    - attr: aria-labelledby
+      on: root
+      value: id of title
+    - attr: aria-describedby
+      on: root
+      value: id of risk
+      when: risk is given
+    - attr: role
+      on: title
+      value: alert
+      when: approval-requested
+    - attr: role
+      on: decision
+      value: status
+      when: approval-responded
+    - attr: data-format
+      on: payload
+      value: command | text
+  keyboard:
+    - key: Enter
+      action: Activates the focused option. On entering, the default option is focused, so Enter alone allows once (read, write) or denies (destroy).
+      when: focus on a button
+    - key: Enter
+      action: Denies with the typed correction.
+      when: focus in the correction field
+    - key: Shift+Enter
+      action: Inserts a newline.
+      when: focus in the correction field
+    - key: Space
+      action: Activates the focused option.
+      when: focus on a button
+    - key: Esc
+      action: Denies.
+      when: focus anywhere in the prompt
+    - key: Tab
+      action: Moves through Allow once, Always allow, Deny, the correction field, the autonomy slot. Nothing is trapped.
+  focus: >-
+    On entering approval-requested, focus moves to Allow once, or to Deny when the effect is destroy, and
+    never to Always allow (LQ-APPROVAL-02, LQ-GATE-01). On responding, the decision line takes focus
+    (tabindex -1) if focus was inside the prompt, so it is not dropped to the body; when a tool card
+    collapses around it, the card's header takes focus instead (tool-call-card). Nothing is trapped;
+    the composer's Stop stays one Tab away (LQ-APPROVAL-05).
+  announcements: >-
+    The title is the thread's only assertive announcement, once, on entering approval-requested
+    (message-state-machine). The decision line is announced politely once. Nothing else in the prompt is live.
 tokens:
   consumes:
-    - color.status.error
     - color.status.warning
+    - color.status.error
     - color.status.success
+    - color.fg.default
+    - color.fg.muted
+    - color.bg.surface
+    - color.bg.surface-tertiary
+    - color.border.default
+    - radius.md
+    - radius.sm
+    - space.inset.sm
+    - space.gap.xs
+    - space.gap.sm
+    - type.body.md
+    - type.label.sm
+    - type.label.md
     - type.family.mono
-    - color.bg.surface-raised
-    - shadow.lg
+content:
+  label: 'The options are "Allow once", "Always allow {scope}" and "Deny"; verb-first, with the scope in the label (LQ-COPY-01).'
+  voice: The title says what the agent will do, as the agent would say it, with the object and the scope. The risk rows are facts, not warnings.
+  limits: Never "OK", "Yes", "Continue" or "Proceed" as an option. Never an Always option whose label does not say what it covers. Never a payload summarised as "a command".
+  strings:
+    needed: Approval needed
+    allow: Allow once
+    always: Always allow {scope}
+    deny: Deny
+    correction: What should it do instead?
+    allowed: Allowed once
+    allowed_always: "Always allowed: {scope}"
+    denied: Denied
+    denied_with: "Denied: {correction}"
+    timed_out: Timed out, denied
+    touches: Touches
+    reversible: Reversible
+    reach: Reach
 usage:
   use_when:
-    - any action outside the sandbox or with external effects
+    - Any action outside the sandbox or with external effect (delete, send, pay, deploy, post, overwrite).
+    - Any destroy, every time, even under an always rule (LQ-GATE-01).
   avoid_when:
-    - an 'always' option that grants more than the prompt showed
-    - prompting for read-only actions
+    - Reads inside the sandbox; prompting for them trains the user to press Allow without reading.
+    - An always option that would grant more than the prompt showed.
+    - A modal; the turn is paused, the page is not.
+  instead:
+    - when: The decision is about the run's autonomy as a whole, not one action
+      use: autonomy-dial
+    - when: It confirms a destructive action outside an agent loop
+      use: alert-dialog
   pairs_well_with:
     - tool-call-card
     - autonomy-dial
     - activity-log
     - undo-rollback
     - hitl-gate
+    - composer
+    - message-state-machine
   reuses:
-    - alert-dialog
-    - code-block
     - button
     - textarea
-    - badge
   exemplars:
-    - Claude Code — offers 'don't ask again' only when the prompt can show everything the rule would allow;
-      never auto-approves protected paths; pauses auto mode after repeated blocks
-    - AI Elements Confirmation — request/accepted/rejected wired to needsApproval
-    - NN/g — ChatGPT Agent 'requested final approval before submitting the reservation'
+    - Claude Code — offers "don't ask again" only when the prompt can show everything the rule would allow; never auto-approves protected paths; pauses auto mode after repeated blocks.
+    - AI Elements Confirmation — request/accepted/rejected wired to needsApproval; the responded line.
+    - NN/g — ChatGPT Agent "requested final approval before submitting the reservation".
 rules:
   shared:
+    - LQ-GATE-01
+    - LQ-GATE-02
+    - LQ-TOOL-02
+    - LQ-COPY-01
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
     - LQ-TOKEN-01
     - LQ-ANAT-01
+  local:
+    - id: LQ-APPROVAL-01
+      level: MUST
+      polarity: require
+      title: The exact payload, not a summary
+      statement: >-
+        The payload part shows verbatim what will run (the command, the paths, the body); a write or
+        destroy prompt without a non-empty payload is a defect.
+      detect:
+        static: '[data-slot="payload"] exists and is non-empty whenever data-effect is write or destroy.'
+      fix: Pass the command or body the tool will receive as `payload`; keep the humanised phrase for the title.
+    - id: LQ-APPROVAL-02
+      level: MUST
+      polarity: require
+      title: Default focus by effect
+      statement: >-
+        On entering approval-requested, focus moves to Allow once for read and write and to Deny for
+        destroy; it never moves to Always allow.
+      rationale: Enter is the fast path, and the fast path for a destroy must be the safe one; the fast path for a read is the useful one.
+      detect:
+        runtime: Mount in approval-requested for each effect; document.activeElement is [data-slot="allow"] for read and write and [data-slot="deny"] for destroy, never [data-slot="always"].
+      fix: Focus the option by effect in the mount effect; keep DOM order allow, always, deny.
+    - id: LQ-APPROVAL-03
+      level: MUST
+      polarity: forbid
+      title: No always without a scope
+      statement: >-
+        The Always option is rendered only when a scope is given, its label names that scope, and the
+        scope never exceeds what the payload shows.
+      detect:
+        static: '[data-slot="always"] is absent, or its text contains the scope string; no always option for data-effect="destroy".'
+      fix: Pass `alwaysScope` only when the rule can be stated in the label ("npm test in this repo"); omit it otherwise.
+    - id: LQ-APPROVAL-04
+      level: MUST
+      polarity: forbid
+      title: Never answered by the transport
+      statement: >-
+        The decide event fires from the user's activation of an option, Enter or Esc, and from nothing
+        else; no timer, transport message or default selects allow, and a time-out resolves to timed-out,
+        which is a deny.
+      detect:
+        static: 'decide is called only from the option handlers and the key handlers; decision="timed-out" is treated as a deny by the caller.'
+        runtime: Mount in approval-requested and wait; no decide event fires without input.
+      fix: Leave the prompt open until the user acts; if the product times out, respond with timed-out and treat it as denied.
+    - id: LQ-APPROVAL-05
+      level: MUST
+      polarity: forbid
+      title: Not a modal
+      statement: >-
+        The prompt is inline in the turn with no scrim, no focus trap and no role="dialog"; the
+        composer's Stop and the rest of the page stay reachable while it waits.
+      rationale: The turn is paused, not the page. Trapping the user in a prompt they cannot leave removes the one control that always works, Stop (LQ-RECOVER-01).
+      detect:
+        static: 'No role="dialog" or aria-modal on or around [data-lacquer="approval-prompt"]; Tab leaves the prompt.'
+      fix: Render it in the tool card's approval slot; let alert-dialog handle confirmations outside an agent loop.
+examples:
+  good:
+    - id: destroy-default-deny
+      title: A destroy prompt with Deny focused and no Always option
+      renderer: html
+      file: examples/html/destroy-default-deny.html
+      demonstrates:
+        - state:approval-requested
+        - variant:effect=destroy
+        - rule:LQ-APPROVAL-02
+        - rule:LQ-GATE-01
+    - id: always-scoped
+      title: A write prompt whose Always option names its scope
+      renderer: html
+      file: examples/html/always-scoped.html
+      demonstrates:
+        - variant:effect=write
+        - rule:LQ-APPROVAL-03
+        - rule:LQ-GATE-02
+    - id: decided
+      title: The responded line for an always rule and for a denial with a correction
+      renderer: html
+      file: examples/html/decided.html
+      demonstrates:
+        - state:approval-responded
+        - mode:allow-always
+        - mode:deny-with-correction
+  anti:
+    - id: always-is-default
+      title: Always allow is primary and focused; there is no payload
+      renderer: html
+      file: examples/anti/always-is-default.html
+      violates:
+        - LQ-GATE-01
+        - LQ-APPROVAL-01
+        - LQ-APPROVAL-02
+    - id: modal-unscoped
+      title: A modal "Allow this?" with an unscoped Always option
+      renderer: html
+      file: examples/anti/modal-unscoped.html
+      violates:
+        - LQ-APPROVAL-03
+        - LQ-APPROVAL-05
+        - LQ-GATE-02
+implementations:
+  - renderer: html
+    file: examples/html/approval-prompt.html
+    status: reference
+  - renderer: react
+    package: "@lacquer/react"
+    export: ApprovalPrompt
+    status: reference
+grading:
+  weight: 2
+  notes: The one component that stands between an agent and a side effect; a defect here is a safety defect, so it is weighted like the state machine.
 sources:
   - https://code.claude.com/docs/en/permissions
   - https://code.claude.com/docs/en/permission-modes
   - https://elements.ai-sdk.dev/components/confirmation
   - https://www.smashingmagazine.com/2026/02/designing-agentic-ai-practical-ux-patterns/
+  - https://www.nngroup.com/articles/
