@@ -11,57 +11,22 @@
  * catalog data — the same files feed the skills, the site and the grader.
  */
 import { readFile } from "node:fs/promises";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import {
+  loadComponent,
+  loadIndex,
+  loadRules,
+  resolvePath,
+  type IndexEntry,
+  type Rule,
+} from "@lacquer/core";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { parse as parseYaml } from "yaml";
 
-// The @lacquer/core package directory. Every path in the catalog (entry
-// paths, skill files, example files) is relative to it.
-const ROOT = path.dirname(
-  fileURLToPath(import.meta.resolve("@lacquer/core/package.json")),
-);
-const DIST = path.join(ROOT, "dist");
-
-type IndexEntry = {
-  id: string;
-  name: string;
-  kind: string;
-  catalog: string;
-  group: string;
-  tier: number;
-  status: string;
-  summary: string;
-  aliases: string[];
-  path: string;
-  skill: string;
-};
-type Rule = {
-  id: string;
-  level: string;
-  polarity: string;
-  title?: string;
-  statement: string;
-  detect?: Record<string, string>;
-  fix?: string;
-  applies_to?: string[];
-  owner: string;
-};
-
-const index = JSON.parse(
-  await readFile(path.join(DIST, "index.json"), "utf8"),
-) as IndexEntry[];
-const rules = (
-  JSON.parse(await readFile(path.join(DIST, "rules.json"), "utf8")) as {
-    rules: Rule[];
-  }
-).rules;
-const component = async (id: string) =>
-  JSON.parse(
-    await readFile(path.join(DIST, "components", `${id}.json`), "utf8"),
-  );
+const index = await loadIndex();
+const { rules } = await loadRules();
+const component = loadComponent;
 const text = (v: unknown) => ({
   content: [
     {
@@ -128,7 +93,7 @@ server.tool(
     if (!entry)
       return text({ error: `unknown id "${id}"`, hint: "use lacquer_search" });
     if (format === "skill")
-      return text(await readFile(path.join(ROOT, entry.skill), "utf8"));
+      return text(await readFile(resolvePath(entry.skill), "utf8"));
     return text(await component(id));
   },
 );
@@ -207,7 +172,7 @@ server.tool(
     for (const e of pick)
       out.push({
         ...e,
-        code: await readFile(path.join(ROOT, c.path, e.file), "utf8"),
+        code: await readFile(resolvePath(`${c.path}/${e.file}`), "utf8"),
       });
     return text(
       out.length
@@ -230,10 +195,7 @@ server.tool(
   },
   async ({ roles, id, binding }) => {
     const b = parseYaml(
-      await readFile(
-        path.join(ROOT, "spec", "bindings", `${binding}.yaml`),
-        "utf8",
-      ),
+      await readFile(resolvePath(`spec/bindings/${binding}.yaml`), "utf8"),
     ) as { roles: Record<string, { var: string }> };
     const wanted =
       roles ?? (id ? ((await component(id)).tokens?.consumes ?? []) : []);

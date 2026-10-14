@@ -10,6 +10,10 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { parse as parseYaml } from "yaml"
 
+import type { Example, Rule, Spec, Vocab } from "../../src/types.ts"
+
+export type { Example, Rule, Spec, Vocab }
+
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..")
 export const SPEC_DIR = path.join(ROOT, "spec")
 export const CATALOG_DIR = path.join(SPEC_DIR, "catalog")
@@ -17,112 +21,6 @@ export const SCHEMA_FILE = path.join(SPEC_DIR, "schema", "component.schema.json"
 export const VOCAB_FILE = path.join(SPEC_DIR, "schema", "vocab.yaml")
 export const SPEC_RULES_DIR = path.join(SPEC_DIR, "rules")
 export const DIST_DIR = path.join(ROOT, "dist")
-
-export interface Vocab {
-  kinds: Record<string, string>
-  catalogs: Record<string, string>
-  groups: { core: Record<string, string>; ai: Record<string, string> }
-  tiers: Record<string, string>
-  atomic_levels: string[]
-  maturity: string[]
-  status: Record<string, string>
-  states: Record<string, { base?: boolean; ai?: boolean; meaning?: string; aliases?: string[] }>
-  token_categories: Record<string, string>
-  component_aliases: Record<string, string>
-  renderers: Record<string, string>
-  rule_levels: Record<string, string>
-}
-
-export interface Rule {
-  id: string
-  level: "MUST" | "SHOULD" | "MAY"
-  polarity: "require" | "forbid"
-  title?: string
-  statement: string
-  rationale?: string
-  detect?: { static?: string; runtime?: string }
-  fix?: string
-  applies_to?: string[]
-  source?: string
-  /** AI-loop phase. */
-  phase?: string
-  /** Where the rule is defined: "shared" or the catalog id that owns it. */
-  owner: string
-  file?: string
-}
-
-// A spec entry, loosely typed: the schema is the contract, this is just enough
-// for the build to navigate it. Only id, catalog, group and status are
-// guaranteed while an entry is a draft.
-export interface Spec {
-  id: string
-  name?: string
-  kind?: string
-  catalog: string
-  group: string
-  tier?: number
-  atomic_level?: string
-  maturity?: string
-  status: string
-  version?: string
-  summary?: string
-  aliases?: string[]
-  found_in?: string[]
-  anatomy?: { part: string; element?: string; required?: boolean; slot?: boolean; description?: string }[]
-  variants?: { axis: string; values: string[]; default?: string; guidance?: string }[]
-  modifiers?: string[]
-  states?: { id: string; required?: boolean; treatment?: string; a11y?: string; notes?: string }[]
-  modes?: { id: string; treatment?: string; a11y?: string; notes?: string }[]
-  machine?: {
-    initial?: string
-    states: { id: string; terminal?: boolean; user_sees?: string; composer_control?: string; announcement?: string }[]
-    transitions: { from: string; to: string; on: string }[]
-  }
-  api?: {
-    props?: { name: string; type: string; default?: unknown; required?: boolean; description?: string; maps_to?: string }[]
-    slots?: string[]
-    events?: { name: string; payload?: string; description?: string }[]
-    interactions?: string[]
-    composition?: string
-  }
-  accessibility?: {
-    apg?: { pattern?: string; url?: string }
-    role?: string
-    name?: string
-    aria?: { attr: string; on?: string; when?: string; value?: string }[]
-    keyboard?: { key: string; action: string; when?: string }[]
-    focus?: string
-    announcements?: string
-    notes?: string
-  }
-  tokens?: { consumes?: string[]; defines?: string[] }
-  content?: { label?: string; voice?: string; limits?: string; strings?: Record<string, string> }
-  usage?: {
-    use_when?: string[]
-    avoid_when?: string[]
-    instead?: { when: string; use: string }[]
-    pairs_well_with?: string[]
-    reuses?: string[]
-    exemplars?: string[]
-    ai_products_rely_on?: boolean
-  }
-  rules?: { shared?: string[]; local?: Omit<Rule, "owner">[] }
-  examples?: { good?: Example[]; anti?: Example[] }
-  implementations?: { renderer: string; file: string; status?: string }[]
-  grading?: { weight?: number; notes?: string }
-  sources?: string[]
-}
-
-export interface Example {
-  id: string
-  title?: string
-  renderer: string
-  file: string
-  export?: string
-  description?: string
-  demonstrates?: string[]
-  violates?: string[]
-}
 
 export interface SpecEntry {
   spec: Spec
