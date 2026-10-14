@@ -1,0 +1,4 @@
+# Catalog YAML is serialised by the build; SKILL.md and dist are generated.
+packages/core/spec/catalog
+dist
+pnpm-lock.yaml
