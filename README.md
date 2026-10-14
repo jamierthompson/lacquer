@@ -20,7 +20,9 @@ read. `@lacquer/react` implements it in React.
 Every entry is a draft, and every draft says what it is still missing. The
 pipeline runs end to end on all 202 entries. `button` shows the full shape of
 a core entry, with guidance, an HTML reference, examples and anti-examples;
-`message-state-machine` has a React implementation and a page in the site. The
+`message-state-machine`, `composer` and `thinking-indicator` have React
+implementations and pages in the site, with `textarea` and `icon-button`
+beneath them. The
 MCP server implements the seven read tools over stdio (`pnpm mcp`); the grader
 is a rubric and a report schema.
 
@@ -231,10 +233,12 @@ and port, and the one the grader's runtime mode inspects anyway.
 
 `@lacquer/react` (`packages/react`) implements the catalog in React: one
 module per entry, written from its spec and registered in the entry's
-`implementations` as a package and a named export. It obeys the same contract
-as the HTML reference: binding custom properties only, `data-slot` on every
-anatomy part, every state as an attribute. The package depends on
-`@lacquer/core` for the compiled contract and on nothing else. The site drives
+`implementations` as a package and a named export. Each component renders
+the HTML reference's markup and loads the reference's stylesheet from
+`@lacquer/core`, so an entry has one design, not two: binding custom
+properties only, `data-slot` on every anatomy part, every state as an
+attribute. The package depends on `@lacquer/core` for the compiled contract
+and those stylesheets, and on nothing else. The site drives
 each implementation through every state its spec names and shows the contract
 beside it. A principle has no HTML reference; its React implementation is the
 code the principle describes, so `message-state-machine` ships as a reducer
