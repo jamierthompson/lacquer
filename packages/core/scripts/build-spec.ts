@@ -1,9 +1,9 @@
 /**
  * spec/catalog/** + spec/schema + spec/rules
- *   -> spec/dist/catalog.json      every entry, validated, with shared rules resolved
- *   -> spec/dist/index.json        the light listing search and MCP use
- *   -> spec/dist/rules.json        one rule catalog, one id space
- *   -> spec/dist/components/<id>.json
+ *   -> dist/catalog.json           every entry, validated, with shared rules resolved
+ *   -> dist/index.json             the light listing search and MCP use
+ *   -> dist/rules.json             one rule catalog, one id space
+ *   -> dist/components/<id>.json
  *   -> spec/catalog/**\/<id>/SKILL.md   generated from the YAML + optional guidance.md
  *
  * Validation: JSON Schema (ajv) with vocab enums injected; folder and path
@@ -13,7 +13,8 @@
  * an entry still lacks is listed as `missing` in dist and SKILL.md: reported
  * while the entry is a draft, an error once it is stable.
  *
- * `--check` exits 1 when any generated file is stale instead of writing.
+ * `--check` exits 1 when any committed generated file (SKILL.md) is stale
+ * instead of writing it; dist/ is build output and is always written.
  */
 import { mkdir, readFile, writeFile, access } from "node:fs/promises"
 import path from "node:path"
@@ -298,7 +299,7 @@ let stale = 0
 async function emit(file: string, content: string) {
   const current = await readFile(file, "utf8").catch(() => "")
   if (current === content) return
-  if (check) {
+  if (check && !file.startsWith(DIST_DIR)) {
     stale++
     console.error(`stale: ${path.relative(ROOT, file)}`)
     return
@@ -392,7 +393,7 @@ async function main() {
     if (warnings.length > 40) console.warn(`  … ${warnings.length - 40} more`)
   }
   console.log(`\n${components.length} entries (${JSON.stringify(byStatus)}), ${allRules.length} rules, ${gaps.size} catalog gap(s): ${[...gaps.keys()].join(", ") || "none"}`)
-  console.log(`${withGaps} entries list ${gapCount} missing item(s); see each SKILL.md or spec/dist/components/<id>.json → missing`)
+  console.log(`${withGaps} entries list ${gapCount} missing item(s); see each SKILL.md or dist/components/<id>.json → missing`)
   if (check && stale) {
     console.error(`\n${stale} generated file(s) out of date. Run: npm run spec:build`)
     process.exit(1)

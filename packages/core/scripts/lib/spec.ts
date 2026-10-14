@@ -3,7 +3,7 @@
  * source of truth: one YAML per catalog entry under spec/catalog/<catalog>/<group>/<id>/,
  * validated against spec/schema/component.schema.json with enums injected from
  * spec/schema/vocab.yaml. Shared rules live in spec/rules/*.yaml. Everything in
- * spec/dist and every SKILL.md next to a spec is generated from these files.
+ * dist/ and every SKILL.md next to a spec is generated from these files.
  */
 import { readdir, readFile, stat } from "node:fs/promises"
 import path from "node:path"
@@ -16,7 +16,7 @@ export const CATALOG_DIR = path.join(SPEC_DIR, "catalog")
 export const SCHEMA_FILE = path.join(SPEC_DIR, "schema", "component.schema.json")
 export const VOCAB_FILE = path.join(SPEC_DIR, "schema", "vocab.yaml")
 export const SPEC_RULES_DIR = path.join(SPEC_DIR, "rules")
-export const DIST_DIR = path.join(SPEC_DIR, "dist")
+export const DIST_DIR = path.join(ROOT, "dist")
 
 export interface Vocab {
   kinds: Record<string, string>
