@@ -1,0 +1,25 @@
+{
+  "name": "@lacquer/core",
+  "version": "0.1.0",
+  "description": "The Lacquer catalog: schema, vocabulary, rules, bindings and every component spec, compiled to JSON.",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./catalog.json": "./dist/catalog.json",
+    "./index.json": "./dist/index.json",
+    "./rules.json": "./dist/rules.json",
+    "./components/*.json": "./dist/components/*.json",
+    "./bindings/*": "./spec/bindings/*",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "node scripts/build-spec.ts",
+    "check": "node scripts/build-spec.ts --check"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "yaml": "^2.8.1"
+  }
+}

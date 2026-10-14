@@ -395,7 +395,7 @@ async function main() {
   console.log(`\n${components.length} entries (${JSON.stringify(byStatus)}), ${allRules.length} rules, ${gaps.size} catalog gap(s): ${[...gaps.keys()].join(", ") || "none"}`)
   console.log(`${withGaps} entries list ${gapCount} missing item(s); see each SKILL.md or dist/components/<id>.json → missing`)
   if (check && stale) {
-    console.error(`\n${stale} generated file(s) out of date. Run: npm run spec:build`)
+    console.error(`\n${stale} generated file(s) out of date. Run: pnpm build`)
     process.exit(1)
   }
 }

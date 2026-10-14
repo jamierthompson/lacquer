@@ -1,13 +1,12 @@
 /**
  * Lacquer MCP server.
  *
- * Not wired into package.json yet. To run it:
- *   pnpm add @modelcontextprotocol/sdk zod
- *   pnpm spec:build
- *   node mcp/server.ts
+ * Run it from the workspace root:
+ *   pnpm build
+ *   pnpm mcp
  * and point a client at it over stdio.
  *
- * The server is deliberately dumb: it reads spec/dist/* that the build
+ * The server is deliberately dumb: it reads @lacquer/core's dist/ that the build
  * validated and answers questions about it. All intelligence lives in the
  * catalog data — the same files feed the skills, the site and the grader.
  */
@@ -19,8 +18,12 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import { parse as parseYaml } from "yaml";
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const DIST = path.join(ROOT, "spec", "dist");
+// The @lacquer/core package directory. Every path in the catalog (entry
+// paths, skill files, example files) is relative to it.
+const ROOT = path.dirname(
+  fileURLToPath(import.meta.resolve("@lacquer/core/package.json")),
+);
+const DIST = path.join(ROOT, "dist");
 
 type IndexEntry = {
   id: string;

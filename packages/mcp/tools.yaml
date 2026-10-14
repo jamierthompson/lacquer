@@ -1,7 +1,7 @@
 # Lacquer MCP server — tool manifest.
 #
 # This is the contract the server will implement. Every tool reads from
-# spec/dist/ (never from the YAML), so the server is a thin, stateless reader
+# @lacquer/core's dist/ (never from the YAML), so the server is a thin, stateless reader
 # over files the build already validated. Tool names are verbs an agent would
 # reach for mid-task; descriptions are written for the model that will call
 # them, not for a person.
@@ -18,10 +18,10 @@ server:
     contract, token roles, forbidden usage and examples — plus tools that grade
     generated UI against it.
   reads:
-    - spec/dist/index.json
-    - spec/dist/catalog.json
-    - spec/dist/components/<id>.json
-    - spec/dist/rules.json
+    - dist/index.json
+    - dist/catalog.json
+    - dist/components/<id>.json
+    - dist/rules.json
     - spec/catalog/**/SKILL.md
     - spec/bindings/*.yaml
 
@@ -213,13 +213,13 @@ tools:
 
 resources:
   - uri: lacquer://catalog/index
-    description: spec/dist/index.json
+    description: dist/index.json
   - uri: lacquer://component/{id}
-    description: spec/dist/components/{id}.json
+    description: dist/components/{id}.json
   - uri: lacquer://skill/{id}
     description: The generated SKILL.md for {id}
   - uri: lacquer://rules
-    description: spec/dist/rules.json
+    description: dist/rules.json
   - uri: lacquer://binding/{name}
     description: spec/bindings/{name}.yaml
 

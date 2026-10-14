@@ -3,23 +3,15 @@
   "version": "0.1.0",
   "description": "The finishing school for AI-generated UI: a framework-agnostic catalog of UI components and AI-interface patterns, with the rules to grade generated UI against it.",
   "license": "MIT",
-  "type": "module",
   "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.18.0",
   "engines": {
     "node": ">=22.18"
   },
   "scripts": {
-    "spec:build": "node scripts/build-spec.ts",
-    "spec:check": "node scripts/build-spec.ts --check",
-    "mcp": "node mcp/server.ts"
-  },
-  "devDependencies": {
-    "ajv": "^8.17.1",
-    "ajv-formats": "^3.0.1",
-    "yaml": "^2.8.1"
-  },
-  "optionalDependencies": {
-    "@modelcontextprotocol/sdk": "^1.20.0",
-    "zod": "^3.25.0"
+    "build": "pnpm -r build",
+    "check": "pnpm -r check",
+    "mcp": "pnpm --filter @lacquer/mcp start"
   }
 }
