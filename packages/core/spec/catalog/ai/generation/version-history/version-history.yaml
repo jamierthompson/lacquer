@@ -9,7 +9,8 @@ tier: 1
 maturity: established
 status: draft
 version: 0.1.0
-summary: Previewable, reversible restore points for both files and conversation, with explicit statements of
+summary:
+  Previewable, reversible restore points for both files and conversation, with explicit statements of
   what a restore does not undo.
 aliases:
   - Checkpoint (AI Elements)
@@ -53,7 +54,8 @@ api:
     - bookmark
     - summarize from/up to here
 accessibility:
-  notes: Markers are buttons with names; history is a list; restore confirms and announces what was and was not
+  notes:
+    Markers are buttons with names; history is a list; restore confirms and announces what was and was not
     restored.
 tokens:
   consumes:

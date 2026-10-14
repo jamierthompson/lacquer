@@ -10,7 +10,8 @@ atomic_level: primitive
 maturity: established
 status: draft
 version: 0.1.0
-summary: Styled generic container that maps style props to design tokens; the escape hatch every other
+summary:
+  Styled generic container that maps style props to design tokens; the escape hatch every other
   primitive is built on.
 aliases:
   - View

@@ -9,7 +9,8 @@ tier: 1
 maturity: established
 status: draft
 version: 0.1.0
-summary: User messages are right-aligned bubbles; assistant messages are full-width, unbubbled containers for
+summary:
+  User messages are right-aligned bubbles; assistant messages are full-width, unbubbled containers for
   ordered parts (reasoning, tools, text, sources, actions).
 aliases:
   - Message (AI Elements, prompt-kit)

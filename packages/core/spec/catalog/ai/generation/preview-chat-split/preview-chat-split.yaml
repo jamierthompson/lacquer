@@ -9,7 +9,8 @@ tier: 1
 maturity: established
 status: draft
 version: 0.1.0
-summary: "The app-builder layout: conversation on one side, a live preview with tabs and a selection-to-prompt
+summary:
+  "The app-builder layout: conversation on one side, a live preview with tabs and a selection-to-prompt
   toolbar on the other."
 aliases:
   - v0 workspace (Preview / Code / Design tabs)
@@ -51,7 +52,8 @@ api:
     - comment pin
     - publish
 accessibility:
-  notes: Iframe titled; toolbar buttons labelled; annotation tools have keyboard equivalents; console is a log
+  notes:
+    Iframe titled; toolbar buttons labelled; annotation tools have keyboard equivalents; console is a log
     region.
 tokens:
   consumes:

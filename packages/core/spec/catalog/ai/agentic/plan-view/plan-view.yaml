@@ -53,7 +53,8 @@ api:
     - keep planning with feedback
     - collapse when executing
 accessibility:
-  notes: Ordered list with per-step status text; approval controls are buttons with focus on the safest option;
+  notes:
+    Ordered list with per-step status text; approval controls are buttons with focus on the safest option;
     progress announced per step.
 tokens:
   consumes:

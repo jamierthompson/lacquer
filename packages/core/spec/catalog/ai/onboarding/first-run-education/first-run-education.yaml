@@ -9,7 +9,8 @@ tier: 2
 maturity: established
 status: draft
 version: 0.1.0
-summary: A dismissible explanation of how the AI works that stays reachable, preferably delivered as the first
+summary:
+  A dismissible explanation of how the AI works that stays reachable, preferably delivered as the first
   message.
 aliases:
   - first assistant message

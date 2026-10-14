@@ -37,7 +37,8 @@ anatomy:
     required: false
     description: Tool-category glyph (search, file, terminal, browser). Decorative.
   - part: name
-    description: Humanised tool name plus target — "Searching the web for 'oklch contrast'", "Reading
+    description:
+      Humanised tool name plus target — "Searching the web for 'oklch contrast'", "Reading
       src/app.tsx". Never the raw function name.
   - part: status
     description: State badge with text ("Running", "Completed", "Error"); colour is secondary.
@@ -60,7 +61,8 @@ variants:
       - row
       - card
     default: row
-    guidance: Row is a single line with the summary (Claude Code style); card adds a visible border and padding.
+    guidance:
+      Row is a single line with the summary (Claude Code style); card adds a visible border and padding.
       Grouped runs ("Searched 4 sources") are a row.
   - axis: effect
     values:
@@ -68,13 +70,15 @@ variants:
       - write
       - destroy
     default: read
-    guidance: Drives data-effect and the status token so writes look different from reads without expansion
+    guidance:
+      Drives data-effect and the status token so writes look different from reads without expansion
       (LQ-TOOL-02).
 modifiers:
   - grouped
 states:
   - id: input-streaming
-    treatment: Status "Pending" in color.status.pending; name may still be arriving; shimmer on the name,
+    treatment:
+      Status "Pending" in color.status.pending; name may still be arriving; shimmer on the name,
       opacity-only under reduced motion.
     a11y: none until a name exists; then one announcement "Preparing {name}".
   - id: input-available
@@ -87,7 +91,8 @@ states:
     treatment: Status "Approved" or "Denied"; the prompt collapses to one line recording the decision.
     a11y: Polite announcement of the decision.
   - id: output-available
-    treatment: Status "Completed" in color.status.success; collapses to a one-line summary ("Read 3 files");
+    treatment:
+      Status "Completed" in color.status.success; collapses to a one-line summary ("Read 3 files");
       spinner removed.
     a11y: aria-busy removed; one polite announcement "{name} complete".
   - id: output-error
@@ -126,7 +131,8 @@ api:
     - name: name
       type: string
       required: true
-      description: Humanised, with target. The implementation does not humanise; the caller does, so the mapping is
+      description:
+        Humanised, with target. The implementation does not humanise; the caller does, so the mapping is
         one place.
     - name: effect
       type: enum(read|write|destroy)
@@ -136,7 +142,8 @@ api:
       type: unknown
     - name: output
       type: unknown | node
-      description: A registered component (a framework element, a custom element, a DOM node) may be passed for
+      description:
+        A registered component (a framework element, a custom element, a DOM node) may be passed for
         generative UI.
     - name: error
       type: string
@@ -189,9 +196,11 @@ accessibility:
       when: focus on header
     - key: Tab
       action: Moves through header, then visible actions. Collapsed body contents are not in the tab order.
-  focus: On approval-requested, focus moves to the approval prompt's safe option (Deny). On output-error, focus
+  focus:
+    On approval-requested, focus moves to the approval prompt's safe option (Deny). On output-error, focus
     does not move; the alert role announces.
-  announcements: Exactly one announcement per state change, polite except approval-requested (assertive).
+  announcements:
+    Exactly one announcement per state change, polite except approval-requested (assertive).
     Batched when several cards change within 2 s (LQ-A11Y-01).
 tokens:
   consumes:
@@ -212,10 +221,12 @@ tokens:
     - space.gap.sm
     - motion.duration.base
 content:
-  label: "Humanised verb + target. \"Searching the web for 'x'\", \"Reading src/app.tsx\", \"Running npm test\".
-    Group repeats: \"Searched 4 sources\"."
-  voice: "Progressive while running (\"Reading\"), past tense when done (\"Read 3 files\"), plain on error
-    (\"Couldn't read src/app.tsx: permission denied\")."
+  label:
+    'Humanised verb + target. "Searching the web for ''x''", "Reading src/app.tsx", "Running npm test".
+    Group repeats: "Searched 4 sources".'
+  voice:
+    'Progressive while running ("Reading"), past tense when done ("Read 3 files"), plain on error
+    ("Couldn''t read src/app.tsx: permission denied").'
   limits: Never the raw function name or a UUID in the visible name. Never "Processing…" without a target.
   strings:
     pending: Pending
@@ -277,7 +288,8 @@ rules:
       level: MUST
       polarity: require
       title: Render from state, not content
-      statement: The card's visual state is driven by the `state` prop from the tool lifecycle; it is never inferred
+      statement:
+        The card's visual state is driven by the `state` prop from the tool lifecycle; it is never inferred
         from the output text (e.g. "contains 'error'" or "ends with ```").
       detect:
         static: No string matching on output/input in the state logic.
@@ -286,7 +298,8 @@ rules:
       level: MUST
       polarity: require
       title: Error and approval auto-expand; everything else collapses
-      statement: output-error and approval-requested open the body automatically; all other states are collapsed by
+      statement:
+        output-error and approval-requested open the body automatically; all other states are collapsed by
         default with a one-line summary visible.
       detect:
         runtime: For each state, assert the body's visibility matches the rule.
@@ -295,7 +308,8 @@ rules:
       level: MUST
       polarity: forbid
       title: Never render model HTML
-      statement: Output is JSON, text, or a component registered by the product; a string from the model is never
+      statement:
+        Output is JSON, text, or a component registered by the product; a string from the model is never
         set as innerHTML.
       detect:
         static: dangerouslySetInnerHTML / v-html / innerHTML inside the output part.
@@ -304,7 +318,8 @@ rules:
       level: SHOULD
       polarity: require
       title: Group repeats
-      statement: Three or more consecutive calls to the same tool collapse into one grouped card ("Searched 4
+      statement:
+        Three or more consecutive calls to the same tool collapse into one grouped card ("Searched 4
         sources") with the individual calls inside.
       detect:
         static: A grouping step exists before render.
@@ -339,7 +354,8 @@ implementations:
     status: reference
 grading:
   weight: 1.5
-  notes: In an agent transcript this is the most repeated component; the grader checks the state coverage of the
+  notes:
+    In an agent transcript this is the most repeated component; the grader checks the state coverage of the
     whole set, not each card.
 sources:
   - https://elements.ai-sdk.dev/components/tool

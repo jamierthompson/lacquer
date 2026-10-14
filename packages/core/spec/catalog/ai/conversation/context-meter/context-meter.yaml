@@ -9,7 +9,8 @@ tier: 2
 maturity: emerging
 status: draft
 version: 0.1.0
-summary: Shows how much of the context window (and budget) a thread has used, with a breakdown on hover and a
+summary:
+  Shows how much of the context window (and budget) a thread has used, with a breakdown on hover and a
   compaction action.
 aliases:
   - Context (AI Elements)

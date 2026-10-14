@@ -48,7 +48,8 @@ api:
     - keyboard accept/reject
     - toggle inline vs panel diffs
 accessibility:
-  notes: Hunks are named regions ('Change 2 of 5 in app.tsx'); +/- glyphs alongside colour; shortcuts for
+  notes:
+    Hunks are named regions ('Change 2 of 5 in app.tsx'); +/- glyphs alongside colour; shortcuts for
     accept/reject.
 tokens:
   consumes:

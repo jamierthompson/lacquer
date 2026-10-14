@@ -9,7 +9,8 @@ tier: 1
 maturity: established
 status: draft
 version: 0.1.0
-summary: Renders partial markdown as it arrives without flashing, breaking or leaking unsafe HTML; styles open
+summary:
+  Renders partial markdown as it arrives without flashing, breaking or leaking unsafe HTML; styles open
   fences and tables deliberately.
 aliases:
   - MessageResponse / Response (AI Elements)
@@ -49,7 +50,8 @@ api:
     - link safety preview of full URL
     - expand long code blocks
 accessibility:
-  notes: Rendered region is not the live region; mirror sentence batches to a hidden status region; code blocks
+  notes:
+    Rendered region is not the live region; mirror sentence batches to a hidden status region; code blocks
     are pre/code with a labelled copy button.
 tokens:
   consumes:

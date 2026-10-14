@@ -9,7 +9,8 @@ tier: 1
 maturity: established
 status: draft
 version: 0.1.0
-summary: "Three distinct designs: transport errors (retry, keep draft), refusals (calm, offer alternatives)
+summary:
+  "Three distinct designs: transport errors (retry, keep draft), refusals (calm, offer alternatives)
   and quota notices (facts and reset time)."
 aliases:
   - Error primitive (assistant-ui)

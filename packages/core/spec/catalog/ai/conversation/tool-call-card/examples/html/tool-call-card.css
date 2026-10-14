@@ -43,7 +43,8 @@
   font: inherit;
   text-align: start;
   cursor: pointer;
-  transition: background-color var(--lq-motion-duration-base) var(--lq-motion-easing-standard);
+  transition: background-color var(--lq-motion-duration-base)
+    var(--lq-motion-easing-standard);
 }
 [data-lacquer="tool-call-card"] > [data-slot="header"]:hover,
 [data-lacquer="tool-call-card"] > [data-slot="header"][aria-expanded="true"] {
@@ -92,23 +93,52 @@
 /* chevron: rotation paired with the header background change (LQ-STATE-02) */
 [data-lacquer="tool-call-card"] [data-slot="chevron"] {
   color: var(--lq-color-fg-muted);
-  transition: rotate var(--lq-motion-duration-base) var(--lq-motion-easing-standard);
+  transition: rotate var(--lq-motion-duration-base)
+    var(--lq-motion-easing-standard);
 }
-[data-lacquer="tool-call-card"] > [data-slot="header"][aria-expanded="true"] [data-slot="chevron"] {
+[data-lacquer="tool-call-card"]
+  > [data-slot="header"][aria-expanded="true"]
+  [data-slot="chevron"] {
   rotate: 90deg;
 }
 
 /* --- lifecycle states (data-state from the tool machine) ------------------ */
 
-[data-lacquer="tool-call-card"][data-state="input-streaming"] [data-slot="status"] { color: var(--lq-color-status-pending); }
-[data-lacquer="tool-call-card"][data-state="input-streaming"] [data-slot="name"] { animation: lq-tool-pulse 2s ease-in-out infinite; }
-[data-lacquer="tool-call-card"][data-state="input-available"] [data-slot="status"] { color: var(--lq-color-status-running); }
-[data-lacquer="tool-call-card"][data-state="approval-requested"] { outline: 1px solid var(--lq-color-status-warning); }
-[data-lacquer="tool-call-card"][data-state="approval-requested"] [data-slot="status"] { color: var(--lq-color-status-warning); }
-[data-lacquer="tool-call-card"][data-state="approval-responded"] [data-slot="status"] { color: var(--lq-color-fg-muted); }
-[data-lacquer="tool-call-card"][data-state="output-available"] [data-slot="status"] { color: var(--lq-color-status-success); }
-[data-lacquer="tool-call-card"][data-state="output-error"] [data-slot="status"] { color: var(--lq-color-status-error); }
-[data-lacquer="tool-call-card"][data-state="output-denied"] [data-slot="status"] { color: var(--lq-color-fg-muted); }
+[data-lacquer="tool-call-card"][data-state="input-streaming"]
+  [data-slot="status"] {
+  color: var(--lq-color-status-pending);
+}
+[data-lacquer="tool-call-card"][data-state="input-streaming"]
+  [data-slot="name"] {
+  animation: lq-tool-pulse 2s ease-in-out infinite;
+}
+[data-lacquer="tool-call-card"][data-state="input-available"]
+  [data-slot="status"] {
+  color: var(--lq-color-status-running);
+}
+[data-lacquer="tool-call-card"][data-state="approval-requested"] {
+  outline: 1px solid var(--lq-color-status-warning);
+}
+[data-lacquer="tool-call-card"][data-state="approval-requested"]
+  [data-slot="status"] {
+  color: var(--lq-color-status-warning);
+}
+[data-lacquer="tool-call-card"][data-state="approval-responded"]
+  [data-slot="status"] {
+  color: var(--lq-color-fg-muted);
+}
+[data-lacquer="tool-call-card"][data-state="output-available"]
+  [data-slot="status"] {
+  color: var(--lq-color-status-success);
+}
+[data-lacquer="tool-call-card"][data-state="output-error"]
+  [data-slot="status"] {
+  color: var(--lq-color-status-error);
+}
+[data-lacquer="tool-call-card"][data-state="output-denied"]
+  [data-slot="status"] {
+  color: var(--lq-color-fg-muted);
+}
 
 /* --- body ------------------------------------------------------------------ */
 
@@ -146,8 +176,16 @@
   gap: var(--lq-space-gap-sm);
 }
 
-@keyframes lq-tool-spin { to { rotate: 1turn; } }
-@keyframes lq-tool-pulse { 50% { opacity: 0.5; } }
+@keyframes lq-tool-spin {
+  to {
+    rotate: 1turn;
+  }
+}
+@keyframes lq-tool-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
 
 /* reduced motion: opacity only, no spin, no rotate transition (LQ-MOTION-02) */
 @media (prefers-reduced-motion: reduce) {

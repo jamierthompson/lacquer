@@ -4,31 +4,78 @@
   rest collapse to one line. Status is text first; colour follows data-state.
 -->
 <div style="display: grid; gap: var(--lq-space-gap-sm)">
-
-  <div role="group" aria-labelledby="s1-name" data-lacquer="tool-call-card" data-state="input-streaming" data-effect="read">
-    <button type="button" data-slot="header" aria-expanded="false" aria-controls="s1-body">
+  <div
+    role="group"
+    aria-labelledby="s1-name"
+    data-lacquer="tool-call-card"
+    data-state="input-streaming"
+    data-effect="read"
+  >
+    <button
+      type="button"
+      data-slot="header"
+      aria-expanded="false"
+      aria-controls="s1-body"
+    >
       <span data-slot="name" id="s1-name">Reading src/app.tsx</span>
       <span data-slot="status">Pending</span>
       <span data-slot="chevron" aria-hidden="true">›</span>
     </button>
-    <div data-slot="body" id="s1-body" role="region" aria-labelledby="s1-name" hidden>
+    <div
+      data-slot="body"
+      id="s1-body"
+      role="region"
+      aria-labelledby="s1-name"
+      hidden
+    >
       <pre data-slot="input">{ "path": "src/app.tsx" }</pre>
     </div>
   </div>
 
-  <div role="group" aria-labelledby="s2-name" aria-busy="true" data-lacquer="tool-call-card" data-state="input-available" data-effect="read">
-    <button type="button" data-slot="header" aria-expanded="false" aria-controls="s2-body">
+  <div
+    role="group"
+    aria-labelledby="s2-name"
+    aria-busy="true"
+    data-lacquer="tool-call-card"
+    data-state="input-available"
+    data-effect="read"
+  >
+    <button
+      type="button"
+      data-slot="header"
+      aria-expanded="false"
+      aria-controls="s2-body"
+    >
       <span data-slot="name" id="s2-name">Reading src/app.tsx</span>
-      <span data-slot="status"><span data-slot="spinner" aria-hidden="true"></span>Running</span>
+      <span data-slot="status"
+        ><span data-slot="spinner" aria-hidden="true"></span>Running</span
+      >
       <span data-slot="chevron" aria-hidden="true">›</span>
     </button>
-    <div data-slot="body" id="s2-body" role="region" aria-labelledby="s2-name" hidden>
+    <div
+      data-slot="body"
+      id="s2-body"
+      role="region"
+      aria-labelledby="s2-name"
+      hidden
+    >
       <pre data-slot="input">{ "path": "src/app.tsx" }</pre>
     </div>
   </div>
 
-  <div role="group" aria-labelledby="s3-name" data-lacquer="tool-call-card" data-state="approval-requested" data-effect="read">
-    <button type="button" data-slot="header" aria-expanded="true" aria-controls="s3-body">
+  <div
+    role="group"
+    aria-labelledby="s3-name"
+    data-lacquer="tool-call-card"
+    data-state="approval-requested"
+    data-effect="read"
+  >
+    <button
+      type="button"
+      data-slot="header"
+      aria-expanded="true"
+      aria-controls="s3-body"
+    >
       <span data-slot="name" id="s3-name">Reading src/app.tsx</span>
       <span data-slot="status">Needs approval</span>
       <span data-slot="chevron" aria-hidden="true">›</span>
@@ -36,59 +83,144 @@
     <div data-slot="body" id="s3-body" role="region" aria-labelledby="s3-name">
       <pre data-slot="input">{ "path": "src/app.tsx" }</pre>
       <div data-slot="actions">
-        <button type="button" data-lacquer="button" data-emphasis="outline" data-size="xs" autofocus><span data-slot="label">Deny</span></button>
-        <button type="button" data-lacquer="button" data-emphasis="primary" data-size="xs"><span data-slot="label">Approve once</span></button>
+        <button
+          type="button"
+          data-lacquer="button"
+          data-emphasis="outline"
+          data-size="xs"
+          autofocus
+        >
+          <span data-slot="label">Deny</span>
+        </button>
+        <button
+          type="button"
+          data-lacquer="button"
+          data-emphasis="primary"
+          data-size="xs"
+        >
+          <span data-slot="label">Approve once</span>
+        </button>
       </div>
     </div>
   </div>
 
-  <div role="group" aria-labelledby="s4-name" data-lacquer="tool-call-card" data-state="approval-responded" data-effect="read">
-    <button type="button" data-slot="header" aria-expanded="false" aria-controls="s4-body">
+  <div
+    role="group"
+    aria-labelledby="s4-name"
+    data-lacquer="tool-call-card"
+    data-state="approval-responded"
+    data-effect="read"
+  >
+    <button
+      type="button"
+      data-slot="header"
+      aria-expanded="false"
+      aria-controls="s4-body"
+    >
       <span data-slot="name" id="s4-name">Reading src/app.tsx</span>
       <span data-slot="status">Approved</span>
       <span data-slot="chevron" aria-hidden="true">›</span>
     </button>
-    <div data-slot="body" id="s4-body" role="region" aria-labelledby="s4-name" hidden>
+    <div
+      data-slot="body"
+      id="s4-body"
+      role="region"
+      aria-labelledby="s4-name"
+      hidden
+    >
       <pre data-slot="input">{ "path": "src/app.tsx" }</pre>
     </div>
   </div>
 
-  <div role="group" aria-labelledby="s5-name" data-lacquer="tool-call-card" data-state="output-available" data-effect="read">
-    <button type="button" data-slot="header" aria-expanded="false" aria-controls="s5-body">
+  <div
+    role="group"
+    aria-labelledby="s5-name"
+    data-lacquer="tool-call-card"
+    data-state="output-available"
+    data-effect="read"
+  >
+    <button
+      type="button"
+      data-slot="header"
+      aria-expanded="false"
+      aria-controls="s5-body"
+    >
       <span data-slot="name" id="s5-name">Read src/app.tsx</span>
       <span data-slot="status">Completed</span>
       <span data-slot="chevron" aria-hidden="true">›</span>
     </button>
-    <div data-slot="body" id="s5-body" role="region" aria-labelledby="s5-name" hidden>
+    <div
+      data-slot="body"
+      id="s5-body"
+      role="region"
+      aria-labelledby="s5-name"
+      hidden
+    >
       <pre data-slot="input">{ "path": "src/app.tsx" }</pre>
       <pre data-slot="output">{ "lines": 120 }</pre>
     </div>
   </div>
 
-  <div role="group" aria-labelledby="s6-name" data-lacquer="tool-call-card" data-state="output-error" data-effect="read">
-    <button type="button" data-slot="header" aria-expanded="true" aria-controls="s6-body">
+  <div
+    role="group"
+    aria-labelledby="s6-name"
+    data-lacquer="tool-call-card"
+    data-state="output-error"
+    data-effect="read"
+  >
+    <button
+      type="button"
+      data-slot="header"
+      aria-expanded="true"
+      aria-controls="s6-body"
+    >
       <span data-slot="name" id="s6-name">Reading src/app.tsx</span>
       <span data-slot="status">Error</span>
       <span data-slot="chevron" aria-hidden="true">›</span>
     </button>
     <div data-slot="body" id="s6-body" role="region" aria-labelledby="s6-name">
       <pre data-slot="input">{ "path": "src/app.tsx" }</pre>
-      <p data-slot="output" role="alert">Couldn't read src/app.tsx: permission denied</p>
+      <p data-slot="output" role="alert">
+        Couldn't read src/app.tsx: permission denied
+      </p>
       <div data-slot="actions">
-        <button type="button" data-lacquer="button" data-emphasis="outline" data-size="xs"><span data-slot="label">Retry</span></button>
+        <button
+          type="button"
+          data-lacquer="button"
+          data-emphasis="outline"
+          data-size="xs"
+        >
+          <span data-slot="label">Retry</span>
+        </button>
       </div>
     </div>
   </div>
 
-  <div role="group" aria-labelledby="s7-name" data-lacquer="tool-call-card" data-state="output-denied" data-effect="read">
-    <button type="button" data-slot="header" aria-expanded="false" aria-controls="s7-body">
+  <div
+    role="group"
+    aria-labelledby="s7-name"
+    data-lacquer="tool-call-card"
+    data-state="output-denied"
+    data-effect="read"
+  >
+    <button
+      type="button"
+      data-slot="header"
+      aria-expanded="false"
+      aria-controls="s7-body"
+    >
       <span data-slot="name" id="s7-name">Reading src/app.tsx</span>
       <span data-slot="status">Denied</span>
       <span data-slot="chevron" aria-hidden="true">›</span>
     </button>
-    <div data-slot="body" id="s7-body" role="region" aria-labelledby="s7-name" hidden>
+    <div
+      data-slot="body"
+      id="s7-body"
+      role="region"
+      aria-labelledby="s7-name"
+      hidden
+    >
       <p data-slot="output">Denied by you.</p>
     </div>
   </div>
-
 </div>

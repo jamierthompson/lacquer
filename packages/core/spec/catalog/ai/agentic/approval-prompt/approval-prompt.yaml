@@ -9,7 +9,8 @@ tier: 1
 maturity: emerging
 status: draft
 version: 0.1.0
-summary: "Gate for side-effecting actions: exact payload, risk framing, and allow-once / always-scoped /
+summary:
+  "Gate for side-effecting actions: exact payload, risk framing, and allow-once / always-scoped /
   deny-with-correction."
 aliases:
   - Confirmation (AI Elements)

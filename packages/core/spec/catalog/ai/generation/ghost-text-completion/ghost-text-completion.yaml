@@ -9,7 +9,8 @@ tier: 2
 maturity: established
 status: draft
 version: 0.1.0
-summary: Predictive text rendered as dimmed ghost text; Tab accepts, anything else discards; never moves
+summary:
+  Predictive text rendered as dimmed ghost text; Tab accepts, anything else discards; never moves
   existing text.
 aliases:
   - Copilot inline suggestions
@@ -45,7 +46,8 @@ api:
     - typing discards
     - hover cycles alternatives
 accessibility:
-  notes: Announce that a suggestion exists; accessible view to read it; never the only way to enter content; low
+  notes:
+    Announce that a suggestion exists; accessible view to read it; never the only way to enter content; low
     contrast acceptable only because transient.
 tokens:
   consumes:

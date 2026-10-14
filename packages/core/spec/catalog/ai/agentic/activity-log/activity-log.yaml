@@ -9,7 +9,8 @@ tier: 2
 maturity: established
 status: draft
 version: 0.1.0
-summary: "The audit surface: every agent action with time, target and result, filterable and exportable; the
+summary:
+  "The audit surface: every agent action with time, target and result, filterable and exportable; the
   basis for undo and 'why did it do that'."
 aliases:
   - transcript / tool log (Claude Code)

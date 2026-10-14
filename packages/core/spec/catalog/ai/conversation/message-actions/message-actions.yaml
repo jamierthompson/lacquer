@@ -9,7 +9,8 @@ tier: 1
 maturity: established
 status: draft
 version: 0.1.0
-summary: Copy, regenerate, feedback and share on every assistant message; the feedback signal must be
+summary:
+  Copy, regenerate, feedback and share on every assistant message; the feedback signal must be
   reason-coded, not a mere 'liked it'.
 aliases:
   - ActionBar (assistant-ui)

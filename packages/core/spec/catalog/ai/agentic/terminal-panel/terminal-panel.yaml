@@ -9,7 +9,8 @@ tier: 2
 maturity: established
 status: draft
 version: 0.1.0
-summary: Console output from agent-run commands, with exit status, ANSI colour and the same follow/release
+summary:
+  Console output from agent-run commands, with exit status, ANSI colour and the same follow/release
   scrolling rule as chat.
 aliases:
   - Terminal, StackTrace, TestResults, Snippet (AI Elements Code)

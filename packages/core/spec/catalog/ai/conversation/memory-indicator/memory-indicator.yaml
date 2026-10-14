@@ -9,7 +9,8 @@ tier: 2
 maturity: emerging
 status: draft
 version: 0.1.0
-summary: "Makes silent personalisation visible: a chip when memory changes, a popover showing which memories
+summary:
+  "Makes silent personalisation visible: a chip when memory changes, a popover showing which memories
   shaped an answer, and a management page."
 aliases:
   - Memory updated (ChatGPT)

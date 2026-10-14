@@ -9,7 +9,8 @@ tier: 1
 maturity: established
 status: draft
 version: 0.1.0
-summary: Shimmering status text ('Thinking…', 'Searching the web') shown between submit and first token;
+summary:
+  Shimmering status text ('Thinking…', 'Searching the web') shown between submit and first token;
   prefer specific status over anonymous dots.
 aliases:
   - Shimmer (AI Elements; Loader deprecated 1.8.2)
@@ -42,7 +43,8 @@ api:
     - appears within 300 ms of submit
     - replaced by first token
 accessibility:
-  notes: Announce 'Thinking' once via status region; shimmer is aria-hidden decoration; static text under
+  notes:
+    Announce 'Thinking' once via status region; shimmer is aria-hidden decoration; static text under
     reduced motion.
 tokens:
   consumes:

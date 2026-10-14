@@ -9,7 +9,8 @@ tier: 1
 maturity: established
 status: draft
 version: 0.1.0
-summary: A labelled summary that always keeps a path to the underlying content and marks itself stale when
+summary:
+  A labelled summary that always keeps a path to the underlying content and marks itself stale when
   sources change.
 aliases:
   - AI review summaries (Amazon)

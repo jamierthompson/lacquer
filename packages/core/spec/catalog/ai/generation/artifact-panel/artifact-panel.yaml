@@ -9,7 +9,8 @@ tier: 1
 maturity: established
 status: draft
 version: 0.1.0
-summary: Substantial standalone output (code, docs, apps, diagrams) lives in a panel beside the conversation
+summary:
+  Substantial standalone output (code, docs, apps, diagrams) lives in a panel beside the conversation
   with tabs, versions and actions.
 aliases:
   - Artifacts (Claude)
@@ -50,7 +51,8 @@ api:
     - publish to URL
     - full-screen sheet on narrow screens
 accessibility:
-  notes: Complementary region or dialog with a name; tabs semantics; focus returns to chat on close; version
+  notes:
+    Complementary region or dialog with a name; tabs semantics; focus returns to chat on close; version
     change announced.
 tokens:
   consumes:

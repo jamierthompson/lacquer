@@ -43,15 +43,18 @@ found_in:
   - Open UI
 anatomy:
   - part: scrim
-    description: Full-viewport backdrop in color.bg.scrim. Click-to-close is a choice, not a default; destructive
+    description:
+      Full-viewport backdrop in color.bg.scrim. Click-to-close is a choice, not a default; destructive
       confirms disable it.
   - part: root
     element: dialog
-    description: The container. role="dialog" aria-modal="true". Prefer the native `<dialog>` with showModal(); it
+    description:
+      The container. role="dialog" aria-modal="true". Prefer the native `<dialog>` with showModal(); it
       provides the top layer and inertness for free.
   - part: title
     element: h2
-    description: Labels the dialog via aria-labelledby. Required. States the task, not the product ("Rename
+    description:
+      Labels the dialog via aria-labelledby. Required. States the task, not the product ("Rename
       project", not "Project").
   - part: close-button
     required: false
@@ -92,7 +95,8 @@ states:
     treatment: aria-busy on the body; footer actions keep width (see button loading).
     a11y: aria-busy="true" on the body region.
   - id: focus-visible
-    treatment: Standard ring on every focusable inside; the dialog container itself is not focused unless nothing
+    treatment:
+      Standard ring on every focusable inside; the dialog container itself is not focused unless nothing
       inside is.
     a11y: Implicit.
   - id: hover
@@ -128,7 +132,8 @@ api:
       description: Whether Escape and scrim-click close it. False for confirms that need an explicit answer.
     - name: initialFocus
       type: ref | selector
-      description: Where focus lands on open. Default is the first focusable element; for destructive confirms, the
+      description:
+        Where focus lands on open. Default is the first focusable element; for destructive confirms, the
         cancel button.
   slots:
     - title
@@ -167,7 +172,8 @@ accessibility:
     - key: Escape
       action: Closes the dialog when dismissible.
       when: dismissible
-  focus: On open, focus moves to initialFocus, else the first focusable, else the container (tabindex=-1). On
+  focus:
+    On open, focus moves to initialFocus, else the first focusable, else the container (tabindex=-1). On
     close, focus returns to the element that opened it. If that element is gone, focus the nearest logical
     ancestor.
   announcements: The title is announced on open by virtue of focus movement; no extra live region.
@@ -187,7 +193,8 @@ tokens:
     - motion.duration.base
     - motion.easing.standard
 content:
-  label: Title is the task as a verb phrase ("Rename project", "Invite teammates"). Footer buttons name the
+  label:
+    Title is the task as a verb phrase ("Rename project", "Invite teammates"). Footer buttons name the
     outcome ("Rename", "Send invites"), never "OK".
   limits: One paragraph of description at most; longer content is a page, not a dialog.
 usage:
@@ -238,7 +245,8 @@ rules:
       level: MUST
       polarity: require
       title: Background is inert
-      statement: While a modal dialog is open, content outside it is inert (not focusable, not clickable, hidden
+      statement:
+        While a modal dialog is open, content outside it is inert (not focusable, not clickable, hidden
         from assistive tech).
       detect:
         runtime: Tab from the last focusable inside wraps to the first; outside elements are not reachable.
@@ -248,7 +256,8 @@ rules:
       level: MUST
       polarity: forbid
       title: Never an unlabeled dialog
-      statement: Every dialog has a visible title referenced by aria-labelledby; a visually-hidden title is
+      statement:
+        Every dialog has a visible title referenced by aria-labelledby; a visually-hidden title is
         acceptable only for full-screen media viewers.
       detect:
         static: role=dialog without aria-labelledby, or the referenced element is empty.
@@ -258,7 +267,8 @@ rules:
       level: SHOULD
       polarity: require
       title: Destructive confirms default to safety
-      statement: When the primary action is destructive, initial focus and the default (Enter) action are the
+      statement:
+        When the primary action is destructive, initial focus and the default (Enter) action are the
         non-destructive option, and scrim-click does not close.
       detect:
         runtime: On open, activeElement is the cancel button when a destructive button is present.

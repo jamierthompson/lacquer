@@ -9,7 +9,8 @@ tier: 1
 maturity: established
 status: draft
 version: 0.1.0
-summary: Marks AI-generated content and is the doorway to explainability; in the EU, first-turn disclosure is
+summary:
+  Marks AI-generated content and is the doorway to explainability; in the EU, first-turn disclosure is
   required from 2 August 2026.
 aliases:
   - AI label (IBM Carbon, formerly AI slug)
@@ -51,7 +52,8 @@ api:
     - revert to AI version
     - never triggers generation
 accessibility:
-  notes: Button named 'AI generated, show details'; popover is a dialog/tooltip with focus management; label
+  notes:
+    Button named 'AI generated, show details'; popover is a dialog/tooltip with focus management; label
     text translatable.
 tokens:
   consumes:

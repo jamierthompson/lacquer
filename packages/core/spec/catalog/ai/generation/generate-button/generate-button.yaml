@@ -9,7 +9,8 @@ tier: 1
 maturity: established
 status: draft
 version: 0.1.0
-summary: "The entry point for AI in augmented products: a verb-labelled button, optionally with a brand glyph;
+summary:
+  "The entry point for AI in augmented products: a verb-labelled button, optionally with a brand glyph;
   never a bare sparkle."
 aliases:
   - Initial CTA (Shape of AI)

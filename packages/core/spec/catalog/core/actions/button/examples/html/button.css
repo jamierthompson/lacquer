@@ -25,7 +25,8 @@
   block-size: var(--lq-size-control-md);
   padding: var(--lq-space-inset-control-md);
   transition:
-    background-color var(--lq-motion-duration-fast) var(--lq-motion-easing-standard),
+    background-color var(--lq-motion-duration-fast)
+      var(--lq-motion-easing-standard),
     border-color var(--lq-motion-duration-fast) var(--lq-motion-easing-standard),
     color var(--lq-motion-duration-fast) var(--lq-motion-easing-standard);
 }
@@ -162,7 +163,9 @@
 }
 
 @keyframes lq-button-spin {
-  to { rotate: 1turn; }
+  to {
+    rotate: 1turn;
+  }
 }
 
 /* reduced motion: no transitions, no spin (LQ-MOTION-02) */

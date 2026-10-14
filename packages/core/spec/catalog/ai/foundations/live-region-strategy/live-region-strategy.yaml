@@ -9,7 +9,8 @@ tier: 1
 maturity: emerging
 status: draft
 version: 0.1.0
-summary: "How screen-reader users experience streaming without being buried: batched, transition-based
+summary:
+  "How screen-reader users experience streaming without being buried: batched, transition-based
   announcements from a single pre-existing region."
 aliases:
   - aria-live polite status region
@@ -38,7 +39,8 @@ states:
 api:
   interactions: []
 accessibility:
-  notes: Never per-token; never aria-live on the whole list plus a status region; region must pre-exist in the
+  notes:
+    Never per-token; never aria-live on the whole list plus a status region; region must pre-exist in the
     DOM (MDN).
 usage:
   use_when:

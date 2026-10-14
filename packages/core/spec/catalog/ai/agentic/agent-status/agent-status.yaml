@@ -23,7 +23,8 @@ found_in:
   - Devin
 anatomy:
   - part: status-pill
-    description: "status pill: thinking / working (current step) / waiting-for-tool / needs-input / paused / done
+    description:
+      "status pill: thinking / working (current step) / waiting-for-tool / needs-input / paused / done
       / failed / cancelled"
   - part: current-mode-label
     description: current mode label

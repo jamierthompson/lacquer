@@ -45,7 +45,8 @@ api:
     - stop
     - open full size
 accessibility:
-  notes: Narration is text in a log region; screenshots have descriptions; take-over is a button with focus
+  notes:
+    Narration is text in a log region; screenshots have descriptions; take-over is a button with focus
     management.
 tokens:
   consumes:

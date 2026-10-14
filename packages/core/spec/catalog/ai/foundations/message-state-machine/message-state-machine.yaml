@@ -9,7 +9,8 @@ tier: 1
 maturity: established
 status: draft
 version: 0.1.0
-summary: Name the assistant-turn lifecycle once and make every AI component render from it; it is the first
+summary:
+  Name the assistant-turn lifecycle once and make every AI component render from it; it is the first
   thing to build.
 aliases:
   - "AI SDK status: submitted / streaming / ready / error"
@@ -155,7 +156,8 @@ api:
     its state from message text.
 accessibility:
   name: Not applicable; this principle defines the announcements other components make.
-  announcements: Each transition maps to exactly one announcement, listed per state above. Streaming text is
+  announcements:
+    Each transition maps to exactly one announcement, listed per state above. Streaming text is
     batched. Approval is the only assertive announcement.
 tokens:
   defines:
@@ -188,7 +190,8 @@ rules:
       level: MUST
       polarity: require
       title: One lifecycle, consumed everywhere
-      statement: Every AI component's visual state is a pure function of the thread status or a tool part's state;
+      statement:
+        Every AI component's visual state is a pure function of the thread status or a tool part's state;
         no component inspects message text to decide how to render.
       detect:
         static: No regex/includes/endsWith on message content in render logic across the implementation.
@@ -197,7 +200,8 @@ rules:
       level: MUST
       polarity: require
       title: Stop in every non-idle state, Regenerate in every terminal state
-      statement: Stop is wired while status is submitted, streaming:* or awaiting-approval; Regenerate and
+      statement:
+        Stop is wired while status is submitted, streaming:* or awaiting-approval; Regenerate and
         Edit-and-resend are wired in complete, error and cancelled.
       detect:
         runtime: Drive each state and assert the control is present and enabled.

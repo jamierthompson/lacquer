@@ -48,7 +48,8 @@ api:
     - scroll-to-bottom button restores following
     - arrow keys move between messages
 accessibility:
-  notes: Either role=log on the list or a separate hidden role=status region, never both; each message is an
+  notes:
+    Either role=log on the list or a separate hidden role=status region, never both; each message is an
     article with an accessible name; keyboard navigation between messages and into actions.
 tokens:
   consumes:

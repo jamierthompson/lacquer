@@ -9,7 +9,8 @@ tier: 2
 maturity: emerging
 status: draft
 version: 0.1.0
-summary: "Runs the user can leave: a card with status and summary in an inbox, plus distinct done vs
+summary:
+  "Runs the user can leave: a card with status and summary in an inbox, plus distinct done vs
   needs-input notifications."
 aliases:
   - cloud/background agents (Cursor, Codex, Claude Code on the web, Devin)
@@ -47,7 +48,8 @@ api:
     - retry
     - mark read
 accessibility:
-  notes: Card is an article with status text; notifications use platform channels plus an in-app status region;
+  notes:
+    Card is an article with status text; notifications use platform channels plus an in-app status region;
     needs-input is assertive.
 tokens:
   consumes:

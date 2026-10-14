@@ -9,7 +9,8 @@ tier: 1
 maturity: established
 status: draft
 version: 0.1.0
-summary: "The single most-used control in an AI product: a form with a growing textarea, attachments, tools,
+summary:
+  "The single most-used control in an AI product: a form with a growing textarea, attachments, tools,
   mode/model selection and a send/stop button."
 aliases:
   - PromptInput (AI Elements, prompt-kit)
@@ -61,7 +62,8 @@ api:
     - draft persists per thread
     - form resets on submit
 accessibility:
-  notes: Real textarea with accessible name; toolbar buttons are labelled buttons with tooltips; Stop reachable
+  notes:
+    Real textarea with accessible name; toolbar buttons are labelled buttons with tooltips; Stop reachable
     within one Tab of the textarea; attachment add/remove announced via role=status; documented keyboard
     shortcuts.
 tokens:

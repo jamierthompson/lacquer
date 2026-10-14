@@ -4,8 +4,16 @@
   reach it and hear why it is unavailable through aria-describedby.
 -->
 <div style="display: flex; align-items: center; gap: var(--lq-space-gap-sm)">
-  <button type="button" data-lacquer="button" data-emphasis="primary" aria-disabled="true" aria-describedby="publish-reason">
+  <button
+    type="button"
+    data-lacquer="button"
+    data-emphasis="primary"
+    aria-disabled="true"
+    aria-describedby="publish-reason"
+  >
     <span data-slot="label">Publish</span>
   </button>
-  <span id="publish-reason" style="color: var(--lq-color-fg-muted)">Add a title before publishing.</span>
+  <span id="publish-reason" style="color: var(--lq-color-fg-muted)"
+    >Add a title before publishing.</span
+  >
 </div>

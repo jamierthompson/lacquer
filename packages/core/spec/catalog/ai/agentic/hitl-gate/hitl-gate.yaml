@@ -9,7 +9,8 @@ tier: 1
 maturity: emerging
 status: draft
 version: 0.1.0
-summary: The agent pauses and asks a structured question; the answer is folded back into the run and recorded
+summary:
+  The agent pauses and asks a structured question; the answer is folded back into the run and recorded
   in the thread.
 aliases:
   - useHumanInTheLoop / useInterrupt (CopilotKit)
@@ -44,7 +45,8 @@ api:
     - skip with default
     - edit answer later
 accessibility:
-  notes: Form semantics with a group label; focus moved when it blocks; announced assertively when the run is
+  notes:
+    Form semantics with a group label; focus moved when it blocks; announced assertively when the run is
     paused.
 tokens:
   consumes:

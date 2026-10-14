@@ -91,7 +91,8 @@ states:
     treatment: Background one step (color.bg.*-hover). Never move the element. Transition motion.duration.fast.
     a11y: none — hover is not available to keyboard or touch and must never be the only cue.
   - id: focus-visible
-    treatment: 2px ring in color.border.focus with focus.ring.offset, ≥3:1 against component and page. Use
+    treatment:
+      2px ring in color.border.focus with focus.ring.offset, ≥3:1 against component and page. Use
       :focus-visible, not :focus.
     a11y: Implicit. Never outline none without a replacement (LQ-FOCUS-01).
   - id: active
@@ -99,7 +100,8 @@ states:
     a11y: none (transient).
   - id: disabled
     treatment: opacity.disabled, pointer-events none, hover/active responses removed. Keep legible.
-    a11y: '`disabled` removes it from tab order. Prefer `aria-disabled="true"` (soft-disable) for anything a user
+    a11y:
+      '`disabled` removes it from tab order. Prefer `aria-disabled="true"` (soft-disable) for anything a user
       might reasonably try, so the reason can be discovered.'
   - id: loading
     treatment: In-place spinner that preserves width; label opacity reduced; re-submission blocked.
@@ -172,9 +174,11 @@ accessibility:
       action: Activates.
     - key: Space
       action: Activates on key-up.
-  focus: Focus stays on the button after activation unless the action moves it deliberately (opening a dialog
+  focus:
+    Focus stays on the button after activation unless the action moves it deliberately (opening a dialog
     moves focus into the dialog).
-  notes: A `div` with role="button" needs tabindex, Enter and Space handling and is still worse than the native
+  notes:
+    A `div` with role="button" needs tabindex, Enter and Space handling and is still worse than the native
     element. The spec names no exception.
 tokens:
   consumes:
@@ -206,10 +210,12 @@ tokens:
     - motion.duration.fast
     - opacity.disabled
 content:
-  label: Verb first, then the object — "Save changes", "Delete 3 files". Sentence case. Three words or fewer
+  label:
+    Verb first, then the object — "Save changes", "Delete 3 files". Sentence case. Three words or fewer
     when possible.
   voice: Say what happens, not what the user should do. "Send" not "Click to send".
-  limits: Never "OK", "Yes", "No", "Submit", "Click here" when a specific verb is possible. Never ellipsis
+  limits:
+    Never "OK", "Yes", "No", "Submit", "Click here" when a specific verb is possible. Never ellipsis
     unless the button opens a dialog that asks for more input ("Export…").
   strings:
     loading: Loading
@@ -258,9 +264,11 @@ rules:
       level: MUST
       polarity: forbid
       title: Never a div with onClick
-      statement: A button is a native `<button>`; a `div`, `span` or `a` without `href` carrying a click handler is
+      statement:
+        A button is a native `<button>`; a `div`, `span` or `a` without `href` carrying a click handler is
         a defect.
-      rationale: Keyboard activation, focus order, form submission and the accessible role all come free from the
+      rationale:
+        Keyboard activation, focus order, form submission and the accessible role all come free from the
         element; recreating them is never complete.
       detect:
         static: div|span[onClick] without role=button, or any element with role=button that is not <button>.
@@ -271,7 +279,8 @@ rules:
       level: MUST
       polarity: require
       title: Loading keeps width and blocks re-press
-      statement: While loading, the button keeps its enabled width, shows an in-place spinner, sets aria-busy="true"
+      statement:
+        While loading, the button keeps its enabled width, shows an in-place spinner, sets aria-busy="true"
         and ignores further presses.
       detect:
         static: loading branch renders a spinner inside the button and sets aria-busy.
@@ -289,17 +298,20 @@ rules:
       level: SHOULD
       polarity: forbid
       title: No navigation disguised as a button
-      statement: A button never calls router.push / location.assign as its only effect; a Link styled as a button
+      statement:
+        A button never calls router.push / location.assign as its only effect; a Link styled as a button
         does that.
       detect:
         static: press handler body is a navigation call.
-      fix: Use `<Link emphasis="primary">` (link rendered with button styles) so middle-click, copy-link and
+      fix:
+        Use `<Link emphasis="primary">` (link rendered with button styles) so middle-click, copy-link and
         prefetch work.
     - id: LQ-BUTTON-05
       level: MUST
       polarity: forbid
       title: Icon-only needs a name
-      statement: A button whose only child is an icon has no accessible name and is a defect; use icon-button with
+      statement:
+        A button whose only child is an icon has no accessible name and is a defect; use icon-button with
         aria-label.
       detect:
         static: Accessible name computes to empty.
@@ -309,7 +321,8 @@ rules:
       level: SHOULD
       polarity: forbid
       title: No disabled submit as validation
-      statement: Do not hard-disable a submit button to signal an invalid form; let the user press it and show the
+      statement:
+        Do not hard-disable a submit button to signal an invalid form; let the user press it and show the
         errors (LQ-ERR-01 pattern). Soft-disable with an explanation is acceptable for truly unavailable
         actions.
       detect:
@@ -374,7 +387,8 @@ implementations:
     status: reference
 grading:
   weight: 1
-  notes: Buttons are everywhere, so a button defect is multiplied. The grader reports the worst instance per
+  notes:
+    Buttons are everywhere, so a button defect is multiplied. The grader reports the worst instance per
     rule, not every instance.
 sources:
   - https://www.w3.org/WAI/ARIA/apg/patterns/button/

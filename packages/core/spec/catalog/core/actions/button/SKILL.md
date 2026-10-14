@@ -15,7 +15,7 @@ Also called: Btn, Pressable, CTA, UnstyledButton, ActionButton.
 
 ## How to think about it
 
-A button is the smallest promise an interface makes: press this and *that* will happen,
+A button is the smallest promise an interface makes: press this and _that_ will happen,
 here, now. Everything in the spec protects that promise. Emphasis tells the eye which
 promise matters most, so there is one primary per view. The loading state keeps the
 promise visible while it is being kept, which is why the width never changes and the

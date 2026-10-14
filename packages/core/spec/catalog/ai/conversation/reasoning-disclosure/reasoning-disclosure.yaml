@@ -9,7 +9,8 @@ tier: 1
 maturity: emerging
 status: draft
 version: 0.1.0
-summary: A collapsible, de-emphasised view of the model's reasoning or step trace that opens while streaming
+summary:
+  A collapsible, de-emphasised view of the model's reasoning or step trace that opens while streaming
   and collapses when the answer begins.
 aliases:
   - Reasoning (AI Elements, prompt-kit)
@@ -49,7 +50,8 @@ api:
     - user toggle overrides
     - steps expand to show outputs
 accessibility:
-  notes: Disclosure button with aria-expanded and a region; reasoning text not announced live; announce start
+  notes:
+    Disclosure button with aria-expanded and a region; reasoning text not announced live; announce start
     once and duration on completion.
 tokens:
   consumes:

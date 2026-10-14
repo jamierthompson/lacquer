@@ -9,7 +9,8 @@ tier: 1
 maturity: established
 status: draft
 version: 0.1.0
-summary: The two controls that make probabilistic, slow output tolerable; their absence is the most common
+summary:
+  The two controls that make probabilistic, slow output tolerable; their absence is the most common
   agent-built-UI defect.
 aliases:
   - HAX G8 efficient dismissal

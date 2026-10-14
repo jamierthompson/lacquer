@@ -9,7 +9,8 @@ tier: 1
 maturity: emerging
 status: draft
 version: 0.1.0
-summary: Define AI tokens as aliases of the brand system so AI surfaces look like the product, not like every
+summary:
+  Define AI tokens as aliases of the brand system so AI surfaces look like the product, not like every
   other AI product.
 aliases:
   - no 'AI purple'

@@ -9,7 +9,8 @@ tier: 1
 maturity: emerging
 status: draft
 version: 0.1.0
-summary: Three sanctioned streaming animations, each with a token and a reduced-motion fallback; decorative
+summary:
+  Three sanctioned streaming animations, each with a token and a reduced-motion fallback; decorative
   gradient animation is prohibited.
 aliases:
   - cursor blink

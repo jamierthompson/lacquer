@@ -10,17 +10,24 @@
    - The output is injected with innerHTML. Model output is untrusted; this
      is both a rendering bug (markdown shows as tags) and an injection vector.
 -->
-<div id="card" style="border: 1px solid var(--lq-color-border-subtle); border-radius: var(--lq-radius-md); padding: var(--lq-space-inset-sm)">
+<div
+  id="card"
+  style="
+    border: 1px solid var(--lq-color-border-subtle);
+    border-radius: var(--lq-radius-md);
+    padding: var(--lq-space-inset-sm);
+  "
+>
   <strong id="name"></strong>
   <div id="output"></div>
 </div>
 <script>
   function render(name, output) {
-    const failed = /error/i.test(output)
+    const failed = /error/i.test(output);
     document.getElementById("card").style.borderColor = failed
       ? "var(--lq-color-status-error)"
-      : "var(--lq-color-status-success)"
-    document.getElementById("name").textContent = name
-    document.getElementById("output").innerHTML = output
+      : "var(--lq-color-status-success)";
+    document.getElementById("name").textContent = name;
+    document.getElementById("output").innerHTML = output;
   }
 </script>

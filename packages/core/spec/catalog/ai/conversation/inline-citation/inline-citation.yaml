@@ -9,7 +9,8 @@ tier: 1
 maturity: established
 status: draft
 version: 0.1.0
-summary: A compact marker on the claim that reveals its source on hover/focus; cite claims, not paragraphs,
+summary:
+  A compact marker on the claim that reveals its source on hover/focus; cite claims, not paragraphs,
   and show missing sources as missing.
 aliases:
   - Inline Citation (AI Elements)
@@ -52,7 +53,8 @@ api:
     - Esc closes
     - paging through sources
 accessibility:
-  notes: "Marker is a button named 'Source 3: example.com'; card opens on focus and closes on Esc; not announced
+  notes:
+    "Marker is a button named 'Source 3: example.com'; card opens on focus and closes on Esc; not announced
     live."
 tokens:
   consumes:

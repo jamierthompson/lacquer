@@ -9,7 +9,8 @@ tier: 2
 maturity: established
 status: draft
 version: 0.1.0
-summary: A respectful block screen that coaches the user toward a permitted request instead of shaming or
+summary:
+  A respectful block screen that coaches the user toward a permitted request instead of shaming or
   exposing policy text.
 aliases:
   - blocked request screen

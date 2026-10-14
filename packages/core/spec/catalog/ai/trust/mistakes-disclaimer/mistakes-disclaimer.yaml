@@ -9,7 +9,8 @@ tier: 1
 maturity: established
 status: draft
 version: 0.1.0
-summary: Short, persistent, linked statement that outputs may be wrong; a baseline, not a substitute for
+summary:
+  Short, persistent, linked statement that outputs may be wrong; a baseline, not a substitute for
   citations or uncertainty signals.
 aliases:
   - ChatGPT can make mistakes. Check important info.

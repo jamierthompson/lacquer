@@ -9,7 +9,8 @@ tier: 3
 maturity: emerging
 status: draft
 version: 0.1.0
-summary: "Management UI for agents that run on a schedule: plain-language cadence, run history, and distinct
+summary:
+  "Management UI for agents that run on a schedule: plain-language cadence, run history, and distinct
   failure states."
 aliases:
   - Tasks (ChatGPT)

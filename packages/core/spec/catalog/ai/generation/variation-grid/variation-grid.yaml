@@ -9,7 +9,8 @@ tier: 2
 maturity: established
 status: draft
 version: 0.1.0
-summary: Show several candidates at once so the user chooses rather than re-prompts; keep the prompt visible
+summary:
+  Show several candidates at once so the user chooses rather than re-prompts; keep the prompt visible
   and reveal cells as they finish.
 aliases:
   - 2x2 grid + Vary Subtle/Strong + Upscale (Midjourney)
@@ -48,7 +49,8 @@ api:
     - vary creates a new grid
     - compare side by side
 accessibility:
-  notes: List/grid semantics with per-item names ('Variation 2 of 4'); generated alt text editable; keyboard
+  notes:
+    List/grid semantics with per-item names ('Variation 2 of 4'); generated alt text editable; keyboard
     selection.
 tokens:
   consumes:

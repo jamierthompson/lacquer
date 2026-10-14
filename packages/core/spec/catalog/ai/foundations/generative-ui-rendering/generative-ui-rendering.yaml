@@ -24,7 +24,8 @@ anatomy:
   - part: tier-1
     description: "tier 1: model selects and fills pre-built components (safest)"
   - part: tier-2
-    description: "tier 2: model emits a JSON spec rendered with the product's catalog (A2UI: 'Agents can only use
+    description:
+      "tier 2: model emits a JSON spec rendered with the product's catalog (A2UI: 'Agents can only use
       pre-approved components')"
   - part: tier-3
     description: "tier 3: sandboxed iframe apps with system fonts/colors and max two actions per card (Apps SDK)"

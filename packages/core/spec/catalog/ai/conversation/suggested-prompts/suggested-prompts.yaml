@@ -45,7 +45,8 @@ api:
     - click sends the prompt (default) or fills the composer when the prompt has slots
     - horizontal scroll on narrow screens
 accessibility:
-  notes: Real buttons inside a labelled group; keyboard reachable scroll row; sent suggestion appears as the
+  notes:
+    Real buttons inside a labelled group; keyboard reachable scroll row; sent suggestion appears as the
     user's message.
 tokens:
   consumes:

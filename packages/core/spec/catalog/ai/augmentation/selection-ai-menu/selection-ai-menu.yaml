@@ -9,7 +9,8 @@ tier: 1
 maturity: established
 status: draft
 version: 0.1.0
-summary: "AI where the user already is: select, choose a verb, review the result next to the original, then
+summary:
+  "AI where the user already is: select, choose a verb, review the result next to the original, then
   replace or discard."
 aliases:
   - Edit with AI (Notion)
@@ -53,7 +54,8 @@ api:
     - try again keeps original
     - undo after replace
 accessibility:
-  notes: Toolbar reachable by shortcut and announced; preview is a dialog or live region; original never
+  notes:
+    Toolbar reachable by shortcut and announced; preview is a dialog or live region; original never
     replaced without confirmation.
 tokens:
   consumes:
