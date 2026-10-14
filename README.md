@@ -20,9 +20,9 @@ read. `@lacquer/react` implements it in React.
 Every entry is a draft, and every draft says what it is still missing. The
 pipeline runs end to end on all 202 entries. `button` shows the full shape of
 a core entry, with guidance, an HTML reference, examples and anti-examples;
-`message-state-machine`, `composer` and `thinking-indicator` have React
-implementations and pages in the site, with `textarea` and `icon-button`
-beneath them. The
+`message-state-machine`, `composer`, `thinking-indicator`, `message`,
+`tool-call-card` and `approval-prompt` have React implementations and pages
+in the site, with `button`, `textarea` and `icon-button` beneath them. The
 MCP server implements the seven read tools over stdio (`pnpm mcp`); the grader
 is a rubric and a report schema.
 
@@ -146,8 +146,8 @@ And three consumers use it without touching YAML:
 
 **core** (134) is product-agnostic UI; each entry lists the systems it is found
 in. **ai** (68) is what AI-native and AI-augmented products add. AI entries declare `usage.reuses` — the core ids they are built from — so
-the dependency graph is explicit: `tool-call-card` reuses `disclosure`, `badge`,
-`code-block`, `spinner`, `card`.
+the dependency graph is explicit: `approval-prompt` reuses `button` and
+`textarea`.
 
 The build reports **gaps**: core ids the AI catalog depends on that do not
 exist. Today: `iframe`, `audio-player`, `code-editor`, `filter-bar`,
