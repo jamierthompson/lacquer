@@ -95,6 +95,10 @@ roles:
 
   opacity.disabled: { var: --lq-opacity-disabled }
 
+  shimmer.duration: { var: --lq-shimmer-duration } # one sweep of the thinking-indicator shimmer
+  shimmer.highlight: { var: --lq-shimmer-highlight } # the bright point of the sweep; an alias of a fg role
+
+
 # Note on LQ-TOKEN-01: component CSS may only read these properties through
 # `var()`. A literal colour, length, duration or z-index in component CSS is
 # the violation; the values live in a theme, never in a component.

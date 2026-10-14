@@ -1,0 +1,172 @@
+/*
+ * Icon Button — reference implementation for the html renderer.
+ * Spec:    spec/catalog/core/actions/icon-button/icon-button.yaml
+ * Binding: spec/bindings/html.yaml
+ *
+ * A square native button whose only visible content is an icon. The name is
+ * aria-label on the root (LQ-NAME-01); the icon part is aria-hidden. Every
+ * value is a binding custom property (LQ-TOKEN-01); every part carries
+ * data-slot (LQ-ANAT-01); every state is an attribute.
+ */
+
+[data-lacquer="icon-button"] {
+  /* anatomy: root — the native <button> */
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--lq-size-control-md);
+  block-size: var(--lq-size-control-md);
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--lq-radius-control);
+  background: transparent;
+  color: var(--lq-color-fg-default);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--lq-motion-duration-fast)
+      var(--lq-motion-easing-standard),
+    border-color var(--lq-motion-duration-fast) var(--lq-motion-easing-standard),
+    color var(--lq-motion-duration-fast) var(--lq-motion-easing-standard);
+}
+
+/* --- states ------------------------------------------------------------- */
+
+[data-lacquer="icon-button"]:focus-visible {
+  outline: var(--lq-focus-ring-width) solid var(--lq-color-border-focus);
+  outline-offset: var(--lq-focus-ring-offset);
+}
+
+/* active: a position delta, so the state is not colour alone (LQ-STATE-02) */
+[data-lacquer="icon-button"]:active {
+  translate: 0 1px;
+}
+
+[data-lacquer="icon-button"]:disabled,
+[data-lacquer="icon-button"][aria-disabled="true"] {
+  pointer-events: none;
+  opacity: var(--lq-opacity-disabled);
+}
+
+[data-lacquer="icon-button"][aria-busy="true"] {
+  cursor: progress;
+}
+
+/* selected (toggle usage): surface plus a border change */
+[data-lacquer="icon-button"][aria-pressed="true"] {
+  background: var(--lq-color-bg-selected);
+  border-color: var(--lq-color-border-input);
+}
+
+/* --- emphasis (variant axis) -------------------------------------------- */
+
+[data-lacquer="icon-button"][data-emphasis="ghost"]:hover,
+[data-lacquer="icon-button"]:not([data-emphasis]):hover {
+  background: var(--lq-color-bg-accent);
+}
+
+[data-lacquer="icon-button"][data-emphasis="outline"] {
+  border-color: var(--lq-color-border-input);
+}
+[data-lacquer="icon-button"][data-emphasis="outline"]:hover {
+  background: var(--lq-color-bg-accent);
+}
+
+[data-lacquer="icon-button"][data-emphasis="tonal"] {
+  background: var(--lq-color-bg-secondary);
+  color: var(--lq-color-fg-on-secondary);
+}
+[data-lacquer="icon-button"][data-emphasis="tonal"]:hover {
+  background: var(--lq-color-bg-secondary-hover);
+}
+
+[data-lacquer="icon-button"][data-emphasis="filled"] {
+  background: var(--lq-color-bg-primary);
+  color: var(--lq-color-fg-on-primary);
+}
+[data-lacquer="icon-button"][data-emphasis="filled"]:hover {
+  background: var(--lq-color-bg-primary-hover);
+}
+
+[data-lacquer="icon-button"][data-emphasis="destructive"] {
+  background: var(--lq-color-bg-destructive);
+  color: var(--lq-color-fg-on-destructive);
+}
+[data-lacquer="icon-button"][data-emphasis="destructive"]:hover {
+  background: var(--lq-color-bg-destructive-hover);
+}
+
+/* --- shape (variant axis) ------------------------------------------------- */
+
+[data-lacquer="icon-button"][data-shape="round"] {
+  border-radius: var(--lq-radius-pill);
+}
+
+/* --- size (variant axis): box and icon move together ----------------------- */
+
+[data-lacquer="icon-button"][data-size="xs"] {
+  inline-size: var(--lq-size-control-xs);
+  block-size: var(--lq-size-control-xs);
+}
+[data-lacquer="icon-button"][data-size="sm"] {
+  inline-size: var(--lq-size-control-sm);
+  block-size: var(--lq-size-control-sm);
+}
+[data-lacquer="icon-button"][data-size="lg"] {
+  inline-size: var(--lq-size-control-lg);
+  block-size: var(--lq-size-control-lg);
+}
+[data-lacquer="icon-button"][data-size="xs"] > [data-slot="icon"],
+[data-lacquer="icon-button"][data-size="sm"] > [data-slot="icon"],
+[data-lacquer="icon-button"][data-size="xs"] > [data-slot="spinner"],
+[data-lacquer="icon-button"][data-size="sm"] > [data-slot="spinner"] {
+  inline-size: var(--lq-size-icon-sm);
+  block-size: var(--lq-size-icon-sm);
+}
+
+/* --- parts ---------------------------------------------------------------- */
+
+[data-lacquer="icon-button"] > [data-slot="icon"] {
+  display: grid;
+  place-items: center;
+  inline-size: var(--lq-size-icon-md);
+  block-size: var(--lq-size-icon-md);
+}
+[data-lacquer="icon-button"] > [data-slot="icon"] > svg {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+/* loading: the spinner takes the icon's box, so the button does not change size */
+[data-lacquer="icon-button"] > [data-slot="spinner"] {
+  inline-size: var(--lq-size-icon-md);
+  block-size: var(--lq-size-icon-md);
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: var(--lq-radius-pill);
+  animation: lq-icon-button-spin 1s linear infinite;
+}
+
+[data-lacquer="icon-button"] > [data-slot="badge"] {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+  translate: 40% -40%;
+}
+
+@keyframes lq-icon-button-spin {
+  to {
+    rotate: 1turn;
+  }
+}
+
+/* reduced motion: no transitions, no spin (LQ-MOTION-02) */
+@media (prefers-reduced-motion: reduce) {
+  [data-lacquer="icon-button"] {
+    transition: none;
+  }
+  [data-lacquer="icon-button"] > [data-slot="spinner"] {
+    animation: none;
+  }
+}

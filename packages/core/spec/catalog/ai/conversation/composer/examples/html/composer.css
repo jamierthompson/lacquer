@@ -1,0 +1,110 @@
+/*
+ * Composer — reference implementation for the html renderer.
+ * Spec:    spec/catalog/ai/conversation/composer/composer.yaml
+ * Binding: spec/bindings/html.yaml
+ * Reuses:  textarea (borderless, autosize) and icon-button (filled, round).
+ *
+ * The form renders from the thread status it carries in data-status. The
+ * one thing this stylesheet decides on its own is the frame: a raised
+ * surface that draws the focus ring when the textarea inside it has
+ * keyboard focus, so the whole composer reads as one control. The primary
+ * control is one icon-button whose data-action is send or stop; it never
+ * moves or changes size when it swaps (LQ-COMPOSER-01).
+ */
+
+[data-lacquer="composer"] {
+  /* anatomy: root — the <form>; data-status, data-density, data-empty live here */
+  display: grid;
+  gap: var(--lq-space-gap-sm);
+  color: var(--lq-color-fg-default);
+  font: var(--lq-type-body-md);
+}
+
+[data-lacquer="composer"] > [data-slot="frame"] {
+  /* anatomy: frame — the raised surface everything but the disclaimer sits in */
+  display: grid;
+  gap: var(--lq-space-gap-sm);
+  padding: var(--lq-space-inset-sm);
+  border: 1px solid var(--lq-color-border-input);
+  border-radius: var(--lq-radius-lg);
+  background: var(--lq-color-bg-surface);
+  box-shadow: var(--lq-shadow-sm);
+  transition: border-color var(--lq-motion-duration-fast)
+    var(--lq-motion-easing-standard);
+}
+
+/* --- states ------------------------------------------------------------- */
+
+[data-lacquer="composer"]:not([aria-disabled="true"])
+  > [data-slot="frame"]:hover {
+  border-color: var(--lq-color-border-default);
+}
+
+/* focus-visible: the ring is on the frame while the textarea has keyboard focus */
+[data-lacquer="composer"]
+  > [data-slot="frame"]:has(
+    [data-slot="textarea"] [data-slot="control"]:focus-visible
+  ) {
+  outline: var(--lq-focus-ring-width) solid var(--lq-color-border-focus);
+  outline-offset: var(--lq-focus-ring-offset);
+}
+
+[data-lacquer="composer"][aria-disabled="true"] {
+  opacity: var(--lq-opacity-disabled);
+}
+[data-lacquer="composer"][aria-disabled="true"] > [data-slot="frame"] {
+  box-shadow: none;
+}
+
+/* --- parts ---------------------------------------------------------------- */
+
+[data-lacquer="composer"] [data-slot="attachments"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--lq-space-gap-sm);
+}
+
+[data-lacquer="composer"] [data-slot="footer"] {
+  display: flex;
+  align-items: center;
+  gap: var(--lq-space-gap-sm);
+}
+
+[data-lacquer="composer"] [data-slot="toolbar"] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--lq-space-gap-xs);
+}
+
+/* the primary control sits at the end of the footer; send and stop share this one element */
+[data-lacquer="composer"] [data-slot="primary-control"] {
+  margin-inline-start: auto;
+}
+
+[data-lacquer="composer"] > [data-slot="disclaimer"] {
+  margin: 0;
+  text-align: center;
+  font: var(--lq-type-label-sm);
+  color: var(--lq-color-fg-muted);
+}
+
+/* --- density (variant axis) ---------------------------------------------- */
+
+/* compact: textarea and control on one row; no toolbar slot */
+[data-lacquer="composer"][data-density="compact"] > [data-slot="frame"] {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+}
+[data-lacquer="composer"][data-density="compact"] [data-slot="footer"] {
+  display: contents;
+}
+[data-lacquer="composer"][data-density="compact"] [data-slot="toolbar"] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-lacquer="composer"] > [data-slot="frame"] {
+    transition: none;
+  }
+}

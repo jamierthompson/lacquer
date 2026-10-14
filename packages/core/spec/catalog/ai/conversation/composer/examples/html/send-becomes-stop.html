@@ -1,0 +1,93 @@
+<!--
+  id: send-becomes-stop — the same composer captured in idle (filled) and in
+  streaming:text (LQ-COMPOSER-01). The primary control is one element in
+  both: data-action, aria-label and the glyph change; the box does not. The
+  draft typed during the turn stays in the textarea (LQ-COMPOSER-02).
+-->
+<form
+  data-lacquer="composer"
+  data-density="full"
+  data-status="idle"
+  aria-label="Message"
+>
+  <div data-slot="frame">
+    <div
+      data-lacquer="textarea"
+      data-slot="textarea"
+      data-sizing="autosize"
+      data-frame="borderless"
+    >
+      <textarea
+        data-slot="control"
+        rows="1"
+        aria-label="Message"
+        placeholder="Message…"
+      >
+Summarise the thread so far</textarea>
+    </div>
+    <div data-slot="footer">
+      <button
+        type="button"
+        data-lacquer="icon-button"
+        data-slot="primary-control"
+        data-action="send"
+        data-emphasis="filled"
+        data-shape="round"
+        aria-label="Send message"
+        aria-keyshortcuts="Enter"
+      >
+        <span data-slot="icon" aria-hidden="true"
+          ><svg
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M8 13V3M3.5 7.5 8 3l4.5 4.5" /></svg
+        ></span>
+      </button>
+    </div>
+  </div>
+</form>
+
+<form
+  data-lacquer="composer"
+  data-density="full"
+  data-status="streaming:text"
+  aria-label="Message"
+>
+  <div data-slot="frame">
+    <div
+      data-lacquer="textarea"
+      data-slot="textarea"
+      data-sizing="autosize"
+      data-frame="borderless"
+    >
+      <textarea
+        data-slot="control"
+        rows="1"
+        aria-label="Message"
+        placeholder="Message…"
+      >
+and then shorten it</textarea>
+    </div>
+    <div data-slot="footer">
+      <button
+        type="button"
+        data-lacquer="icon-button"
+        data-slot="primary-control"
+        data-action="stop"
+        data-emphasis="filled"
+        data-shape="round"
+        aria-label="Stop generating"
+      >
+        <span data-slot="icon" aria-hidden="true"
+          ><svg viewBox="0 0 16 16" fill="currentColor">
+            <rect x="4" y="4" width="8" height="8" rx="1" /></svg
+        ></span>
+      </button>
+    </div>
+  </div>
+</form>

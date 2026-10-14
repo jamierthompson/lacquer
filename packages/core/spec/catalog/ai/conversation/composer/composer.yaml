@@ -6,12 +6,13 @@ kind: component
 catalog: ai
 group: conversation
 tier: 1
+atomic_level: organism
 maturity: established
 status: draft
 version: 0.1.0
 summary:
-  "The single most-used control in an AI product: a form with a growing textarea, attachments, tools,
-  mode/model selection and a send/stop button."
+  "The single most-used control in an AI product: a form with a growing textarea, slots for attachments
+  and tools, and one primary control that is Send or Stop depending on the thread status."
 aliases:
   - PromptInput (AI Elements, prompt-kit)
   - Composer (assistant-ui)
@@ -29,84 +30,399 @@ found_in:
   - prompt-kit
   - CopilotKit
 anatomy:
-  - part: container
-    description: container (rounded, raised, pinned bottom or centered on empty state)
-  - part: attachment-header
-    description: attachment header with previews and remove
-  - part: auto-resizing-textarea
-    description: auto-resizing textarea (1 to ~8 lines, then scroll)
-  - part: footer-toolbar
-    description: "footer toolbar: attach, screenshot, slash/actions menu, mode selector, model selector"
-  - part: voice-dictation-button
-    description: voice/dictation button
-  - part: send-button
-    description: send button that becomes stop while generating
-  - part: disclaimer-line-beneath
-    description: disclaimer line beneath
+  - part: root
+    element: form
+    description:
+      The form. Carries data-status (the thread status it renders from) and data-empty while the draft
+      is empty; named by aria-label so it is a landmark.
+  - part: frame
+    description:
+      The raised surface, its border, shadow and the focus ring when the textarea inside has keyboard focus.
+      Everything but the disclaimer sits in it.
+  - part: attachments
+    slot: true
+    required: false
+    description: Attachment header with previews and remove controls, above the textarea. Consumer-supplied.
+  - part: textarea
+    element: textarea
+    description:
+      The draft. A `textarea` (reuses textarea) in its autosize, borderless frame, one line growing to
+      maxRows and then scrolling. The composer's accessible name lives here.
+  - part: footer
+    description: The row beneath the textarea that holds the toolbar slot and the primary control.
+  - part: toolbar
+    slot: true
+    required: false
+    description:
+      Attach, slash menu, mode and model selectors, dictation. Consumer-supplied; each is a labelled
+      control in its own right.
+  - part: primary-control
+    element: button
+    description:
+      One icon-button (reuses icon-button) that is Send while the status is idle or terminal and Stop
+      while it is submitted, streaming:* or awaiting-approval. Same slot, same size, so nothing moves
+      when it swaps. Carries data-action="send | stop".
+  - part: disclaimer
+    slot: true
+    required: false
+    description: One line beneath the form ("AI can make mistakes"). Consumer-supplied; see mistakes-disclaimer.
+variants:
+  - axis: density
+    values:
+      - full
+      - compact
+    default: full
+    guidance:
+      Full stacks the textarea above a footer row (toolbar and control), the shape of every chat product.
+      Compact puts the control beside the textarea for inline "ask" panels inside a classic product; it
+      has no toolbar slot.
 states:
-  - id: empty
-  - id: streaming
-  - id: error
+  - id: enabled
+    treatment:
+      Raised surface (color.bg.surface, shadow.sm) with a color.border.input border and radius.lg; the
+      textarea is borderless inside it; the primary control is Send.
+    a11y: Default semantics; the form is a named landmark, the textarea has a name, the control has a name.
+  - id: hover
+    treatment: Border one step to color.border.default. The textarea and control keep their own hover rules.
+    a11y: none
+  - id: focus-visible
+    treatment:
+      When the textarea has keyboard focus the whole container shows the ring (color.border.focus,
+      focus.ring.width, focus.ring.offset), not the textarea alone; the primary control shows its own ring.
+    a11y: Implicit. Never outline none without a replacement (LQ-FOCUS-01).
+  - id: active
+    treatment: none on the container; the primary control's active treatment applies (icon-button).
+    a11y: none (transient)
   - id: disabled
+    treatment:
+      opacity.disabled on the whole form; textarea and control carry `disabled`; no hover or focus
+      response. Used when there is no thread to send to, not to signal an empty draft.
+    a11y: "`disabled` on the textarea and the control removes both from the tab order; aria-disabled on the form."
+  - id: empty
+    treatment:
+      Placeholder visible; the primary control is Send and soft-disabled (aria-disabled, kept focusable,
+      opacity.disabled); pressing it does nothing.
+    a11y: aria-disabled="true" on the control; data-empty on the root; the placeholder is not the name.
+  - id: filled
+    treatment: Placeholder gone; Send enabled in color.bg.primary; Enter submits.
+    a11y: aria-disabled removed from the control.
+  - id: submitted
+    treatment:
+      The primary control is Stop (square glyph, same slot and size) the moment the status leaves idle;
+      nothing inside the composer spins or shimmers, the thinking indicator belongs to the message. The
+      textarea stays editable so the next draft can be typed.
+    a11y:
+      The control's accessible name changes to the stop string; the swap never moves focus
+      (LQ-COMPOSER-03). The lifecycle announcement is the message's, not the composer's.
+  - id: streaming
+    treatment: Stop stays, in every sub-state. Enter does not submit (LQ-COMPOSER-04); Esc stops.
+    a11y: Unchanged from submitted; no live region in the composer.
+  - id: awaiting-approval
+    treatment: Stop stays; the composer does not take focus from the approval prompt.
+    a11y: Unchanged from submitted.
+  - id: error
+    treatment:
+      Send returns. Whatever is in the textarea stays (LQ-ERR-01, LQ-COMPOSER-02). The error and its
+      Retry live in the message; the composer shows no error styling of its own.
+    a11y: none of its own; role="alert" belongs to the message's error.
 modes:
-  - id: typing
   - id: attachments-pending
-  - id: submitting
+    treatment:
+      The attachments slot is rendered above the textarea with one preview per file and a remove control
+      each; the form grows, the control does not move.
+    a11y: Adding or removing an attachment is announced politely from a role="status" region inside the slot.
 api:
+  props:
+    - name: status
+      type: enum(idle|submitted|streaming:reasoning|streaming:tool|streaming:text|awaiting-approval|complete|error|cancelled)
+      required: true
+      maps_to: data-status
+      description:
+        The thread status from message-state-machine. The primary control, Enter and Esc are derived
+        from it and from nothing else (LQ-MACHINE-01).
+    - name: value
+      type: string
+      description: The draft, when controlled.
+    - name: defaultValue
+      type: string
+      default: ""
+      description: The initial draft, when uncontrolled.
+    - name: disabled
+      type: boolean
+      default: false
+      maps_to: disabled, aria-disabled
+    - name: placeholder
+      type: string
+      maps_to: placeholder
+      description: A hint, not the name. Default is the `placeholder` string.
+    - name: label
+      type: string
+      default: Message
+      maps_to: aria-label
+      description: The accessible name of the form and of the textarea.
+    - name: submitKey
+      type: enum(enter|mod-enter)
+      default: enter
+      maps_to: aria-keyshortcuts
+      description:
+        enter submits on Enter and inserts a newline on Shift+Enter; mod-enter submits on Cmd/Ctrl+Enter
+        and lets Enter insert a newline.
+    - name: maxRows
+      type: number
+      default: 8
+      description: Lines the textarea grows to before it scrolls.
+    - name: clearOnSubmit
+      type: boolean
+      default: true
+      description: Empty the draft when a submit is accepted. Never applies on error (LQ-COMPOSER-02).
+    - name: density
+      type: enum(full|compact)
+      default: full
+      maps_to: data-density
+    - name: strings
+      type: Partial<Record<send|stop|placeholder, string>>
+      description: Localised strings; the defaults are in `content.strings`.
+  slots:
+    - attachments
+    - toolbar
+    - disclaimer
+  events:
+    - name: submit
+      payload: string
+      description: The draft, when Enter or Send is pressed while filled and the status is idle or terminal.
+    - name: stop
+      description: Stop or Esc while the status is submitted, streaming:* or awaiting-approval.
+    - name: change
+      payload: string
+      description: Every edit of the draft.
   interactions:
-    - Enter submits, Shift+Enter newline (configurable to Cmd/Ctrl+Enter)
-    - drag-drop and paste files
-    - / opens command menu
-    - "@ opens context/mention picker"
-    - Esc stops generation
-    - draft persists per thread
-    - form resets on submit
+    - Enter submits, Shift+Enter inserts a newline (submitKey=enter)
+    - Cmd/Ctrl+Enter submits, Enter inserts a newline (submitKey=mod-enter)
+    - Esc stops the current turn while it is pending
+    - Typing while a turn is pending is kept as the next draft
+  composition: >
+    The composer owns three things: the draft, the primary control and the keyboard contract between
+    them. Everything else, attachments, the toolbar, the disclaimer, is a slot the product fills with its
+    own labelled controls, because the set of tools differs between products and must not be a prop list
+    here. `status` is a prop because the composer never knows whether a request is in flight; the thread
+    does, and the composer renders it (message-state-machine).
 accessibility:
-  notes:
-    Real textarea with accessible name; toolbar buttons are labelled buttons with tooltips; Stop reachable
-    within one Tab of the textarea; attachment add/remove announced via role=status; documented keyboard
-    shortcuts.
+  role: form (the root, a landmark because it is named); textbox (the textarea); button (the control)
+  name:
+    The form and the textarea are both named by `label` ("Message") through aria-label. The primary
+    control is named by the send or stop string through aria-label; the icon is decorative. The
+    placeholder is never the name (LQ-NAME-01).
+  aria:
+    - attr: aria-label
+      on: root, textarea
+      value: label
+    - attr: aria-label
+      on: primary-control
+      value: strings.send | strings.stop
+      when: by status
+    - attr: aria-disabled
+      on: primary-control
+      when: the draft is empty and the status is not pending
+      value: "true"
+    - attr: aria-keyshortcuts
+      on: primary-control
+      value: Enter | Meta+Enter Control+Enter
+      when: by submitKey, while it is Send
+    - attr: disabled
+      on: textarea, primary-control
+      when: disabled
+  keyboard:
+    - key: Enter
+      action: Submits the draft.
+      when: submitKey=enter, filled, status idle or terminal
+    - key: Shift+Enter
+      action: Inserts a newline.
+      when: submitKey=enter
+    - key: Cmd/Ctrl+Enter
+      action: Submits the draft.
+      when: submitKey=mod-enter, filled, status idle or terminal
+    - key: Esc
+      action: Stops the turn.
+      when: focus inside the composer and the status is pending
+    - key: Tab
+      action: Moves from the textarea through the toolbar to the primary control. Stop is at most one Tab from the textarea when the toolbar is empty.
+  focus:
+    Focus stays in the textarea after a submit, so the next draft can be typed; the swap between Send
+    and Stop never moves focus (LQ-COMPOSER-03). Stop never steals focus from an approval prompt.
+  announcements:
+    None of its own. The lifecycle announcements ("Thinking", "Response complete") belong to the message's
+    status region (message-state-machine). The attachments slot announces add and remove via role="status".
 tokens:
   consumes:
+    - color.bg.surface
+    - color.border.input
+    - color.border.default
+    - color.border.focus
+    - color.fg.default
+    - color.fg.muted
     - radius.lg
-    - color.bg.surface-raised
-    - color.border.subtle
     - shadow.sm
+    - space.inset.sm
     - space.gap.sm
-    - space.gap.md
     - type.body.md
-    - color.accent.brand
-    - size.measure.prose
+    - type.label.sm
+    - focus.ring.width
+    - focus.ring.offset
+    - opacity.disabled
+    - motion.duration.fast
+    - motion.easing.standard
+content:
+  label: The control has no visible label; its name is a verb and an object ("Send message", "Stop generating").
+  voice: The placeholder invites, in one or two words ("Message…", "Ask anything"). It never explains the keyboard.
+  limits:
+    Never "Submit", "Go" or "Enter" as the control's name. Never a spinner, "Sending…" or a disabled Send
+    while a turn is pending; the control is Stop then.
+  strings:
+    send: Send message
+    stop: Stop generating
+    placeholder: Message…
 usage:
   use_when:
-    - any conversational or prompt-driven surface
-    - inline 'ask' panels in augmented products (compact variant)
+    - Any conversational or prompt-driven surface.
+    - Inline "ask" panels in augmented products (density=compact).
   avoid_when:
-    - a single-line search or command palette is the right mental model (use the NL command bar instead)
+    - A single-line search or command palette is the right mental model.
+    - The input is a one-shot form field with no thread behind it; that is a textarea with a button.
+  instead:
+    - when: It is a command or search bar that returns results rather than a turn
+      use: nl-command-bar
   pairs_well_with:
     - message-list
+    - thinking-indicator
     - suggested-prompts
     - context-chips
     - model-mode-selector
     - mistakes-disclaimer
     - voice-input
+    - tooltip
+    - message-state-machine
   reuses:
     - textarea
     - icon-button
-    - tooltip
-    - dropdown-menu
-    - select
-    - popover
-    - badge
   exemplars:
-    - ChatGPT — pill composer with + menu, tools and dictation
-    - Gemini — Deep Think toggle inside the prompt bar (Feb 2026)
-    - AI Elements PromptInput — status-driven submit/stop button
+    - ChatGPT — pill composer with + menu, tools and dictation; the control swaps to a stop square.
+    - AI Elements PromptInputSubmit — the send/stop icon follows `status`; adopt that, not a loading spinner.
+    - Claude — the draft typed during a turn is kept and sent next; nothing is lost on error.
 rules:
   shared:
+    - LQ-STATE-01
+    - LQ-STATE-02
+    - LQ-STATE-03
+    - LQ-FOCUS-01
+    - LQ-SEM-01
+    - LQ-NAME-01
     - LQ-TOKEN-01
     - LQ-ANAT-01
+    - LQ-RECOVER-01
+    - LQ-ERR-01
+  local:
+    - id: LQ-COMPOSER-01
+      level: MUST
+      polarity: require
+      title: Send becomes Stop from the status
+      statement:
+        The primary control is Send while the status is idle or terminal and Stop while it is submitted,
+        streaming:* or awaiting-approval, in the same slot at the same size; it reads the status and
+        nothing else.
+      detect:
+        static: The control's action is derived from the status prop; no request flag or message text is read.
+        runtime:
+          Drive every status; assert [data-slot="primary-control"] has data-action="stop" exactly in the
+          pending statuses and that its box does not change size across the swap.
+      fix: 'Derive `action = isPending(status) ? "stop" : "send"` and render one icon-button from it.'
+    - id: LQ-COMPOSER-02
+      level: MUST
+      polarity: require
+      title: The draft survives
+      statement:
+        Only an accepted submit clears the draft; an error, a stop, a status change or typing during a
+        turn never does.
+      detect:
+        runtime:
+          Type, send, drive the status to error; the textarea value is unchanged. Type during streaming,
+          press Stop; the textarea value is unchanged.
+      fix: Clear the draft inside the submit handler only, after the submit event fires.
+    - id: LQ-COMPOSER-03
+      level: MUST
+      polarity: forbid
+      title: No focus theft
+      statement:
+        Swapping Send for Stop, or back, never moves focus; a submit never moves focus out of the composer;
+        the composer never takes focus while an approval prompt holds it.
+      detect:
+        runtime:
+          Focus the control, drive the status from idle to submitted and back; document.activeElement is
+          unchanged. Submit from the textarea; activeElement is still the textarea.
+      fix: Keep one button element across the swap and change its attributes; focus the textarea after a submit, never a message.
+    - id: LQ-COMPOSER-04
+      level: MUST
+      polarity: forbid
+      title: No second turn while one is pending
+      statement:
+        Enter and the primary control never emit submit while the status is submitted, streaming:* or
+        awaiting-approval; the only action available then is Stop. Queuing a draft is a product feature
+        outside the composer.
+      rationale: The machine has no `send` row from a pending status (LQ-MACHINE-04); a composer that submits there is lying to the user.
+      detect:
+        runtime: Press Enter during streaming; no submit event fires and the draft is unchanged.
+      fix: Gate the submit path on `!isPending(status)`; make Enter a no-op there, not a newline.
+examples:
+  good:
+    - id: send-becomes-stop
+      title: The same composer in idle and in streaming
+      renderer: html
+      file: examples/html/send-becomes-stop.html
+      demonstrates:
+        - state:filled
+        - state:streaming
+        - rule:LQ-COMPOSER-01
+    - id: draft-kept-on-error
+      title: An errored turn with the draft still in place
+      renderer: html
+      file: examples/html/draft-kept-on-error.html
+      demonstrates:
+        - state:error
+        - rule:LQ-COMPOSER-02
+        - rule:LQ-ERR-01
+    - id: compact
+      title: Inline ask panel
+      renderer: html
+      file: examples/html/compact.html
+      demonstrates:
+        - variant:density=compact
+  anti:
+    - id: loading-send
+      title: Send shows a spinner and disables itself while streaming; there is no Stop
+      renderer: html
+      file: examples/anti/loading-send.html
+      violates:
+        - LQ-COMPOSER-01
+        - LQ-RECOVER-01
+    - id: placeholder-as-name
+      title: A div composer whose only name is the placeholder
+      renderer: html
+      file: examples/anti/placeholder-as-name.html
+      violates:
+        - LQ-NAME-01
+        - LQ-SEM-01
+        - LQ-ANAT-01
+implementations:
+  - renderer: html
+    file: examples/html/composer.html
+    status: reference
+  - renderer: react
+    package: "@lacquer/react"
+    export: Composer
+    status: reference
+grading:
+  weight: 1.5
+  notes: One per screen, but every turn starts here; a wrong primary control is the most visible defect in an AI product.
 sources:
   - https://elements.ai-sdk.dev/components/prompt-input
   - https://www.assistant-ui.com/docs/primitives
-  - https://gemini.google/release-notes/
+  - https://developer.apple.com/design/human-interface-guidelines/generative-ai

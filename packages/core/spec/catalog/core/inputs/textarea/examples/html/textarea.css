@@ -1,0 +1,134 @@
+/*
+ * Textarea — reference implementation for the html renderer.
+ * Spec:    spec/catalog/core/inputs/textarea/textarea.yaml
+ * Binding: spec/bindings/html.yaml
+ *
+ * The root draws the frame (border, surface, inset, focus ring) and the
+ * native control inside it is bare. That is what lets autosize be pure CSS:
+ * `field-sizing: content` grows the control with its text and
+ * `max-block-size` in `lh` units caps it at a number of lines, with no
+ * padding arithmetic because the padding is on the root. States are read
+ * off the control with :has(), so the attribute stays on the native element
+ * where assistive tech reads it.
+ */
+
+[data-lacquer="textarea"] {
+  /* anatomy: root — the frame; carries data-sizing, data-frame, data-size */
+  display: grid;
+  gap: var(--lq-space-gap-xs);
+  padding: var(--lq-space-inset-control-md);
+  border: 1px solid var(--lq-color-border-input);
+  border-radius: var(--lq-radius-control);
+  background: var(--lq-color-bg-surface);
+  color: var(--lq-color-fg-default);
+  font: var(--lq-type-body-md);
+  transition: border-color var(--lq-motion-duration-fast)
+    var(--lq-motion-easing-standard);
+}
+
+[data-lacquer="textarea"] > [data-slot="control"] {
+  /* anatomy: control — the native <textarea>, bare; the root is the frame */
+  display: block;
+  inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  resize: none;
+  /* The ring is drawn on the root (see :has below), never removed outright (LQ-FOCUS-01). */
+  outline: none;
+}
+
+/* --- sizing (variant axis) ------------------------------------------------- */
+
+[data-lacquer="textarea"][data-sizing="autosize"] > [data-slot="control"] {
+  field-sizing: content;
+  min-block-size: 1lh;
+  max-block-size: calc(var(--lq-textarea-max-rows, 8) * 1lh);
+  overflow-y: auto;
+}
+
+[data-lacquer="textarea"][data-sizing="fixed"] > [data-slot="control"] {
+  resize: vertical;
+}
+
+/* --- states ------------------------------------------------------------- */
+
+[data-lacquer="textarea"]:hover {
+  border-color: var(--lq-color-border-default);
+}
+
+/* focus-visible: ring on the frame while the control has keyboard focus */
+[data-lacquer="textarea"]:has(> [data-slot="control"]:focus-visible) {
+  outline: var(--lq-focus-ring-width) solid var(--lq-color-border-focus);
+  outline-offset: var(--lq-focus-ring-offset);
+}
+
+[data-lacquer="textarea"]:has(> [data-slot="control"]:disabled) {
+  opacity: var(--lq-opacity-disabled);
+  border-color: var(--lq-color-border-input);
+}
+[data-lacquer="textarea"]:has(> [data-slot="control"]:disabled)
+  > [data-slot="control"] {
+  resize: none;
+}
+
+/* read-only: by attribute, because :read-only also matches disabled */
+[data-lacquer="textarea"]:has(> [data-slot="control"][readonly]) {
+  background: var(--lq-color-bg-surface-secondary);
+}
+[data-lacquer="textarea"]:has(> [data-slot="control"][readonly])
+  > [data-slot="control"] {
+  resize: none;
+}
+
+/* invalid: border colour plus the field's message; never colour alone (LQ-STATE-02) */
+[data-lacquer="textarea"]:has(> [data-slot="control"][aria-invalid="true"]) {
+  border-color: var(--lq-color-border-danger);
+}
+
+/* placeholder / filled */
+[data-lacquer="textarea"] > [data-slot="control"]::placeholder {
+  color: var(--lq-color-fg-muted);
+  opacity: 1;
+}
+
+/* --- frame (variant axis) -------------------------------------------------- */
+
+/* borderless: for embedding; the parent draws the frame and the focus ring */
+[data-lacquer="textarea"][data-frame="borderless"] {
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+}
+[data-lacquer="textarea"][data-frame="borderless"]:has(
+    > [data-slot="control"]:focus-visible
+  ) {
+  outline: none; /* the parent's ring replaces it; see composer */
+}
+
+/* --- size (variant axis): the inset changes, the text style stays ----------- */
+
+[data-lacquer="textarea"][data-size="sm"] {
+  padding: var(--lq-space-inset-control-sm);
+}
+[data-lacquer="textarea"][data-size="lg"] {
+  padding: var(--lq-space-inset-control-lg);
+}
+
+/* --- parts ---------------------------------------------------------------- */
+
+[data-lacquer="textarea"] > [data-slot="counter"] {
+  justify-self: end;
+  font: var(--lq-type-label-sm);
+  color: var(--lq-color-fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-lacquer="textarea"] {
+    transition: none;
+  }
+}

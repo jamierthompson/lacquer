@@ -1,17 +1,18 @@
 # Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
 
 id: thinking-indicator
-name: Thinking / typing indicator
+name: Thinking indicator
 kind: component
 catalog: ai
 group: conversation
 tier: 1
+atomic_level: atom
 maturity: established
 status: draft
 version: 0.1.0
 summary:
-  Shimmering status text ('Thinking…', 'Searching the web') shown between submit and first token;
-  prefer specific status over anonymous dots.
+  Shimmering status text ("Thinking", "Searching the web") in the assistant slot while the status is
+  submitted; specific text over anonymous dots, gone at the first token.
 aliases:
   - Shimmer (AI Elements; Loader deprecated 1.8.2)
   - Loader (prompt-kit)
@@ -25,54 +26,210 @@ found_in:
   - AI Elements
   - prompt-kit
 anatomy:
+  - part: root
+    description:
+      The indicator. Carries data-mode (thinking | specific-status) and data-elapsed once elapsed time is
+      shown. Not a live region; the message's status region does the announcing.
+  - part: dot
+    required: false
+    description: A pulsing dot before the text. Decorative (aria-hidden); static under reduced motion.
   - part: status-text
-    description: status text with shimmer sweep
-  - part: optional-pulsing-dot
-    description: optional pulsing dot
-  - part: elapsed-time-after
-    description: elapsed time after ~5 s
+    description:
+      What the assistant is doing, as text, either the generic string or the caller's specific status.
+      The shimmer sweeps across this text and only this text.
+  - part: elapsed
+    required: false
+    description:
+      Seconds since the turn was submitted, shown after 5 s ("12s"). Outside any live region so it is
+      never read aloud as a count-up (LQ-THINK-04).
 states:
   - id: enabled
+    treatment:
+      Status text in color.fg.muted with a shimmer sweep to shimmer.highlight over shimmer.duration; the
+      dot pulses on the same clock. Under prefers-reduced-motion the text is static in color.fg.muted and
+      the dot is still (LQ-MOTION-01).
+    a11y:
+      none of its own. The message's status region announces "Thinking" once on submitted and the specific
+      text when it changes, at most once per 2 s (LQ-A11Y-01); the indicator itself is plain content.
 modes:
   - id: thinking
+    treatment: The generic string ("Thinking") when the transport has nothing more specific to say.
+    a11y: Announced once by the message's status region as "Thinking".
   - id: specific-status
-    notes: specific-status (e.g. Reading 4 files)
+    treatment:
+      The caller's text ("Searching the web for 'oklch contrast'", "Reading 4 files"); same shimmer. The
+      text may change while the status stays submitted.
+    a11y: Each change is announced by the message's status region, throttled (LQ-A11Y-01).
   - id: hidden
+    treatment:
+      Not rendered at all, with no placeholder height and no fade. The first token, tool or reasoning event
+      replaces it (LQ-THINK-02).
+    a11y: none; nothing announces the removal, the next component's announcement follows.
 api:
-  interactions:
-    - appears within 300 ms of submit
-    - replaced by first token
+  props:
+    - name: status
+      type: enum(idle|submitted|streaming:reasoning|streaming:tool|streaming:text|awaiting-approval|complete|error|cancelled)
+      required: true
+      maps_to: rendered | not rendered
+      description: The thread status from message-state-machine. The indicator renders in submitted and in no other status.
+    - name: label
+      type: string
+      maps_to: data-mode
+      description: The specific status, when the transport knows one. Absent means the generic string and data-mode="thinking".
+    - name: elapsedAfter
+      type: number
+      default: 5000
+      description: Milliseconds before the elapsed part appears. LQ-WAIT-01 requires it by 10 s.
+    - name: strings
+      type: Partial<Record<thinking, string>>
+      description: Localised strings; the default is in `content.strings`.
+  interactions: []
+  composition: >
+    The indicator is text. It takes the status so it can decide whether to exist, and a label so the
+    product can say what is happening; it never reads message content to decide either (LQ-MACHINE-01).
+    It has no live region of its own because a thread has exactly one status region, owned by the message
+    (live-region-strategy); giving every pending component its own would announce the same event twice.
 accessibility:
-  notes:
-    Announce 'Thinking' once via status region; shimmer is aria-hidden decoration; static text under
-    reduced motion.
+  role: none. The status text is content; the dot is aria-hidden; the elapsed part is content outside any live region.
+  name:
+    Not applicable. The status text is read in place. The announcement comes from the message's status
+    region, which receives the same text.
+  aria:
+    - attr: aria-hidden
+      on: dot
+      value: "true"
+  focus: Never focusable; focus must not be lost when it is replaced by the first token.
+  announcements:
+    None of its own. The message's status region announces "Thinking" once on submitted and each specific
+    status change at most once per 2 s (LQ-A11Y-01). Elapsed time is never announced.
 tokens:
   consumes:
+    - color.fg.muted
     - shimmer.duration
     - shimmer.highlight
-    - color.fg.muted
-    - motion.reduce
+    - type.body.md
+    - type.label.sm
+    - space.gap.sm
+    - size.icon.sm
+    - motion.duration.base
+content:
+  label: Progressive verb plus object when specific ("Searching the web", "Reading 4 files"); the generic string otherwise.
+  voice: Says what is happening, not that the user should wait. Sentence case, no ellipsis in the string itself.
+  limits: Never "Processing", "Loading", "Please wait" or "Generating response"; never a count-up read aloud.
+  strings:
+    thinking: Thinking
 usage:
   use_when:
-    - any latency between submit and first output
+    - Any latency between submit and the first token, tool or reasoning event; that is, whenever the status is submitted.
   avoid_when:
-    - after content has arrived (shimmer must stop)
-    - as a fake delay
+    - After content has arrived; the shimmer stops at the first token.
+    - As a fake delay to look busy.
+    - Inside a tool card; the card has its own pending state.
   pairs_well_with:
+    - composer
+    - message
     - streaming-markdown
     - reasoning-disclosure
     - latency-patterns
     - reduced-motion-streaming
-  reuses:
-    - skeleton
-    - spinner
+    - live-region-strategy
+    - message-state-machine
   exemplars:
-    - Apple HIG — 'Finding substitutions for ingredients' instead of 'Processing…'
-    - Jim Nielsen (2026) — shimmer text 'shows staying power as genuinely useful UX'
+    - Apple HIG — "Finding substitutions for ingredients" instead of "Processing…".
+    - Claude — the shimmer runs over the word, not over a bar; the word changes as the work changes.
+    - Jim Nielsen (2026) — shimmer text "shows staying power as genuinely useful UX".
 rules:
   shared:
     - LQ-TOKEN-01
     - LQ-ANAT-01
+    - LQ-WAIT-01
+    - LQ-MOTION-01
+    - LQ-MOTION-02
+    - LQ-A11Y-01
+  local:
+    - id: LQ-THINK-01
+      level: MUST
+      polarity: require
+      title: Specific over generic
+      statement:
+        When the transport knows what it is doing (a tool, a phase, a target) the status text says so;
+        the generic string is the fallback, never the default while specifics are available.
+      detect:
+        static: The label prop is wired to the transport's status where one exists; the stoplist in content.limits never appears.
+      fix: Pass the humanised tool or phase name as `label`.
+    - id: LQ-THINK-02
+      level: MUST
+      polarity: require
+      title: Gone at the first token
+      statement:
+        The indicator is rendered only while the status is submitted; it is removed on the first
+        reasoning, tool or text event and never sits beside streamed content.
+      detect:
+        runtime: In every streaming:* status no [data-lacquer="thinking-indicator"] exists in the message.
+      fix: Render it from `status === "submitted"` and from nothing else.
+    - id: LQ-THINK-03
+      level: MUST
+      polarity: forbid
+      title: No anonymous dots
+      statement:
+        Three pulsing dots, a bare spinner or a bar is never the whole indicator; the status text is
+        always present and the dot is a companion to it.
+      detect:
+        static: '[data-slot="status-text"] exists and has non-empty text.'
+      fix: Add the text; keep the dot if you like it.
+    - id: LQ-THINK-04
+      level: MUST
+      polarity: forbid
+      title: Elapsed time is not announced
+      statement: The elapsed part lives outside every live region, so a screen reader never hears a counter tick.
+      rationale: A polite region that updates every second is not polite; it is a metronome over the real announcements.
+      detect:
+        static: '[data-slot="elapsed"] has no ancestor with aria-live or role="status" | "alert" | "log".'
+      fix: Keep the indicator out of the live region; give the message's status region the status text only.
+examples:
+  good:
+    - id: specific-status
+      title: Status text the transport supplied
+      renderer: html
+      file: examples/html/specific-status.html
+      demonstrates:
+        - mode:specific-status
+        - rule:LQ-THINK-01
+    - id: elapsed
+      title: Elapsed time after five seconds
+      renderer: html
+      file: examples/html/elapsed.html
+      demonstrates:
+        - state:enabled
+        - rule:LQ-WAIT-01
+        - rule:LQ-THINK-04
+  anti:
+    - id: anonymous-dots
+      title: Three dots and nothing else
+      renderer: html
+      file: examples/anti/anonymous-dots.html
+      violates:
+        - LQ-THINK-03
+        - LQ-WAIT-01
+    - id: elapsed-in-live-region
+      title: A role="status" region that counts the seconds aloud
+      renderer: html
+      file: examples/anti/elapsed-in-live-region.html
+      violates:
+        - LQ-THINK-04
+        - LQ-A11Y-01
+implementations:
+  - renderer: html
+    file: examples/html/thinking-indicator.html
+    status: reference
+  - renderer: react
+    package: "@lacquer/react"
+    export: ThinkingIndicator
+    status: reference
+grading:
+  weight: 1
+  notes: Graded once per turn; the first thing a user sees after sending, so a defect here is seen every time.
 sources:
   - https://developer.apple.com/design/human-interface-guidelines/generative-ai
   - https://github.com/vercel/ai-elements/releases
+  - https://blog.jim-nielsen.com/

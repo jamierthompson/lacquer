@@ -1,0 +1,79 @@
+/*
+ * Thinking indicator — reference implementation for the html renderer.
+ * Spec:    spec/catalog/ai/conversation/thinking-indicator/thinking-indicator.yaml
+ * Binding: spec/bindings/html.yaml
+ *
+ * Text first. The shimmer is a gradient clipped to the status text and
+ * swept across it on shimmer.duration; the dot pulses on the same clock.
+ * Both stop under prefers-reduced-motion and the text stays (LQ-MOTION-01).
+ * Nothing here is a live region: the message's status region announces,
+ * and the elapsed part is deliberately outside it (LQ-THINK-04).
+ */
+
+[data-lacquer="thinking-indicator"] {
+  /* anatomy: root — carries data-mode and data-elapsed */
+  display: inline-flex;
+  align-items: center;
+  gap: var(--lq-space-gap-sm);
+  color: var(--lq-color-fg-muted);
+  font: var(--lq-type-body-md);
+}
+
+[data-lacquer="thinking-indicator"] > [data-slot="dot"] {
+  /* anatomy: dot — decorative, aria-hidden */
+  flex: none;
+  inline-size: calc(var(--lq-size-icon-sm) / 2);
+  block-size: calc(var(--lq-size-icon-sm) / 2);
+  border-radius: var(--lq-radius-pill);
+  background: currentColor;
+  animation: lq-thinking-pulse var(--lq-shimmer-duration) ease-in-out infinite;
+}
+
+[data-lacquer="thinking-indicator"] > [data-slot="status-text"] {
+  /* anatomy: status-text — the shimmer is clipped to these glyphs and nothing else */
+  background: linear-gradient(
+    90deg,
+    var(--lq-color-fg-muted) 0 40%,
+    var(--lq-shimmer-highlight) 50%,
+    var(--lq-color-fg-muted) 60% 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: lq-thinking-shimmer var(--lq-shimmer-duration) linear infinite;
+}
+
+[data-lacquer="thinking-indicator"] > [data-slot="elapsed"] {
+  /* anatomy: elapsed — appears after 5 s; outside every live region */
+  font: var(--lq-type-label-sm);
+  color: var(--lq-color-fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes lq-thinking-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0% 0;
+  }
+}
+
+@keyframes lq-thinking-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* reduced motion: static text in color.fg.muted, a still dot (LQ-MOTION-01, LQ-MOTION-02) */
+@media (prefers-reduced-motion: reduce) {
+  [data-lacquer="thinking-indicator"] > [data-slot="status-text"] {
+    animation: none;
+    background: none;
+    color: var(--lq-color-fg-muted);
+  }
+  [data-lacquer="thinking-indicator"] > [data-slot="dot"] {
+    animation: none;
+  }
+}

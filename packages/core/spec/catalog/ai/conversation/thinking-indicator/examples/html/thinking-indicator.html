@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Thinking indicator — Lacquer reference implementation</title>
+    <!--
+    Reference implementation for the html renderer.
+    Spec: spec/catalog/ai/conversation/thinking-indicator/thinking-indicator.yaml
+
+    The markup pattern is:
+
+      <div data-lacquer="thinking-indicator" data-mode="thinking">
+        <span data-slot="dot" aria-hidden="true"></span>              optional
+        <span data-slot="status-text">Thinking</span>
+        <span data-slot="elapsed">12s</span>                           after 5 s; sets data-elapsed on the root
+      </div>
+
+    Rendered while the thread status is submitted and in no other status
+    (LQ-THINK-02). It is not a live region: the message's status region
+    announces "Thinking" once and each specific status change, throttled;
+    the elapsed part is outside every live region (LQ-THINK-04).
+  -->
+    <link rel="stylesheet" href="../../../../../../bindings/html.theme.css" />
+    <link rel="stylesheet" href="thinking-indicator.css" />
+    <style>
+      /* Page chrome only. Not part of the component. */
+      body {
+        margin: 0;
+        padding: var(--lq-space-inset-lg);
+        background: var(--lq-color-bg-surface);
+        color: var(--lq-color-fg-default);
+        font: var(--lq-type-body-md);
+      }
+      h1 {
+        font: var(--lq-type-heading-md);
+        margin: 0 0 var(--lq-space-gap-lg);
+      }
+      h2 {
+        font: var(--lq-type-label-md);
+        color: var(--lq-color-fg-muted);
+        margin: var(--lq-space-gap-lg) 0 var(--lq-space-gap-sm);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Thinking indicator</h1>
+
+    <h2>thinking: the generic string</h2>
+    <div data-lacquer="thinking-indicator" data-mode="thinking">
+      <span data-slot="dot" aria-hidden="true"></span>
+      <span data-slot="status-text">Thinking</span>
+    </div>
+
+    <h2>specific-status: what the transport said it is doing</h2>
+    <div data-lacquer="thinking-indicator" data-mode="specific-status">
+      <span data-slot="dot" aria-hidden="true"></span>
+      <span data-slot="status-text"
+        >Searching the web for ‘oklch contrast’</span
+      >
+    </div>
+
+    <h2>after 5 s: elapsed time, outside any live region</h2>
+    <div
+      data-lacquer="thinking-indicator"
+      data-mode="specific-status"
+      data-elapsed
+    >
+      <span data-slot="dot" aria-hidden="true"></span>
+      <span data-slot="status-text">Reading 4 files</span>
+      <span data-slot="elapsed">12s</span>
+    </div>
+
+    <h2>without the dot</h2>
+    <div data-lacquer="thinking-indicator" data-mode="thinking">
+      <span data-slot="status-text">Thinking</span>
+    </div>
+
+    <p style="color: var(--lq-color-fg-muted)">
+      Turn on reduced motion to see the static branch: the text stays, the sweep
+      and the pulse stop.
+    </p>
+  </body>
+</html>

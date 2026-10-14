@@ -1,0 +1,22 @@
+<!--
+  ANTI-EXAMPLE — violates LQ-THINK-04, LQ-A11Y-01.
+  A grader fixture: this file must FAIL. Do not copy.
+
+  What is wrong:
+   - The whole indicator is a role="status" region and the elapsed counter
+     is inside it, so every second the region re-announces "Thinking, 13
+     seconds", "Thinking, 14 seconds" … over whatever else the page says.
+   - It is also a second status region beside the message's own, so
+     "Thinking" is announced twice on submit.
+-->
+<div
+  data-lacquer="thinking-indicator"
+  data-mode="thinking"
+  data-elapsed
+  role="status"
+  aria-live="polite"
+>
+  <span data-slot="dot" aria-hidden="true"></span>
+  <span data-slot="status-text">Thinking</span>
+  <span data-slot="elapsed">13s</span>
+</div>

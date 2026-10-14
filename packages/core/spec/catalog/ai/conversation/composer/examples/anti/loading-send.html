@@ -1,0 +1,51 @@
+<!--
+  ANTI-EXAMPLE — violates LQ-COMPOSER-01, LQ-RECOVER-01.
+  A grader fixture: this file must FAIL. Do not copy.
+
+  What is wrong:
+   - While the turn streams, Send shows a spinner and disables itself. There
+     is no Stop anywhere: the user cannot end the turn (LQ-RECOVER-01).
+   - The control is driven by a private `sending` flag the composer set when
+     it fired the request, not by the thread status; when the transport
+     errors the flag is never cleared and the composer stays stuck.
+
+  Captured mid-stream. The same markup with data-action="stop" and the stop
+  glyph is the correct state.
+-->
+<form
+  data-lacquer="composer"
+  data-density="full"
+  data-status="streaming:text"
+  aria-label="Message"
+>
+  <div data-slot="frame">
+    <div
+      data-lacquer="textarea"
+      data-slot="textarea"
+      data-sizing="autosize"
+      data-frame="borderless"
+    >
+      <textarea
+        data-slot="control"
+        rows="1"
+        aria-label="Message"
+        placeholder="Message…"
+      ></textarea>
+    </div>
+    <div data-slot="footer">
+      <button
+        type="button"
+        data-lacquer="icon-button"
+        data-slot="primary-control"
+        data-action="send"
+        data-emphasis="filled"
+        data-shape="round"
+        aria-label="Sending…"
+        aria-busy="true"
+        disabled
+      >
+        <span data-slot="spinner" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</form>

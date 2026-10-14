@@ -10,7 +10,7 @@ atomic_level: atom
 maturity: established
 status: draft
 version: 0.1.0
-summary: Multi-line free-text entry, usually auto-growing with content.
+summary: Multi-line free-text entry, usually growing with its content up to a limit, then scrolling.
 aliases:
   - TextArea
   - Multiline input
@@ -33,59 +33,179 @@ found_in:
   - Nuxt UI
   - PrimeVue
 anatomy:
-  - part: container
-    description: container
-  - part: textarea-element
-    description: textarea element
-  - part: resize-handle
-    description: resize handle
-  - part: character-counter
-    description: character counter
-  - part: toolbar-slot
-    description: toolbar slot
+  - part: root
+    description:
+      The wrapper. Carries data-sizing, data-frame, data-size and data-empty, and the `--lq-textarea-max-rows`
+      parameter the autosize limit reads.
+  - part: control
+    element: textarea
+    description: The native textarea. Every state is an attribute on it; it is where the name lives.
+  - part: counter
+    required: false
+    description: Characters used of the limit, beneath the control; referenced by aria-describedby.
 variants:
-  - axis: variant
+  - axis: sizing
     values:
       - fixed
       - autosize
-      - with-counter
+    default: autosize
+    guidance:
+      Autosize grows with content from `rows` to maxRows using the `field-sizing` property, then scrolls;
+      fixed keeps `rows` and lets the user drag the resize handle.
+  - axis: frame
+    values:
+      - outlined
       - borderless
+    default: outlined
+    guidance: Borderless is for embedding inside a parent that draws the frame and the focus ring, such as composer.
   - axis: size
     values:
       - sm
       - md
       - lg
+    default: md
+    guidance: Size changes the inset; the text style stays type.body.md so lines align with the rest of the form.
 states:
   - id: enabled
+    treatment: color.bg.surface, a color.border.input border, radius.control, type.body.md in color.fg.default.
+    a11y: Default semantics; the name comes from a label.
   - id: hover
+    treatment: Border one step to color.border.default.
+    a11y: none
   - id: focus-visible
+    treatment:
+      Ring in color.border.focus (focus.ring.width, focus.ring.offset) on the control; borderless frames
+      leave the ring to the parent.
+    a11y: Implicit. Never outline none without a replacement (LQ-FOCUS-01).
   - id: active
+    treatment: none; typing has no pressed state, the focus treatment applies.
+    a11y: none
   - id: disabled
-  - id: invalid
+    treatment: opacity.disabled; no hover or focus response; the resize handle is removed.
+    a11y: "`disabled` on the control."
   - id: read-only
+    treatment: Surface one step to color.bg.surface-secondary; the text is selectable; no resize handle.
+    a11y: "`readonly` on the control; it stays in the tab order."
+  - id: invalid
+    treatment: Border in color.border.danger plus the error message the field renders; never colour alone.
+    a11y: 'aria-invalid="true" and aria-describedby pointing at the message.'
   - id: placeholder
+    treatment: The placeholder in color.fg.muted; data-empty on the root.
+    a11y: The placeholder is a hint, never the name (LQ-NAME-01).
   - id: filled
-  - id: loading
+    treatment: Placeholder gone; data-empty removed.
+    a11y: none
+api:
+  props:
+    - name: value
+      type: string
+      description: The text, when controlled.
+    - name: defaultValue
+      type: string
+      description: The initial text, when uncontrolled.
+    - name: sizing
+      type: enum(fixed|autosize)
+      default: autosize
+      maps_to: data-sizing
+    - name: frame
+      type: enum(outlined|borderless)
+      default: outlined
+      maps_to: data-frame
+    - name: size
+      type: enum(sm|md|lg)
+      default: md
+      maps_to: data-size
+    - name: rows
+      type: number
+      default: 1
+      maps_to: rows
+      description: Lines shown while empty; the minimum height when autosizing.
+    - name: maxRows
+      type: number
+      default: 8
+      maps_to: --lq-textarea-max-rows
+      description: Lines the control grows to before it scrolls (autosize only).
+    - name: maxLength
+      type: number
+      maps_to: maxlength
+      description: Renders the counter when set.
+    - name: invalid
+      type: boolean
+      default: false
+      maps_to: aria-invalid
+    - name: disabled
+      type: boolean
+      default: false
+      maps_to: disabled
+    - name: readOnly
+      type: boolean
+      default: false
+      maps_to: readonly
+  events:
+    - name: change
+      payload: string
+      description: Every edit.
+  interactions:
+    - Type; Enter inserts a newline unless the parent (composer) binds it
+    - Drag the handle to resize (sizing=fixed)
+  composition: >
+    The control is the native element and the props are its attributes; the only thing the component adds
+    is the wrapper that carries the sizing parameter. Labelling is the field's job, which is why this
+    component has no label prop and composes with field.
 accessibility:
-  notes: |-
-    ARIA: Native `textarea`; counter must be referenced via `aria-describedby` and announced politely.
-    Keyboard: Enter inserts a newline. If Enter submits (chat), Shift+Enter must insert a newline.
+  role: textbox (implicit, multi-line)
+  name: From a `<label for>` or aria-labelledby supplied by the field or parent; aria-label when there is no visible label. Never the placeholder.
+  aria:
+    - attr: aria-invalid
+      on: control
+      when: invalid
+      value: "true"
+    - attr: aria-describedby
+      on: control
+      when: a counter or message is rendered
+      value: ids of counter and message
+  keyboard:
+    - key: Tab
+      action: Moves focus to the control. Tab never inserts a tab character.
+    - key: Enter
+      action: Inserts a newline. If a parent submits on Enter, Shift+Enter must insert a newline.
+  focus: Focus stays on the control; growing or scrolling never moves it or the caret.
+  announcements: The counter is announced politely only at thresholds (90 %, limit), not per keystroke.
 tokens:
   consumes:
-    - radius.control
-    - space.inset.control.md
-    - type.body.md
+    - color.bg.surface
+    - color.bg.surface-secondary
+    - color.border.input
+    - color.border.default
     - color.border.focus
-    - size.control.textarea-min
+    - color.border.danger
+    - color.fg.default
+    - color.fg.muted
+    - radius.control
+    - space.inset.control.sm
+    - space.inset.control.md
+    - space.inset.control.lg
+    - type.body.md
+    - type.label.sm
+    - focus.ring.width
+    - focus.ring.offset
+    - opacity.disabled
+    - motion.duration.fast
+    - motion.easing.standard
 usage:
   use_when:
-    - Comments, descriptions, prompt composition
+    - Comments, descriptions, prompt composition.
   avoid_when:
-    - Rich formatting is required — use a rich text editor
+    - Rich formatting is required; use a rich text editor.
+    - One line will always do; that is text-input.
+  instead:
+    - when: The value is a single line
+      use: text-input
   pairs_well_with:
     - field
     - button
     - file-upload
+    - composer
   ai_products_rely_on: true
 rules:
   shared:
@@ -97,6 +217,15 @@ rules:
     - LQ-NAME-01
     - LQ-TOKEN-01
     - LQ-ANAT-01
+implementations:
+  - renderer: html
+    file: examples/html/textarea.html
+    status: reference
+  - renderer: react
+    package: "@lacquer/react"
+    export: Textarea
+    status: reference
 sources:
   - https://m3.material.io/components
   - https://carbondesignsystem.com/components/overview/components/
+  - https://developer.mozilla.org/en-US/docs/Web/CSS/field-sizing

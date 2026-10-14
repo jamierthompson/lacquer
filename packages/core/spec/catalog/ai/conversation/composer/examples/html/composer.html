@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Composer — Lacquer reference implementation</title>
+    <!--
+    Reference implementation for the html renderer.
+    Spec: spec/catalog/ai/conversation/composer/composer.yaml
+    Reuses: textarea (borderless, autosize), icon-button (filled, round)
+
+    The markup pattern is:
+
+      <form data-lacquer="composer" data-density="full" data-status="idle" data-empty aria-label="Message">
+        <div data-slot="frame">
+          <div data-slot="attachments">…</div>                                        optional slot
+          <div data-lacquer="textarea" data-slot="textarea" data-sizing="autosize" data-frame="borderless">
+            <textarea data-slot="control" rows="1" aria-label="Message" placeholder="Message…"></textarea>
+          </div>
+          <div data-slot="footer">
+            <div data-slot="toolbar">…</div>                                          optional slot
+            <button type="button" data-lacquer="icon-button" data-slot="primary-control"
+                    data-action="send" data-emphasis="filled" data-shape="round"
+                    aria-label="Send message" aria-keyshortcuts="Enter" aria-disabled="true">
+              <span data-slot="icon" aria-hidden="true"><svg …/></span>
+            </button>
+          </div>
+        </div>
+        <p data-slot="disclaimer">…</p>                                               optional slot
+      </form>
+
+    The form renders from the thread status in data-status. The primary
+    control is one element: data-action="send" while the status is idle or
+    terminal, data-action="stop" while it is submitted, streaming:* or
+    awaiting-approval, with the aria-label and the glyph changed and nothing
+    else (LQ-COMPOSER-01). This page is static; the site drives the React
+    implementation through every status.
+  -->
+    <link rel="stylesheet" href="../../../../../../bindings/html.theme.css" />
+    <link
+      rel="stylesheet"
+      href="../../../../../core/inputs/textarea/examples/html/textarea.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../../../../core/actions/icon-button/examples/html/icon-button.css"
+    />
+    <link rel="stylesheet" href="composer.css" />
+    <style>
+      /* Page chrome only. Not part of the component. */
+      body {
+        margin: 0;
+        padding: var(--lq-space-inset-lg);
+        background: var(--lq-color-bg-surface-tertiary);
+        color: var(--lq-color-fg-default);
+        font: var(--lq-type-body-md);
+      }
+      h1 {
+        font: var(--lq-type-heading-md);
+        margin: 0 0 var(--lq-space-gap-lg);
+      }
+      h2 {
+        font: var(--lq-type-label-md);
+        color: var(--lq-color-fg-muted);
+        margin: var(--lq-space-gap-lg) 0 var(--lq-space-gap-sm);
+      }
+      .row {
+        display: grid;
+        gap: var(--lq-space-gap-md);
+        max-inline-size: 44rem;
+      }
+      svg {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      [data-slot="attachments"] > span {
+        padding: var(--lq-space-gap-xs) var(--lq-space-gap-sm);
+        border: 1px solid var(--lq-color-border-subtle);
+        border-radius: var(--lq-radius-md);
+        background: var(--lq-color-bg-surface-secondary);
+        font: var(--lq-type-label-sm);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Composer</h1>
+
+    <h2>
+      idle, empty: Send is soft-disabled and focuses the textarea when pressed
+    </h2>
+    <div class="row">
+      <form
+        data-lacquer="composer"
+        data-density="full"
+        data-status="idle"
+        data-empty
+        aria-label="Message"
+      >
+        <div data-slot="frame">
+          <div
+            data-lacquer="textarea"
+            data-slot="textarea"
+            data-sizing="autosize"
+            data-frame="borderless"
+          >
+            <textarea
+              data-slot="control"
+              rows="1"
+              aria-label="Message"
+              placeholder="Message…"
+            ></textarea>
+          </div>
+          <div data-slot="footer">
+            <div data-slot="toolbar">
+              <button
+                type="button"
+                data-lacquer="icon-button"
+                aria-label="Attach file"
+              >
+                <span data-slot="icon" aria-hidden="true"
+                  ><svg viewBox="0 0 16 16">
+                    <path
+                      d="M10.5 5.5 6 10a1.5 1.5 0 0 0 2 2l5-5a3 3 0 0 0-4-4L4 8a4.5 4.5 0 0 0 6 6l3-3"
+                    /></svg
+                ></span>
+              </button>
+            </div>
+            <button
+              type="button"
+              data-lacquer="icon-button"
+              data-slot="primary-control"
+              data-action="send"
+              data-emphasis="filled"
+              data-shape="round"
+              aria-label="Send message"
+              aria-keyshortcuts="Enter"
+              aria-disabled="true"
+            >
+              <span data-slot="icon" aria-hidden="true"
+                ><svg viewBox="0 0 16 16">
+                  <path d="M8 13V3M3.5 7.5 8 3l4.5 4.5" /></svg
+              ></span>
+            </button>
+          </div>
+        </div>
+        <p data-slot="disclaimer">
+          AI can make mistakes. Check important information.
+        </p>
+      </form>
+    </div>
+
+    <h2>idle, filled: Send enabled; Enter submits, Shift+Enter is a newline</h2>
+    <div class="row">
+      <form
+        data-lacquer="composer"
+        data-density="full"
+        data-status="idle"
+        aria-label="Message"
+      >
+        <div data-slot="frame">
+          <div
+            data-lacquer="textarea"
+            data-slot="textarea"
+            data-sizing="autosize"
+            data-frame="borderless"
+          >
+            <textarea
+              data-slot="control"
+              rows="1"
+              aria-label="Message"
+              placeholder="Message…"
+            >
+Summarise the thread so far</textarea>
+          </div>
+          <div data-slot="footer">
+            <button
+              type="button"
+              data-lacquer="icon-button"
+              data-slot="primary-control"
+              data-action="send"
+              data-emphasis="filled"
+              data-shape="round"
+              aria-label="Send message"
+              aria-keyshortcuts="Enter"
+            >
+              <span data-slot="icon" aria-hidden="true"
+                ><svg viewBox="0 0 16 16">
+                  <path d="M8 13V3M3.5 7.5 8 3l4.5 4.5" /></svg
+              ></span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <h2>
+      streaming:text: the same element is Stop; the next draft is being typed
+    </h2>
+    <div class="row">
+      <form
+        data-lacquer="composer"
+        data-density="full"
+        data-status="streaming:text"
+        aria-label="Message"
+      >
+        <div data-slot="frame">
+          <div
+            data-lacquer="textarea"
+            data-slot="textarea"
+            data-sizing="autosize"
+            data-frame="borderless"
+          >
+            <textarea
+              data-slot="control"
+              rows="1"
+              aria-label="Message"
+              placeholder="Message…"
+            >
+and then shorten it</textarea>
+          </div>
+          <div data-slot="footer">
+            <button
+              type="button"
+              data-lacquer="icon-button"
+              data-slot="primary-control"
+              data-action="stop"
+              data-emphasis="filled"
+              data-shape="round"
+              aria-label="Stop generating"
+            >
+              <span data-slot="icon" aria-hidden="true"
+                ><svg viewBox="0 0 16 16">
+                  <rect
+                    x="4"
+                    y="4"
+                    width="8"
+                    height="8"
+                    rx="1"
+                    fill="currentColor"
+                  /></svg
+              ></span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <h2>attachments-pending: the slot above the textarea</h2>
+    <div class="row">
+      <form
+        data-lacquer="composer"
+        data-density="full"
+        data-status="idle"
+        aria-label="Message"
+      >
+        <div data-slot="frame">
+          <div data-slot="attachments" role="status" aria-label="Attachments">
+            <span
+              >report.pdf
+              <button
+                type="button"
+                data-lacquer="icon-button"
+                data-size="xs"
+                aria-label="Remove report.pdf"
+              >
+                <span data-slot="icon" aria-hidden="true"
+                  ><svg viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" /></svg
+                ></span></button
+            ></span>
+          </div>
+          <div
+            data-lacquer="textarea"
+            data-slot="textarea"
+            data-sizing="autosize"
+            data-frame="borderless"
+          >
+            <textarea
+              data-slot="control"
+              rows="1"
+              aria-label="Message"
+              placeholder="Message…"
+            >
+What does section 3 commit us to?</textarea>
+          </div>
+          <div data-slot="footer">
+            <button
+              type="button"
+              data-lacquer="icon-button"
+              data-slot="primary-control"
+              data-action="send"
+              data-emphasis="filled"
+              data-shape="round"
+              aria-label="Send message"
+              aria-keyshortcuts="Enter"
+            >
+              <span data-slot="icon" aria-hidden="true"
+                ><svg viewBox="0 0 16 16">
+                  <path d="M8 13V3M3.5 7.5 8 3l4.5 4.5" /></svg
+              ></span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <h2>disabled: no thread to send to</h2>
+    <div class="row">
+      <form
+        data-lacquer="composer"
+        data-density="full"
+        data-status="idle"
+        data-empty
+        aria-label="Message"
+        aria-disabled="true"
+      >
+        <div data-slot="frame">
+          <div
+            data-lacquer="textarea"
+            data-slot="textarea"
+            data-sizing="autosize"
+            data-frame="borderless"
+          >
+            <textarea
+              data-slot="control"
+              rows="1"
+              aria-label="Message"
+              placeholder="Select a conversation"
+              disabled
+            ></textarea>
+          </div>
+          <div data-slot="footer">
+            <button
+              type="button"
+              data-lacquer="icon-button"
+              data-slot="primary-control"
+              data-action="send"
+              data-emphasis="filled"
+              data-shape="round"
+              aria-label="Send message"
+              disabled
+            >
+              <span data-slot="icon" aria-hidden="true"
+                ><svg viewBox="0 0 16 16">
+                  <path d="M8 13V3M3.5 7.5 8 3l4.5 4.5" /></svg
+              ></span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <h2>density=compact: an inline ask panel</h2>
+    <div class="row" style="max-inline-size: 28rem">
+      <form
+        data-lacquer="composer"
+        data-density="compact"
+        data-status="idle"
+        data-empty
+        aria-label="Ask about this page"
+      >
+        <div data-slot="frame">
+          <div
+            data-lacquer="textarea"
+            data-slot="textarea"
+            data-sizing="autosize"
+            data-frame="borderless"
+          >
+            <textarea
+              data-slot="control"
+              rows="1"
+              aria-label="Ask about this page"
+              placeholder="Ask about this page"
+            ></textarea>
+          </div>
+          <div data-slot="footer">
+            <button
+              type="button"
+              data-lacquer="icon-button"
+              data-slot="primary-control"
+              data-action="send"
+              data-emphasis="filled"
+              data-shape="round"
+              data-size="sm"
+              aria-label="Send message"
+              aria-keyshortcuts="Enter"
+              aria-disabled="true"
+            >
+              <span data-slot="icon" aria-hidden="true"
+                ><svg viewBox="0 0 16 16">
+                  <path d="M8 13V3M3.5 7.5 8 3l4.5 4.5" /></svg
+              ></span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <p style="color: var(--lq-color-fg-muted)">
+      Hover and focus-visible are live: the ring is on the frame while the
+      textarea has keyboard focus.
+    </p>
+  </body>
+</html>

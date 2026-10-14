@@ -1,0 +1,54 @@
+<!--
+  id: compact — density=compact for an inline "ask" panel inside a classic
+  product. The control sits beside the textarea; there is no toolbar slot.
+  Everything else is the full composer: same status contract, same keyboard.
+-->
+<form
+  data-lacquer="composer"
+  data-density="compact"
+  data-status="idle"
+  data-empty
+  aria-label="Ask about this page"
+>
+  <div data-slot="frame">
+    <div
+      data-lacquer="textarea"
+      data-slot="textarea"
+      data-sizing="autosize"
+      data-frame="borderless"
+    >
+      <textarea
+        data-slot="control"
+        rows="1"
+        aria-label="Ask about this page"
+        placeholder="Ask about this page"
+      ></textarea>
+    </div>
+    <div data-slot="footer">
+      <button
+        type="button"
+        data-lacquer="icon-button"
+        data-slot="primary-control"
+        data-action="send"
+        data-emphasis="filled"
+        data-shape="round"
+        data-size="sm"
+        aria-label="Send message"
+        aria-keyshortcuts="Enter"
+        aria-disabled="true"
+      >
+        <span data-slot="icon" aria-hidden="true"
+          ><svg
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M8 13V3M3.5 7.5 8 3l4.5 4.5" /></svg
+        ></span>
+      </button>
+    </div>
+  </div>
+</form>

@@ -105,6 +105,10 @@
 
   /* opacity.* */
   --lq-opacity-disabled: 0.5;
+
+  /* shimmer.* — the thinking-indicator sweep; the highlight is an alias, never a new hue */
+  --lq-shimmer-duration: 1.8s;
+  --lq-shimmer-highlight: var(--lq-color-fg-default);
 }
 
 @media (prefers-color-scheme: dark) {

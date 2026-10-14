@@ -1,11 +1,11 @@
 ---
 name: lacquer-textarea
-description: Multi-line free-text entry, usually auto-growing with content.
+description: Multi-line free-text entry, usually growing with its content up to a limit, then scrolling.
 ---
 
 # Textarea
 
-> Multi-line free-text entry, usually auto-growing with content.
+> Multi-line free-text entry, usually growing with its content up to a limit, then scrolling.
 >
 > component · core/inputs · tier 1 · atom · established · status: draft
 
@@ -15,22 +15,18 @@ Also called: TextArea, Multiline input, Autosize textarea, Prompt box.
 
 ## Missing
 
-- states.treatment: enabled, hover, focus-visible, active, disabled, invalid, read-only, placeholder, filled, loading
-- states.a11y: enabled, hover, focus-visible, active, disabled, invalid, read-only, placeholder, filled, loading
-- api.props
-- accessibility.name
-- accessibility.keyboard
 - rules.local (three or more, at least one forbid)
 - examples.good
 - examples.anti
-- implementations
 
 ## Use it when / not when
 
-- Use: Comments, descriptions, prompt composition
-- Avoid: Rich formatting is required — use a rich text editor
+- Use: Comments, descriptions, prompt composition.
+- Avoid: Rich formatting is required; use a rich text editor.
+- Avoid: One line will always do; that is text-input.
+- If the value is a single line → use `text-input`
 
-Pairs with: `field`, `button`, `file-upload`.
+Pairs with: `field`, `button`, `file-upload`, `composer`.
 
 AI products rely on this.
 
@@ -40,16 +36,15 @@ Parts in DOM order; each renders with `data-slot="<part>"`.
 
 | Part | Element | Req. | Notes |
 | --- | --- | --- | --- |
-| `container` |  | required | container |
-| `textarea-element` |  | required | textarea element |
-| `resize-handle` |  | required | resize handle |
-| `character-counter` |  | required | character counter |
-| `toolbar-slot` |  | required | toolbar slot |
+| `root` |  | required | The wrapper. Carries data-sizing, data-frame, data-size and data-empty, and the `--lq-textarea-max-rows` parameter the autosize limit reads. |
+| `control` | textarea | required | The native textarea. Every state is an attribute on it; it is where the name lives. |
+| `counter` |  | optional | Characters used of the limit, beneath the control; referenced by aria-describedby. |
 
 ## Variants
 
-- **variant**: fixed | autosize | with-counter | borderless
-- **size**: sm | md | lg
+- **sizing**: fixed | autosize (default `autosize`) — Autosize grows with content from `rows` to maxRows using the `field-sizing` property, then scrolls; fixed keeps `rows` and lets the user drag the resize handle.
+- **frame**: outlined | borderless (default `outlined`) — Borderless is for embedding inside a parent that draws the frame and the focus ring, such as composer.
+- **size**: sm | md | lg (default `md`) — Size changes the inset; the text style stays type.body.md so lines align with the rest of the form.
 
 ## States
 
@@ -57,29 +52,61 @@ Every listed state needs a visual treatment **and** an accessibility expression 
 
 | State | Treatment | A11y | Notes |
 | --- | --- | --- | --- |
-| `enabled` | missing | missing |  |
-| `hover` | missing | missing |  |
-| `focus-visible` | missing | missing |  |
-| `active` | missing | missing |  |
-| `disabled` | missing | missing |  |
-| `invalid` | missing | missing |  |
-| `read-only` | missing | missing |  |
-| `placeholder` | missing | missing |  |
-| `filled` | missing | missing |  |
-| `loading` | missing | missing |  |
+| `enabled` | color.bg.surface, a color.border.input border, radius.control, type.body.md in color.fg.default. | Default semantics; the name comes from a label. |  |
+| `hover` | Border one step to color.border.default. | none |  |
+| `focus-visible` | Ring in color.border.focus (focus.ring.width, focus.ring.offset) on the control; borderless frames leave the ring to the parent. | Implicit. Never outline none without a replacement (LQ-FOCUS-01). |  |
+| `active` | none; typing has no pressed state, the focus treatment applies. | none |  |
+| `disabled` | opacity.disabled; no hover or focus response; the resize handle is removed. | `disabled` on the control. |  |
+| `read-only` | Surface one step to color.bg.surface-secondary; the text is selectable; no resize handle. | `readonly` on the control; it stays in the tab order. |  |
+| `invalid` | Border in color.border.danger plus the error message the field renders; never colour alone. | aria-invalid="true" and aria-describedby pointing at the message. |  |
+| `placeholder` | The placeholder in color.fg.muted; data-empty on the root. | The placeholder is a hint, never the name (LQ-NAME-01). |  |
+| `filled` | Placeholder gone; data-empty removed. | none |  |
+
+## API (framework-neutral)
+
+| Prop | Type | Default | Maps to | Notes |
+| --- | --- | --- | --- | --- |
+| `value` | `string` |  |  | The text, when controlled. |
+| `defaultValue` | `string` |  |  | The initial text, when uncontrolled. |
+| `sizing` | `enum(fixed\|autosize)` | `autosize` | data-sizing |  |
+| `frame` | `enum(outlined\|borderless)` | `outlined` | data-frame |  |
+| `size` | `enum(sm\|md\|lg)` | `md` | data-size |  |
+| `rows` | `number` | `1` | rows | Lines shown while empty; the minimum height when autosizing. |
+| `maxRows` | `number` | `8` | --lq-textarea-max-rows | Lines the control grows to before it scrolls (autosize only). |
+| `maxLength` | `number` |  | maxlength | Renders the counter when set. |
+| `invalid` | `boolean` | `false` | aria-invalid |  |
+| `disabled` | `boolean` | `false` | disabled |  |
+| `readOnly` | `boolean` | `false` | readonly |  |
+
+Events: `change`.
+
+Interactions:
+- Type; Enter inserts a newline unless the parent (composer) binds it
+- Drag the handle to resize (sizing=fixed)
+
+The control is the native element and the props are its attributes; the only thing the component adds is the wrapper that carries the sizing parameter. Labelling is the field's job, which is why this component has no label prop and composes with field.
 
 ## Accessibility
 
-- Accessible name: missing
+- Role: textbox (implicit, multi-line)
+- Accessible name: From a `<label for>` or aria-labelledby supplied by the field or parent; aria-label when there is no visible label. Never the placeholder.
+- `aria-invalid` on control = true when invalid
+- `aria-describedby` on control = ids of counter and message when a counter or message is rendered
 
-ARIA: Native `textarea`; counter must be referenced via `aria-describedby` and announced politely.
-Keyboard: Enter inserts a newline. If Enter submits (chat), Shift+Enter must insert a newline.
+| Key | Action |
+| --- | --- |
+| `Tab` | Moves focus to the control. Tab never inserts a tab character. |
+| `Enter` | Inserts a newline. If a parent submits on Enter, Shift+Enter must insert a newline. |
+
+Focus: Focus stays on the control; growing or scrolling never moves it or the caret.
+
+Announcements: The counter is announced politely only at thresholds (90 %, limit), not per keystroke.
 
 ## Tokens
 
 Roles, not values. Resolve through the binding (spec/bindings/html.yaml) to CSS custom properties.
 
-Consumes: `radius.control`, `space.inset.control.md`, `type.body.md`, `color.border.focus`, `size.control.textarea-min`.
+Consumes: `color.bg.surface`, `color.bg.surface-secondary`, `color.border.input`, `color.border.default`, `color.border.focus`, `color.border.danger`, `color.fg.default`, `color.fg.muted`, `radius.control`, `space.inset.control.sm`, `space.inset.control.md`, `space.inset.control.lg`, `type.body.md`, `type.label.sm`, `focus.ring.width`, `focus.ring.offset`, `opacity.disabled`, `motion.duration.fast`, `motion.easing.standard`.
 
 ## Rules
 
@@ -107,7 +134,13 @@ What the grader enforces. MUST = defect, SHOULD = deduction.
 - **LQ-TOKEN-01** (MUST) No literal values. Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).
   Fix: Replace with the role's custom property from the binding (see spec/bindings/html.yaml).
 
+## Implementations
+
+- html: `examples/html/textarea.html` (reference)
+- react: `@lacquer/react#Textarea` (reference)
+
 ## Sources
 
 - https://m3.material.io/components
 - https://carbondesignsystem.com/components/overview/components/
+- https://developer.mozilla.org/en-US/docs/Web/CSS/field-sizing

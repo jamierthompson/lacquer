@@ -1,0 +1,34 @@
+<!--
+  ANTI-EXAMPLE — violates LQ-NAME-01, LQ-SEM-01, LQ-ANAT-01.
+  A grader fixture: this file must FAIL. Do not copy.
+
+  What is wrong:
+   - The editable area is a contenteditable div, not a <textarea>: no native
+     multi-line editing, no form participation, no implicit role (LQ-SEM-01).
+   - Its only "name" is the placeholder text painted by CSS, which is not an
+     accessible name (LQ-NAME-01). The send control is a div with an onclick
+     and no name at all.
+   - No part carries data-slot, so nothing can be targeted (LQ-ANAT-01).
+-->
+<div
+  class="composer"
+  style="
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 16px;
+  "
+>
+  <div
+    contenteditable="true"
+    class="input"
+    data-placeholder="Message…"
+    style="flex: 1; min-height: 20px; outline: none"
+  ></div>
+  <div
+    class="send"
+    onclick="send()"
+    style="width: 36px; height: 36px; border-radius: 50%; background: #111"
+  ></div>
+</div>

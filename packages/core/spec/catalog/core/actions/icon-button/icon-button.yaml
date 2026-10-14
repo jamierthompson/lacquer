@@ -10,7 +10,7 @@ atomic_level: atom
 maturity: established
 status: draft
 version: 0.1.0
-summary: A button whose entire label is an icon, used where space is tight and the meaning is conventional.
+summary: A button whose entire visible label is an icon, used where space is tight and the meaning is conventional.
 aliases:
   - ActionIcon
   - IconButton
@@ -32,64 +32,192 @@ found_in:
   - Nuxt UI
   - PrimeVue
 anatomy:
-  - part: hit-area
-    description: hit area
+  - part: root
+    element: button
+    description: The native button, square, at least size.control.*; carries aria-label and every state attribute.
   - part: icon
-    description: icon
-  - part: focus-ring
-    description: focus ring
-  - part: optional-badge
-    description: optional badge
-  - part: accessible-name
-    description: accessible name
+    slot: true
+    description: The glyph. Decorative (aria-hidden); the name is on the root.
+  - part: spinner
+    required: false
+    description: Replaces the icon while loading, same box, so the button does not change size.
+  - part: badge
+    required: false
+    description: A count or dot pinned to the corner (reuses badge); its text is appended to the name.
 variants:
-  - axis: variant
+  - axis: emphasis
     values:
       - ghost
       - outline
-      - filled
       - tonal
-      - danger
-      - round
+      - filled
+      - destructive
+    default: ghost
+    guidance: Same ladder as button, minus link; ghost is the toolbar default. Destructive is an emphasis, not a colour.
+  - axis: shape
+    values:
       - square
+      - round
+    default: square
+    guidance: Round for a lone control (a composer's send); square inside toolbars and rows so edges align.
   - axis: size
     values:
       - xs
       - sm
       - md
       - lg
+    default: md
+    guidance: Size sets the box and the icon together; the hit area is never smaller than size.control.sm.
 states:
   - id: enabled
+    treatment: Base tokens for the emphasis; icon in color.fg.default (or on-* for filled and destructive).
+    a11y: Default semantics; aria-label is the name.
   - id: hover
+    treatment: Background one step (color.bg.*-hover, or color.bg.accent for ghost and outline). Never move the element.
+    a11y: none
   - id: focus-visible
+    treatment: Ring in color.border.focus with focus.ring.width and focus.ring.offset. Use :focus-visible, not :focus.
+    a11y: Implicit. Never outline none without a replacement (LQ-FOCUS-01).
   - id: active
+    treatment: One pixel down, so the state is not colour alone.
+    a11y: none (transient)
   - id: disabled
+    treatment: opacity.disabled; pointer-events none; hover and active removed.
+    a11y: "`disabled` removes it from the tab order; aria-disabled keeps it focusable so the reason can be discovered."
   - id: selected
+    treatment: color.bg.selected plus a border change. Toggle usage only.
+    a11y: aria-pressed="true".
   - id: loading
+    treatment: The spinner replaces the icon in the same box; activation blocked.
+    a11y: aria-busy="true" and aria-disabled="true".
+api:
+  props:
+    - name: label
+      type: string
+      required: true
+      maps_to: aria-label
+      description: The accessible name. Required; there is no icon-button without one (LQ-NAME-01).
+    - name: emphasis
+      type: enum(ghost|outline|tonal|filled|destructive)
+      default: ghost
+      maps_to: data-emphasis
+    - name: shape
+      type: enum(square|round)
+      default: square
+      maps_to: data-shape
+    - name: size
+      type: enum(xs|sm|md|lg)
+      default: md
+      maps_to: data-size
+    - name: pressed
+      type: boolean
+      maps_to: aria-pressed
+      description: Toggle usage; omitted means not a toggle.
+    - name: loading
+      type: boolean
+      default: false
+      maps_to: aria-busy
+    - name: disabled
+      type: boolean
+      default: false
+      maps_to: disabled
+    - name: softDisabled
+      type: boolean
+      default: false
+      maps_to: aria-disabled
+      description: Keeps the button focusable so a tooltip can explain why it is unavailable.
+    - name: type
+      type: enum(button|submit|reset)
+      default: button
+  slots:
+    - icon
+    - badge
+  events:
+    - name: press
+      description: Fired on click, Enter and Space. Not fired while loading or disabled.
+  composition: >
+    The icon is a child, wrapped in the icon part and hidden from assistive tech; the name is a required
+    prop so the component cannot be rendered without one. Emphasis, shape and size are closed sets the
+    system owns.
 accessibility:
   apg:
     pattern: Button
     url: https://www.w3.org/WAI/ARIA/apg/patterns/button/
-  notes: |-
-    ARIA: Requires `aria-label` or visually-hidden text; icon must be `aria-hidden`.
-    Keyboard: Tab, then Enter or Space.
+  role: button (implicit from the native element)
+  name: From aria-label, always; the icon is aria-hidden. A tooltip may repeat the name but never replaces it.
+  aria:
+    - attr: aria-label
+      on: root
+      value: label
+    - attr: aria-pressed
+      on: root
+      when: used as a toggle
+      value: true | false
+    - attr: aria-busy
+      on: root
+      when: loading
+      value: "true"
+    - attr: aria-disabled
+      on: root
+      when: softDisabled or loading
+      value: "true"
+  keyboard:
+    - key: Tab
+      action: Moves focus to the button. Hard-disabled buttons are skipped; soft-disabled are not.
+    - key: Enter
+      action: Activates.
+    - key: Space
+      action: Activates on key-up.
+  focus: Focus stays on the button after activation unless the action moves it deliberately.
 tokens:
   consumes:
-    - radius.control
-    - size.control.md
-    - size.icon.md
+    - color.bg.primary
+    - color.bg.primary-hover
+    - color.fg.on-primary
+    - color.bg.secondary
+    - color.bg.secondary-hover
+    - color.fg.on-secondary
+    - color.bg.accent
+    - color.bg.selected
+    - color.bg.destructive
+    - color.bg.destructive-hover
+    - color.fg.on-destructive
     - color.fg.default
-    - color.bg.subtle
+    - color.border.input
+    - color.border.focus
+    - radius.control
+    - radius.pill
+    - size.control.xs
+    - size.control.sm
+    - size.control.md
+    - size.control.lg
+    - size.icon.sm
+    - size.icon.md
     - focus.ring.width
+    - focus.ring.offset
+    - motion.duration.fast
+    - motion.easing.standard
+    - opacity.disabled
+content:
+  label: Verb first, then the object, as the aria-label ("Send message", "Close dialog", "Copy code").
+  limits: Never the icon's name ("Arrow up", "X") as the label.
 usage:
   use_when:
-    - Toolbars, table row actions, close affordances, message actions
+    - Toolbars, table row actions, close affordances, message actions, a composer's send control.
   avoid_when:
-    - The icon's meaning is not universally understood — add a text label
+    - The icon's meaning is not universally understood; add a visible text label (button).
+  instead:
+    - when: The meaning needs words
+      use: button
+    - when: It toggles and stays on
+      use: toggle-button
   pairs_well_with:
     - tooltip
     - toolbar
     - table
+    - composer
+  reuses:
+    - badge
   ai_products_rely_on: true
 rules:
   shared:
@@ -101,6 +229,15 @@ rules:
     - LQ-NAME-01
     - LQ-TOKEN-01
     - LQ-ANAT-01
+    - LQ-MOTION-02
+implementations:
+  - renderer: html
+    file: examples/html/icon-button.html
+    status: reference
+  - renderer: react
+    package: "@lacquer/react"
+    export: IconButton
+    status: reference
 sources:
   - https://www.w3.org/WAI/ARIA/apg/patterns/button/
   - https://m3.material.io/components

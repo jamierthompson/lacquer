@@ -1,0 +1,39 @@
+<!--
+  ANTI-EXAMPLE — violates LQ-THINK-03, LQ-WAIT-01.
+  A grader fixture: this file must FAIL. Do not copy.
+
+  What is wrong:
+   - Three bouncing dots and no text. The user learns that something is
+     happening and nothing about what; a screen reader learns nothing at all.
+   - No status text by 5 s and no elapsed time by 10 s, however long it runs.
+   - Literal colours and a transform-based loop with no reduced-motion branch.
+-->
+<div class="typing" aria-label="loading" style="display: flex; gap: 4px">
+  <span
+    style="
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #999;
+      animation: bounce 1s infinite;
+    "
+  ></span>
+  <span
+    style="
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #999;
+      animation: bounce 1s 0.2s infinite;
+    "
+  ></span>
+  <span
+    style="
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #999;
+      animation: bounce 1s 0.4s infinite;
+    "
+  ></span>
+</div>

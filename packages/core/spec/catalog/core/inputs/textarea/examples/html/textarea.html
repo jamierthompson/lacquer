@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Textarea — Lacquer reference implementation</title>
+    <!--
+    Reference implementation for the html renderer.
+    Spec: spec/catalog/core/inputs/textarea/textarea.yaml
+
+    The markup pattern is:
+
+      <div data-lacquer="textarea" data-sizing="autosize" data-frame="outlined" style="--lq-textarea-max-rows: 8">
+        <textarea data-slot="control" rows="1" aria-label="…" placeholder="…"></textarea>
+        <span data-slot="counter" id="…">0 / 500</span>              optional; aria-describedby points here
+      </div>
+
+    The root is the frame; the control inside is bare. Autosize is CSS only:
+    `field-sizing: content` grows the control and `max-block-size` in `lh`
+    caps it. States are attributes on the native control and the frame reads
+    them with :has():
+      disabled    disabled
+      read-only   readonly
+      invalid     aria-invalid="true" + aria-describedby pointing at the message
+      placeholder :placeholder-shown
+  -->
+    <link rel="stylesheet" href="../../../../../../bindings/html.theme.css" />
+    <link rel="stylesheet" href="textarea.css" />
+    <style>
+      /* Page chrome only. Not part of the component. */
+      body {
+        margin: 0;
+        padding: var(--lq-space-inset-lg);
+        background: var(--lq-color-bg-surface);
+        color: var(--lq-color-fg-default);
+        font: var(--lq-type-body-md);
+      }
+      h1 {
+        font: var(--lq-type-heading-md);
+        margin: 0 0 var(--lq-space-gap-lg);
+      }
+      h2 {
+        font: var(--lq-type-label-md);
+        color: var(--lq-color-fg-muted);
+        margin: var(--lq-space-gap-lg) 0 var(--lq-space-gap-sm);
+      }
+      .row {
+        display: grid;
+        gap: var(--lq-space-gap-md);
+        max-inline-size: 40rem;
+      }
+      label {
+        display: block;
+        font: var(--lq-type-label-md);
+        margin-block-end: var(--lq-space-gap-xs);
+      }
+      .message {
+        font: var(--lq-type-label-sm);
+        color: var(--lq-color-status-error);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Textarea</h1>
+
+    <h2>Autosize (default): one line, grows to eight, then scrolls</h2>
+    <div class="row">
+      <div>
+        <label for="t-auto">Description</label>
+        <div data-lacquer="textarea" data-sizing="autosize">
+          <textarea
+            data-slot="control"
+            id="t-auto"
+            rows="1"
+            placeholder="Type a few lines to see it grow"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <h2>Fixed: keeps its rows, drag to resize</h2>
+    <div class="row">
+      <div>
+        <label for="t-fixed">Notes</label>
+        <div data-lacquer="textarea" data-sizing="fixed">
+          <textarea data-slot="control" id="t-fixed" rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <h2>With counter</h2>
+    <div class="row">
+      <div>
+        <label for="t-counter">Bio</label>
+        <div data-lacquer="textarea">
+          <textarea
+            data-slot="control"
+            id="t-counter"
+            rows="2"
+            maxlength="160"
+            aria-describedby="t-counter-count"
+          >
+Writes specs by day.</textarea>
+          <span data-slot="counter" id="t-counter-count">20 / 160</span>
+        </div>
+      </div>
+    </div>
+
+    <h2>States</h2>
+    <div class="row">
+      <div>
+        <label for="t-disabled">Disabled</label>
+        <div data-lacquer="textarea">
+          <textarea data-slot="control" id="t-disabled" rows="1" disabled>
+Not available now</textarea>
+        </div>
+      </div>
+      <div>
+        <label for="t-readonly">Read-only</label>
+        <div data-lacquer="textarea">
+          <textarea data-slot="control" id="t-readonly" rows="1" readonly>
+Selectable, not editable</textarea>
+        </div>
+      </div>
+      <div>
+        <label for="t-invalid">Invalid</label>
+        <div data-lacquer="textarea">
+          <textarea
+            data-slot="control"
+            id="t-invalid"
+            rows="1"
+            aria-invalid="true"
+            aria-describedby="t-invalid-msg"
+          >
+ok</textarea>
+        </div>
+        <p class="message" id="t-invalid-msg">
+          Say a little more: at least 20 characters.
+        </p>
+      </div>
+    </div>
+    <p style="color: var(--lq-color-fg-muted)">
+      Hover and focus-visible are live: use the pointer and the keyboard.
+    </p>
+
+    <h2>Frame: borderless, for embedding (the parent draws the frame)</h2>
+    <div class="row">
+      <div
+        style="
+          padding: var(--lq-space-inset-sm);
+          border: 1px solid var(--lq-color-border-input);
+          border-radius: var(--lq-radius-lg);
+        "
+      >
+        <div data-lacquer="textarea" data-frame="borderless">
+          <textarea
+            data-slot="control"
+            rows="1"
+            aria-label="Message"
+            placeholder="Message…"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <h2>Size</h2>
+    <div class="row">
+      <div data-lacquer="textarea" data-size="sm">
+        <textarea data-slot="control" rows="1" aria-label="Small">
+Small</textarea>
+      </div>
+      <div data-lacquer="textarea" data-size="md">
+        <textarea data-slot="control" rows="1" aria-label="Medium">
+Medium</textarea>
+      </div>
+      <div data-lacquer="textarea" data-size="lg">
+        <textarea data-slot="control" rows="1" aria-label="Large">
+Large</textarea>
+      </div>
+    </div>
+  </body>
+</html>
