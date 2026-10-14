@@ -1,16 +1,21 @@
 import type { CatalogComponent } from "@lacquer/core";
 import type { ComponentType } from "react";
 
+import { ComposerDemo } from "./harness/ComposerDemo.tsx";
 import { MachineHarness } from "./harness/MachineHarness.tsx";
+import { ThinkingDemo } from "./harness/ThinkingDemo.tsx";
 
 /**
  * What an entry page renders on its stage. Each demo drives the entry's React
- * implementation through every state the spec names and reports the current
- * status, so the contract panel beside it can tick states off as they are
- * reached.
+ * implementation through every state the spec names and reports what it is
+ * showing, so the contract panel beside it can tick states and modes off as
+ * they are reached.
  */
 export interface DemoProps {
+  /** The thread status the stage is in now. */
   onStatus?: (status: string) => void;
+  /** A state or mode id the stage is showing, beside the status. */
+  onVisit?: (id: string) => void;
 }
 
 export interface Demo {
@@ -23,6 +28,14 @@ export const demos: Record<string, Demo> = {
   "message-state-machine": {
     component: MachineHarness,
     spec: () => import("@lacquer/core/components/message-state-machine.json"),
+  },
+  composer: {
+    component: ComposerDemo,
+    spec: () => import("@lacquer/core/components/composer.json"),
+  },
+  "thinking-indicator": {
+    component: ThinkingDemo,
+    spec: () => import("@lacquer/core/components/thinking-indicator.json"),
   },
 };
 

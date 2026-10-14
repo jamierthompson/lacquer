@@ -161,6 +161,54 @@ h3 {
 
 /* --- harness -------------------------------------------------------------- */
 
+.thread {
+  display: grid;
+  gap: var(--lq-space-gap-sm);
+  min-block-size: 5rem;
+  padding: var(--lq-space-inset-md);
+  border-radius: var(--lq-radius-md);
+  background: var(--lq-color-bg-surface);
+}
+.user-message {
+  justify-self: end;
+  max-inline-size: 70%;
+  margin: 0;
+  padding: var(--lq-space-gap-xs) var(--lq-space-inset-sm);
+  border-radius: var(--lq-radius-lg);
+  background: var(--lq-color-bg-secondary);
+  color: var(--lq-color-fg-on-secondary);
+}
+.assistant-slot {
+  min-block-size: 1.5rem;
+}
+.assistant-slot .meta {
+  margin: 0;
+}
+.attachment {
+  padding: var(--lq-space-gap-xs) var(--lq-space-gap-sm);
+  border: 1px solid var(--lq-color-border-subtle);
+  border-radius: var(--lq-radius-md);
+  background: var(--lq-color-bg-surface-secondary);
+  font: var(--lq-type-label-sm);
+}
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--lq-space-gap-xs);
+  color: var(--lq-color-fg-muted);
+  font: var(--lq-type-label-sm);
+}
+.toggle input[type="text"],
+.toggle select {
+  font: var(--lq-type-body-md);
+  padding: 0 var(--lq-space-gap-sm);
+  block-size: var(--lq-size-control-sm);
+  border: 1px solid var(--lq-color-border-input);
+  border-radius: var(--lq-radius-control);
+  background: var(--lq-color-bg-surface);
+  color: var(--lq-color-fg-default);
+}
+
 .harness {
   display: grid;
   gap: var(--lq-space-gap-lg);

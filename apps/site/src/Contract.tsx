@@ -10,8 +10,8 @@ interface Props {
 
 /**
  * The entry's contract, read from dist/components/<id>.json and shown beside
- * the live component: lifecycle, states, rules and token roles. States tick
- * off as the stage reaches them.
+ * the live component: lifecycle, states, modes, rules and token roles.
+ * States and modes tick off as the stage reaches them.
  */
 export function Contract({ entry, current, visited }: Props) {
   // A `states` id like `streaming` is reached by any `streaming:*` status.
@@ -85,6 +85,37 @@ export function Contract({ entry, current, visited }: Props) {
                   </th>
                   <td>{s.treatment}</td>
                   <td>{s.a11y}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      ) : null}
+
+      {entry.modes?.length ? (
+        <section>
+          <h2>Modes</h2>
+          <table className="contract-table">
+            <thead>
+              <tr>
+                <th scope="col">Mode</th>
+                <th scope="col">Treatment</th>
+                <th scope="col">A11y</th>
+              </tr>
+            </thead>
+            <tbody>
+              {entry.modes.map((m) => (
+                <tr
+                  key={m.id}
+                  data-seen={visited.has(m.id) || undefined}
+                  aria-current={current === m.id ? "true" : undefined}
+                >
+                  <th scope="row">
+                    <Tick on={visited.has(m.id)} />
+                    <code>{m.id}</code>
+                  </th>
+                  <td>{m.treatment}</td>
+                  <td>{m.a11y}</td>
                 </tr>
               ))}
             </tbody>
