@@ -12,7 +12,7 @@
   "scripts": {
     "build": "pnpm -r build",
     "check": "pnpm -r check",
-    "dev": "pnpm --filter @lacquer/core build && pnpm --filter @lacquer/site dev",
+    "dev": "pnpm --filter @lacquer/core build && pnpm --filter @lacquer/react build && pnpm --parallel --filter @lacquer/react --filter @lacquer/site dev",
     "mcp": "pnpm --filter @lacquer/mcp start",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

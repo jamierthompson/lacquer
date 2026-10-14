@@ -6,12 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "check": "tsc -b",
     "preview": "vite preview"
   },
   "dependencies": {
     "@lacquer/core": "workspace:*",
+    "@lacquer/react": "workspace:*",
     "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react-dom": "^19.3.0",
+    "react-router": "^8.4.0"
   },
   "devDependencies": {
     "@types/node": "^24.13.3",
