@@ -116,6 +116,7 @@ async function validateFiles(entry: SpecEntry) {
     ...(entry.spec.implementations ?? []),
   ];
   for (const ex of all) {
+    if (!ex.file) continue;
     if (!(await exists(path.join(entry.dir, ex.file)))) {
       (strict ? err : warn)(entry, `missing file ${ex.file}`);
     }
@@ -492,7 +493,7 @@ export function renderSkill(
     out.push("## Implementations", "");
     for (const i of s.implementations)
       out.push(
-        `- ${i.renderer}: \`${i.file}\`${i.status ? ` (${i.status})` : ""}`,
+        `- ${i.renderer}: \`${i.package ? `${i.package}${i.export ? `#${i.export}` : ""}` : i.file}\`${i.status ? ` (${i.status})` : ""}`,
       );
     out.push("");
   }

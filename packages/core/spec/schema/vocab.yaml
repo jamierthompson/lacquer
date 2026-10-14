@@ -136,14 +136,16 @@ component_aliases:
   split-pane: resizable-panels
   input: text-input
   kanban: kanban-board
-  # Referenced by AI entries but not yet in the catalog; the build reports
+  # Referenced by AI entries but not in the catalog; the build reports
   # them as gaps: iframe, audio-player, code-editor, filter-bar, highlight
 
-# Lacquer ships exactly one renderer. HTML is what every framework produces,
-# so an HTML reference is the one every framework can read and port. Examples
-# are fragments that consume the `html` binding's custom properties.
+# Renderers. HTML is the reference: it is what every framework produces, so an
+# HTML reference is the one every framework can read and port. `react` is
+# @lacquer/react, written from the spec and shown beside it in the site. Every
+# renderer consumes the `html` binding's custom properties.
 renderers:
   html: Plain HTML + CSS custom properties. The reference every framework can read.
+  react: "@lacquer/react: components written from the spec; the site renders them live beside the contract."
 
 rule_levels:
   MUST: Violation is a defect. Grader scores it as a failure.

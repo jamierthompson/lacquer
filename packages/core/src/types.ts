@@ -143,7 +143,15 @@ export interface Spec {
   };
   rules?: { shared?: string[]; local?: Omit<Rule, "owner">[] };
   examples?: { good?: Example[]; anti?: Example[] };
-  implementations?: { renderer: string; file: string; status?: string }[];
+  implementations?: {
+    renderer: string;
+    /** Relative to the entry folder. */
+    file?: string;
+    /** The package that ships it, e.g. @lacquer/react, with the named export. */
+    package?: string;
+    export?: string;
+    status?: string;
+  }[];
   grading?: { weight?: number; notes?: string };
   sources?: string[];
 }

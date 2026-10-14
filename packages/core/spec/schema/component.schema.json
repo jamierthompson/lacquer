@@ -390,14 +390,26 @@
 
     "implementations": {
       "type": "array",
-      "description": "Concrete code for a renderer: the reference implementation of this entry.",
+      "description": "Concrete code for a renderer: the reference implementation of this entry. Either a file in the entry folder (the HTML reference) or a named export of a package (a framework implementation such as @lacquer/react).",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["renderer", "file"],
+        "required": ["renderer"],
+        "anyOf": [{ "required": ["file"] }, { "required": ["package"] }],
         "properties": {
           "renderer": { "type": "string", "x-vocab": "renderers" },
-          "file": { "type": "string" },
+          "file": {
+            "type": "string",
+            "description": "Relative to the entry folder."
+          },
+          "package": {
+            "type": "string",
+            "description": "The package that ships the implementation, e.g. @lacquer/react."
+          },
+          "export": {
+            "type": "string",
+            "description": "The named export of that package to import."
+          },
           "status": {
             "type": "string",
             "enum": ["sketch", "reference", "published"]
