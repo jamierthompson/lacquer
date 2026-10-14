@@ -13,22 +13,26 @@ const CONTROLS: { event: Event; label: string }[] = [
 /**
  * The events a demo lets you fire by hand, each enabled only where the
  * table has a row, plus the transport delay. `children` go first: the
- * demo's own controls.
+ * demo's own controls. A demo that renders the approval prompt leaves
+ * `approval-responded` to it (LQ-APPROVAL-04).
  */
 export function EventControls({
   thread,
   maxDelay = 2000,
+  except = [],
   children,
 }: {
   thread: Thread;
   maxDelay?: number;
+  /** Events the demo answers through its own component instead. */
+  except?: readonly Event[];
   children?: ReactNode;
 }) {
   const { accepts, send, delay, setDelay } = thread;
   return (
     <div className="controls" role="group" aria-label="Events">
       {children}
-      {CONTROLS.map((c) => (
+      {CONTROLS.filter((c) => !except.includes(c.event)).map((c) => (
         <button
           key={c.event}
           type="button"

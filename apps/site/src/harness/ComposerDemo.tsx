@@ -1,4 +1,4 @@
-import { Composer, describe, ThinkingIndicator } from "@lacquer/react";
+import { Composer, describe, Message, ThinkingIndicator } from "@lacquer/react";
 import { useEffect, useState } from "react";
 
 import type { DemoProps } from "../demos.ts";
@@ -8,8 +8,9 @@ import { useThread } from "./useThread.ts";
 
 /**
  * The composer wired to a thread. Its Send becomes Stop because the status
- * left idle; the thinking indicator above it appears because the status is
- * submitted. Neither reads the draft or any message text to decide.
+ * left idle; the thinking indicator in the message above it appears because
+ * the status is submitted. Neither reads the draft or any message text to
+ * decide.
  */
 export function ComposerDemo({ onStatus, onVisit }: DemoProps) {
   const thread = useThread();
@@ -33,15 +34,19 @@ export function ComposerDemo({ onStatus, onVisit }: DemoProps) {
   return (
     <div className="harness">
       <div className="thread" aria-label="Thread">
-        {sent !== undefined && <p className="user-message">{sent}</p>}
-        <div className="assistant-slot">
+        {sent !== undefined && (
+          <Message from="user">
+            <p>{sent}</p>
+          </Message>
+        )}
+        <Message from="assistant" status={status}>
           <ThinkingIndicator status={status} />
           {status !== "submitted" && (
             <p className="meta">
               <code>{status}</code> · {d.user_sees}
             </p>
           )}
-        </div>
+        </Message>
       </div>
 
       <Composer

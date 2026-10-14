@@ -25,14 +25,18 @@ export const SCRIPT: readonly Event[] = [
 ];
 
 /** Events that start (or restart) the script. */
-const STARTS: readonly Event[] = ["send", "retry", "regenerate"];
+export const STARTS: readonly Event[] = ["send", "retry", "regenerate"];
+
+/** Where the current turn's events begin in the log: after the last start. */
+export const turnStart = (events: readonly Event[]): number =>
+  events.findLastIndex((e) => STARTS.includes(e)) + 1;
 
 /** How far through the script the log is, counted from the last start. */
 function scriptStep(events: readonly Event[]): number {
-  const start = events.findLastIndex((e) => STARTS.includes(e));
-  if (start < 0) return -1;
+  const start = turnStart(events);
+  if (start === 0) return -1;
   let step = 0;
-  for (let i = start + 1; i < events.length && step < SCRIPT.length; i++)
+  for (let i = start; i < events.length && step < SCRIPT.length; i++)
     if (events[i] === SCRIPT[step]) step++;
   return step;
 }

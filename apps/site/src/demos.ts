@@ -1,9 +1,12 @@
 import type { CatalogComponent } from "@lacquer/core";
 import type { ComponentType } from "react";
 
+import { ApprovalDemo } from "./harness/ApprovalDemo.tsx";
 import { ComposerDemo } from "./harness/ComposerDemo.tsx";
 import { MachineHarness } from "./harness/MachineHarness.tsx";
+import { MessageDemo } from "./harness/MessageDemo.tsx";
 import { ThinkingDemo } from "./harness/ThinkingDemo.tsx";
+import { ToolCallDemo } from "./harness/ToolCallDemo.tsx";
 
 /**
  * What an entry page renders on its stage. Each demo drives the entry's React
@@ -36,6 +39,18 @@ export const demos: Record<string, Demo> = {
   "thinking-indicator": {
     component: ThinkingDemo,
     spec: () => import("@lacquer/core/components/thinking-indicator.json"),
+  },
+  message: {
+    component: MessageDemo,
+    spec: () => import("@lacquer/core/components/message.json"),
+  },
+  "tool-call-card": {
+    component: ToolCallDemo,
+    spec: () => import("@lacquer/core/components/tool-call-card.json"),
+  },
+  "approval-prompt": {
+    component: ApprovalDemo,
+    spec: () => import("@lacquer/core/components/approval-prompt.json"),
   },
 };
 

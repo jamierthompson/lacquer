@@ -169,14 +169,14 @@ h3 {
   border-radius: var(--lq-radius-md);
   background: var(--lq-color-bg-surface);
 }
-.user-message {
-  justify-self: end;
-  max-inline-size: 70%;
+/* a part a later step builds: what the spec says the user sees there */
+.part {
   margin: 0;
   padding: var(--lq-space-gap-xs) var(--lq-space-inset-sm);
-  border-radius: var(--lq-radius-lg);
-  background: var(--lq-color-bg-secondary);
-  color: var(--lq-color-fg-on-secondary);
+  border: 1px dashed var(--lq-color-border-default);
+  border-radius: var(--lq-radius-md);
+  color: var(--lq-color-fg-muted);
+  font: var(--lq-type-label-sm);
 }
 .assistant-slot {
   min-block-size: 1.5rem;
