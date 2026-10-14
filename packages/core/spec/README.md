@@ -1,10 +1,13 @@
 # The Lacquer spec layer
 
 This folder is the framework-agnostic source of truth for Lacquer. Everything
-else in the repo — the generated skills, the MCP server and the grader — reads
-from here. Nothing here depends on any framework or product. The catalog structure
-is in the root [README](../README.md); this file covers only what you need to
-work inside `spec/`.
+else in the repo — the generated skills, `@lacquer/react`, the MCP server and
+the grader — reads from here. Nothing here depends on any framework or product.
+
+The catalog structure, the authoring workflow and the definition of done are in
+the root [README](../../../README.md); the rules for working here are in
+[AGENTS.md](../../../AGENTS.md). This file covers only what is specific to
+writing the files in `spec/`.
 
 ## What is in here
 
@@ -32,55 +35,6 @@ spec/
 The build (`../scripts/build-spec.ts`) compiles all of this into `../dist/`,
 which is not committed.
 
-## Rules for working here
-
-- `catalog/**/<id>.yaml` is the source of truth. `SKILL.md` files and everything
-  in `../dist/` are generated — never edit them; run `pnpm build` and commit
-  the result. `pnpm check` fails if stale.
-- Every enum lives in `schema/vocab.yaml`. Add a state, group or token category
-  there, not inline.
-- A spec names token **roles**, never values or properties. Property names
-  belong in `bindings/html.yaml`; values belong in a theme.
-- Forbidden usage is a rule (`rules.local` with `polarity: forbid`), not prose.
-  Every anti-example cites the rules it violates.
-- Rule ids are `LQ-<AREA>-<NN>` and unique across shared and local rules.
-- Cross-references (`usage.instead`, `pairs_well_with`, `reuses`) must resolve
-  to catalog ids for stable entries. Use `vocab.component_aliases` for other
-  systems' names.
-- Example code is plain HTML and CSS. The root carries `data-lacquer="<id>"`,
-  every anatomy part carries `data-slot`, every state is an attribute, and
-  every value is read through `var(--lq-…)`. Native elements first.
-
-## Authoring workflow
-
-```
-# edit <id>.yaml; its SKILL.md lists what is still missing
-pnpm build    # validate, compile dist/, regenerate SKILL.md
-pnpm check    # CI: fail if anything generated is stale or invalid
-```
-
-Every entry starts as `draft`. In a draft only `id`, `catalog`, `group` and
-`status` are required; the build lists everything else that is missing, in the
-entry's SKILL.md and in its dist JSON, without failing. An entry becomes
-`stable` when it meets the definition of done and a maintainer signs it off;
-from then on any gap is a build error. `deprecated` entries are kept for
-reference.
-
-**Definition of done for `status: stable`** (the build enforces the checkable parts):
-
-1. Every anatomy part is a real part with a `data-slot` name, not a sentence.
-2. Every interactive entry has the five base states with a treatment and an a11y expression.
-3. `accessibility.name` says where the name comes from; keyboard is a table, not prose.
-4. `api.props` are framework-neutral and each maps to a DOM/ARIA attribute where one exists.
-5. At least three `rules.local`, at least one of them `forbid`.
-6. At least one good example and one anti-example in `examples/html/` and `examples/anti/`, files present.
-7. Cross-references (`instead`, `pairs_well_with`, `reuses`) all resolve.
-
-`button` shows the full shape: guidance, an HTML reference, examples and
-anti-examples. `tool-call-card` is an AI component with lifecycle states and an
-HTML reference; `message-state-machine` is a principle with a `machine` block.
-Every entry's SKILL.md lists what it is still missing.
-
 ## Writing an HTML example
 
 Open `catalog/core/actions/button/examples/html/button.html` in a browser; it
@@ -91,3 +45,17 @@ shows and which rules it exercises. Each anti-example is the same shape and
 must fail the rules it cites. Stateful behaviour (a toggle, a loading
 transition) is shown as a snapshot with the attributes set; the reference page
 may add a few lines of script to make a disclosure usable, nothing more.
+
+`button` shows the full shape: guidance, an HTML reference, examples and
+anti-examples. `tool-call-card` is an AI component with lifecycle states and an
+HTML reference; `message-state-machine` is a principle with a `machine` block.
+Every entry's SKILL.md lists what it is still missing.
+
+## Registering a React implementation
+
+The code lives in `packages/react/src/<id>.ts(x)` and is exported from
+`@lacquer/react`. The entry registers it under `implementations` with
+`renderer: react`, the `package` and the named `export`. It may import the
+compiled entry from `@lacquer/core/components/<id>.json`;
+`message-state-machine` reads its own `machine` block that way, so the reducer
+cannot drift from the YAML.

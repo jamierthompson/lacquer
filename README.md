@@ -11,17 +11,18 @@ the same thing. The same data feeds a skill per component, an MCP server, and a
 grader that scores generated UI against the catalog.
 
 It is for anyone, human or agent, designing or building UI for the web, in any
-framework, for any product. Lacquer ships no framework code: the reference for
-every entry is plain HTML and CSS, which is what every framework produces and
-every design tool can read.
+framework, for any product. HTML is the reference for every entry: plain markup
+and CSS, which is what every framework produces and every design tool can
+read. `@lacquer/react` implements it in React.
 
 ## Status
 
 Every entry is a draft, and every draft says what it is still missing. The
-pipeline runs end to end on all 202 entries; `button` shows the full shape,
-with guidance, an HTML reference, examples and anti-examples. The MCP server
-implements the seven read tools over stdio (`pnpm mcp`); the grader is a
-rubric and a report schema, not yet code.
+pipeline runs end to end on all 202 entries. `button` shows the full shape of
+a core entry, with guidance, an HTML reference, examples and anti-examples;
+`message-state-machine` has a React implementation and a page in the site. The
+MCP server implements the seven read tools over stdio (`pnpm mcp`); the grader
+is a rubric and a report schema.
 
 ## Run it
 
@@ -31,7 +32,7 @@ pnpm install
 pnpm build  # validate every spec, compile dist/, regenerate SKILL.md files
 pnpm check  # CI mode: fail on invalid or stale output
 pnpm mcp    # the MCP server over stdio; point a client at it
-pnpm dev    # the site: every reference page, served from the catalog
+pnpm dev    # the site
 ```
 
 To see a reference implementation without the site, open its page in a
@@ -99,11 +100,15 @@ packages/
       rules.json              one rule catalog, one id space (shared + every local rule)
       components/<id>.json    one file per entry
       index.js, index.d.ts    the typed entry
+  react/                      @lacquer/react
+    src/<id>.ts(x)            one module per entry, written from its spec; registered in the
+                              entry's `implementations` as package + export
   mcp/                        @lacquer/mcp
     tools.yaml                the MCP tool contract (read tools now, grade tools next)
-    server.ts                 phase-1 sketch: the read tools over @lacquer/core
+    server.ts                 the read tools over @lacquer/core
 apps/
-  site/                       @lacquer/site: a Vite app that serves the catalog's reference pages
+  site/                       @lacquer/site: one page per entry, the React implementation live
+                              beside its contract
 ```
 
 ## One entry, end to end
@@ -144,7 +149,7 @@ the dependency graph is explicit: `tool-call-card` reuses `disclosure`, `badge`,
 
 The build reports **gaps**: core ids the AI catalog depends on that do not
 exist. Today: `iframe`, `audio-player`, `code-editor`, `filter-bar`,
-`highlight`. Those are the next five core entries to write.
+`highlight`.
 
 ## Kinds
 
@@ -204,11 +209,11 @@ changes. A design tool, a CLI or a Tailwind preset can generate its own output
 from the same binding, because custom properties are the one token format every
 tool already understands.
 
-## The HTML renderer
+## Renderers
 
-Lacquer ships exactly one renderer: plain HTML and CSS. The contract of a
-component is anatomy + states + ARIA + keyboard + token roles, and all of that
-is expressible in markup and a stylesheet with no framework in the way.
+HTML is the reference. The contract of a component is anatomy + states + ARIA +
+keyboard + token roles, and all of that is expressible in markup and a
+stylesheet with no framework in the way.
 
 - `examples/html/<id>.html` is the reference implementation: a page you can
   open that documents the markup pattern and shows every state and variant.
@@ -223,6 +228,17 @@ is expressible in markup and a stylesheet with no framework in the way.
 This is why the catalog is usable by **any** framework. HTML is what every
 framework produces, so the HTML reference is the one every framework can read
 and port, and the one the grader's runtime mode inspects anyway.
+
+`@lacquer/react` (`packages/react`) implements the catalog in React: one
+module per entry, written from its spec and registered in the entry's
+`implementations` as a package and a named export. It obeys the same contract
+as the HTML reference: binding custom properties only, `data-slot` on every
+anatomy part, every state as an attribute. The package depends on
+`@lacquer/core` for the compiled contract and on nothing else. The site drives
+each implementation through every state its spec names and shows the contract
+beside it. A principle has no HTML reference; its React implementation is the
+code the principle describes, so `message-state-machine` ships as a reducer
+that reads its own `machine.transitions` table from the compiled spec.
 
 ## Authoring workflow
 
@@ -248,15 +264,6 @@ reference.
 5. At least three `rules.local`, at least one of them `forbid`.
 6. At least one good example and one anti-example in `examples/html/` and `examples/anti/`, files present.
 7. Cross-references (`instead`, `pairs_well_with`, `reuses`) all resolve.
-
-## Where this is going
-
-1. **Component specs** — core + AI, each to the definition of done, each with its HTML reference.
-2. **The site** — browse the catalog, see every example live, follow this roadmap.
-3. **MCP** — `packages/mcp/server.ts` over `@lacquer/core`; the read and grade tools in `packages/mcp/tools.yaml`.
-4. **Grader, static** — `lacquer_lint`: detect components, run `detect.static` hints, emit a finish report.
-5. **Grader, runtime** — Playwright drives states and keyboard; the `detect.runtime` hints become checks.
-6. **Tooling on the same data** — a CLI and a Figma plugin that read `@lacquer/core` and the binding.
 
 ## License
 
