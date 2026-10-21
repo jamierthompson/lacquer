@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: "true"
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm typecheck
+      # Validates every spec, compiles dist/, checks SKILL.md output is
+      # current, and validates the registry.
+      - run: pnpm check
+      - run: pnpm test
+      - run: pnpm build
+
+      - name: Resolve the Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('playwright/package.json').version")" >> "$GITHUB_OUTPUT"
+        working-directory: apps/site
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
+      - if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: pnpm --filter @lacquer/site exec playwright install --with-deps chromium
+      - if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm --filter @lacquer/site exec playwright install-deps chromium
+      # playwright.config.ts serves the build from `pnpm start` when CI is set.
+      - run: pnpm test:e2e
+      # Last, so a new advisory on a transitive dependency does not hide a
+      # test result; it still fails the job.
+      - run: pnpm audit --prod --audit-level=high
+
+      - uses: actions/upload-artifact@v6
+        if: failure()
+        with:
+          name: test-failure-${{ github.run_attempt }}
+          path: |
+            apps/site/playwright-report
+            apps/site/test-results
+          if-no-files-found: ignore

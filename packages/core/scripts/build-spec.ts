@@ -16,23 +16,23 @@
  * `--check` exits 1 when any committed generated file (SKILL.md) is stale
  * instead of writing it; dist/ is build output and is always written.
  */
-import { mkdir, readFile, writeFile, access } from "node:fs/promises";
+import { access, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 
 import {
-  type Rule,
-  type Spec,
-  type SpecEntry,
-  type Vocab,
   CATALOG_DIR,
   DIST_DIR,
   ROOT,
+  type Rule,
   readSchema,
   readSharedRules,
   readSpecs,
   readVocab,
+  type Spec,
+  type SpecEntry,
+  type Vocab,
 } from "./lib/spec.ts";
 
 const check = process.argv.includes("--check");
@@ -457,8 +457,8 @@ export function renderSkill(
   }
 
   const sharedRules = (s.rules?.shared ?? [])
-    .map((id) => shared.get(id)!)
-    .filter(Boolean);
+    .map((id) => shared.get(id))
+    .filter((r) => r !== undefined);
   const local = s.rules?.local ?? [];
   const must = [...sharedRules, ...local].filter(
     (r) => r.polarity === "require",
@@ -485,7 +485,7 @@ export function renderSkill(
       );
     for (const e of s.examples.anti ?? [])
       out.push(
-        `- ✗ ${e.title ?? e.id} — \`${e.file}\` violates ${e.violates!.join(", ")}`,
+        `- ✗ ${e.title ?? e.id} — \`${e.file}\` violates ${e.violates?.join(", ")}`,
       );
     out.push("");
   }
@@ -501,12 +501,10 @@ export function renderSkill(
     out.push("## Exemplars", "", ...u.exemplars.map((x) => `- ${x}`), "");
   if (s.sources?.length)
     out.push("## Sources", "", ...s.sources.map((x) => `- ${x}`), "");
-  return (
-    out
-      .join("\n")
-      .replace(/\n{3,}/g, "\n\n")
-      .trimEnd() + "\n"
-  );
+  return `${out
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trimEnd()}\n`;
 }
 
 // ---------------------------------------------------------------- emit
@@ -584,7 +582,9 @@ async function main() {
       rules: {
         ...(s.rules ?? {}),
         resolved: [
-          ...(s.rules?.shared ?? []).map((id) => shared.get(id)!),
+          ...(s.rules?.shared ?? [])
+            .map((id) => shared.get(id))
+            .filter((r) => r !== undefined),
           ...(s.rules?.local ?? []).map((r) => ({ ...r, owner: s.id })),
         ],
       },

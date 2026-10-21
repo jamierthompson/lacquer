@@ -4,3 +4,19 @@ dist/
 *.log
 *.tsbuildinfo
 PLAN.md
+
+# next.js
+.next/
+.source/
+next-env.d.ts
+out/
+
+# tests
+playwright-report/
+test-results/
+coverage/
+
+# env and vercel
+.env*
+!.env.example
+.vercel

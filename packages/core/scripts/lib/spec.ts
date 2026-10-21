@@ -64,7 +64,10 @@ export async function readSchema(
     rule_levels: Object.keys(vocab.rule_levels),
   };
   const walk = (node: unknown): void => {
-    if (Array.isArray(node)) return node.forEach(walk);
+    if (Array.isArray(node)) {
+      node.forEach(walk);
+      return;
+    }
     if (typeof node !== "object" || node === null) return;
     const obj = node as Record<string, unknown>;
     if (typeof obj["x-vocab"] === "string") {

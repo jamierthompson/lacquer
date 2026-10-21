@@ -12,17 +12,17 @@
  */
 import { readFile } from "node:fs/promises";
 import {
+  type IndexEntry,
   loadComponent,
   loadIndex,
   loadRules,
-  resolvePath,
-  type IndexEntry,
   type Rule,
+  resolvePath,
 } from "@lacquer/core";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { z } from "zod";
 import { parse as parseYaml } from "yaml";
+import { z } from "zod";
 
 const index = await loadIndex();
 const { rules } = await loadRules();
@@ -238,10 +238,11 @@ server.tool(
           ? [...tier1core, ...augmented]
           : [...tier1core, ...tier1ai];
     const by = (k: keyof IndexEntry) =>
-      index.reduce<Record<string, number>>(
-        (m, e) => ((m[String(e[k])] = (m[String(e[k])] ?? 0) + 1), m),
-        {},
-      );
+      index.reduce<Record<string, number>>((m, e) => {
+        const key = String(e[k]);
+        m[key] = (m[key] ?? 0) + 1;
+        return m;
+      }, {});
     return text({
       total: index.length,
       by_catalog: by("catalog"),
