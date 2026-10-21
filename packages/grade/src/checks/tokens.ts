@@ -5,12 +5,14 @@
  * z-index, a palette or default-scale utility, or a property outside the
  * binding is a finding.
  *
- * Two scanners, one rule: `scanCss` for stylesheets, `scanClasses` for the
+ * Three scanners, one rule: `scanCss` for stylesheets, `scanHtml` for an
+ * example's `<style>` blocks and `style=""` attributes, `scanClasses` for the
  * string literals in TS/TSX. `checkTokens` walks the roots and skips the
  * anti-examples, which are meant to fail and are tested as fixtures.
  */
-import { readdir, readFile } from "node:fs/promises";
+import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
+import type { Bindings } from "@lacquer/core";
 import { componentOf, type Finding } from "../finding.ts";
 
 export const RULE = "LQ-TOKEN-01";
@@ -18,8 +20,31 @@ const DIMENSION = "tokens";
 const FIX =
   "Replace with the role's --lq-* property or its lq- utility (dist/bindings.json, derived from spec/tokens); values belong in a theme.";
 
-/** Custom properties the binding defines, with the leading `--`. */
-export type KnownProperties = ReadonlySet<string>;
+/**
+ * What the binding defines: the html custom properties, with the leading
+ * `--`, and the Tailwind theme variables by namespace (`color` ->
+ * {`lq-bg-primary`, …}), so a class can be checked for the role it names.
+ */
+export interface Known {
+  properties: ReadonlySet<string>;
+  theme: ReadonlyMap<string, ReadonlySet<string>>;
+}
+
+/** The `Known` set for the compiled bindings. */
+export function knownFrom(bindings: Bindings): Known {
+  const properties = new Set(
+    Object.values(bindings.html.roles).map((r) => r.var),
+  );
+  const theme = new Map<string, Set<string>>();
+  for (const role of Object.values(bindings.tailwind.roles)) {
+    const m = role.var.match(/^--([a-z-]+?)-(lq-[a-z0-9-]+)$/);
+    if (!m) continue;
+    const set = theme.get(m[1]) ?? new Set<string>();
+    set.add(m[2]);
+    theme.set(m[1], set);
+  }
+  return { properties, theme };
+}
 
 // ---------------------------------------------------------------- values
 
@@ -33,11 +58,12 @@ const COLOR_FUNCTION =
   /\b(rgba?|hsla?|hwb|lab|lch|oklab|oklch|color|color-mix|light-dark)\(/i;
 const HEX = /#[0-9a-f]{3,8}\b/i;
 const LENGTH = /(^|[\s,(])-?\d*\.?\d+(px|r?em|%|vw|vh|ch|ex|cm|mm|in|pt|pc)\b/;
-const DURATION = /(^|[\s,(])\d*\.?\d+m?s\b/;
-const INTEGER = /(^|[\s,(])\d+(?=$|[\s,)])/;
+const DURATION = /(^|[\s,(])-?\d*\.?\d+m?s\b/;
+const INTEGER = /(^|[\s,(])-?\d+(?=$|[\s,)])/;
 
+/** Properties that take a colour, including the shorthands and images that carry one. */
 const isColorProperty = (p: string) =>
-  /^(color|background|background-color|border(-(top|right|bottom|left|block|inline)(-(start|end))?)?(-color)?|outline|outline-color|fill|stroke|text-decoration-color|caret-color|accent-color|column-rule(-color)?)$/.test(
+  /^(color|background(-color|-image)?|border(-(top|right|bottom|left|block|inline)(-(start|end))?)?(-color)?|border-image(-source)?|outline(-color)?|fill|stroke|stop-color|flood-color|lighting-color|text-decoration(-color)?|text-emphasis(-color)?|caret-color|accent-color|column-rule(-color)?|scrollbar-color|-webkit-text-fill-color|-webkit-text-stroke(-color)?)$/.test(
     p,
   );
 const isRadiusProperty = (p: string) => /^border(-[a-z-]+)?-radius$/.test(p);
@@ -57,11 +83,12 @@ const ANY_VAR = /var\(\s*(--[a-z0-9_-]+)/gi;
  */
 export function variableViolation(
   name: string,
-  known: KnownProperties,
+  known: Known,
   component: string,
 ): string | null {
   if (!name.startsWith("--lq-")) return `${name} is outside the binding`;
-  if (known.has(name) || name.startsWith(`--lq-${component}-`)) return null;
+  if (known.properties.has(name) || name.startsWith(`--lq-${component}-`))
+    return null;
   return `${name} binds no role`;
 }
 
@@ -69,7 +96,7 @@ export function variableViolation(
 export function literalsIn(
   property: string,
   value: string,
-  known: KnownProperties,
+  known: Known,
   component = "screen",
 ): string[] {
   const found: string[] = [];
@@ -80,10 +107,7 @@ export function literalsIn(
   const rest = value.replace(BINDING_VAR, " ").replace(/url\([^)]*\)/g, " ");
   const custom = property.startsWith("--");
   const colour =
-    custom ||
-    isColorProperty(property) ||
-    isShadowProperty(property) ||
-    /^(border|outline|background|text-decoration|column-rule)$/.test(property);
+    custom || isColorProperty(property) || isShadowProperty(property);
   if (colour) {
     const hex = rest.match(HEX);
     if (hex) found.push(hex[0]);
@@ -118,39 +142,48 @@ const lineAt = (text: string, offset: number) =>
 const blankComments = (css: string) =>
   css.replace(/\/\*[\s\S]*?\*\//g, (c) => c.replace(/[^\n]/g, " "));
 
-export function scanCss(
-  source: string,
+/** The finding for one `property: value` declaration, or null when it is clean. */
+function declarationFinding(
+  text: string,
   file: string,
-  known: KnownProperties,
-): Finding[] {
+  line: number,
+  known: Known,
+  component: string,
+): Finding | null {
+  const colon = text.indexOf(":");
+  if (colon < 0) return null;
+  const property = text.slice(0, colon).trim().toLowerCase();
+  const value = text
+    .slice(colon + 1)
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!/^(--)?-?[a-z-]+$/.test(property)) return null;
+  const literals = literalsIn(property, value, known, component);
+  if (!literals.length) return null;
+  return {
+    rule: RULE,
+    level: "MUST",
+    dimension: DIMENSION,
+    component,
+    message: `\`${property}\` is set to a literal instead of a token role through the binding.`,
+    location: { file, line, snippet: `${property}: ${value}` },
+    evidence: literals.join(", "),
+    fix: FIX,
+  };
+}
+
+export function scanCss(source: string, file: string, known: Known): Finding[] {
   const css = blankComments(source);
   const findings: Finding[] = [];
   const component = componentOf(file);
   let depth = 0;
   let start = 0;
   const declaration = (end: number) => {
+    if (depth === 0) return;
     const text = css.slice(start, end);
-    const colon = text.indexOf(":");
-    if (depth === 0 || colon < 0) return;
-    const property = text.slice(0, colon).trim().toLowerCase();
-    const value = text
-      .slice(colon + 1)
-      .replace(/\s+/g, " ")
-      .trim();
-    if (!/^(--)?[a-z-]+$/.test(property)) return;
-    const literals = literalsIn(property, value, known, component);
-    if (!literals.length) return;
-    const line = lineAt(css, start + text.search(/\S/));
-    findings.push({
-      rule: RULE,
-      level: "MUST",
-      dimension: DIMENSION,
-      component,
-      message: `\`${property}\` is set to a literal instead of a token role through the binding.`,
-      location: { file, line, snippet: `${property}: ${value}` },
-      evidence: literals.join(", "),
-      fix: FIX,
-    });
+    const line = lineAt(css, start + Math.max(0, text.search(/\S/)));
+    const f = declarationFinding(text, file, line, known, component);
+    if (f) findings.push(f);
   };
   for (let i = 0; i < css.length; i++) {
     const c = css[i];
@@ -169,6 +202,30 @@ export function scanCss(
   return findings;
 }
 
+/** `style="…"` attributes: declarations at depth 0, which `scanCss` ignores. */
+const STYLE_ATTRIBUTE = /\sstyle\s*=\s*(?:"([^"]*)"|'([^']*)')/gi;
+
+/**
+ * An HTML example: its `<style>` blocks (plain CSS, so `scanCss` reads them
+ * where the markup around them is at depth 0) and its inline styles.
+ */
+export function scanHtml(
+  source: string,
+  file: string,
+  known: Known,
+): Finding[] {
+  const findings = scanCss(source, file, known);
+  const component = componentOf(file);
+  for (const m of source.matchAll(STYLE_ATTRIBUTE)) {
+    const line = lineAt(source, m.index ?? 0);
+    for (const text of (m[1] ?? m[2] ?? "").split(";")) {
+      const f = declarationFinding(text, file, line, known, component);
+      if (f) findings.push(f);
+    }
+  }
+  return findings;
+}
+
 // ---------------------------------------------------------------- classes
 
 const PALETTE =
@@ -179,33 +236,65 @@ const SEMANTIC =
 const COLOR_UTILITY =
   "bg|text|border(-[trblxyse]|-[a-z]+)?|ring|ring-offset|inset-ring|outline|fill|stroke|from|via|to|shadow|inset-shadow|decoration|accent|caret|divide|placeholder";
 
+/** An opacity modifier: `/50`, `/[0.5]`, `/(--x)`. */
+const OPACITY = "(/\\S+)?";
 const PALETTE_CLASS = new RegExp(
-  `^(${COLOR_UTILITY})-(${PALETTE})(-\\d{2,3})?(/\\d+)?$`,
+  `^(${COLOR_UTILITY})-(${PALETTE})(-\\d{2,3})?${OPACITY}$`,
 );
 const SEMANTIC_CLASS = new RegExp(
-  `^(${COLOR_UTILITY})-(${SEMANTIC})(-foreground)?(/\\d+)?$`,
+  `^(${COLOR_UTILITY})-(${SEMANTIC})(-foreground)?${OPACITY}$`,
 );
+/** The default radius scale, including the bare `rounded` (Tailwind's `rounded-sm`-sized default). */
 const RADIUS_CLASS =
-  /^rounded(-(t|r|b|l|s|e|tl|tr|br|bl|ss|se|es|ee))?-(xs|sm|md|lg|xl|[2-4]xl|full)$/;
+  /^rounded(-(t|r|b|l|s|e|tl|tr|br|bl|ss|se|es|ee))?(-(xs|sm|md|lg|xl|[2-4]xl|full))?$/;
+/** The default shadow scale, including the bare `shadow` and friends. */
 const SHADOW_CLASS =
-  /^(shadow|inset-shadow|drop-shadow|text-shadow)-(2xs|xs|sm|md|lg|xl|2xl)$/;
+  /^(shadow|inset-shadow|drop-shadow|text-shadow)(-(2xs|xs|sm|md|lg|xl|2xl))?$/;
 const DURATION_CLASS = /^(duration|delay)-\d+$/;
 const Z_CLASS = /^z-\d+$/;
 const ARBITRARY_VALUE = new RegExp(
   `^(${COLOR_UTILITY}|rounded(-[a-z]+)?|z|duration|delay)-\\[(.+)\\]$`,
 );
-const ARBITRARY_PROPERTY = /^\[([a-z-]+):(.+)\]$/;
+const ARBITRARY_PROPERTY = /^\[(-?[a-z-]+):(.+)\]$/;
 const VARIABLE_FORM = /^[a-z-]+-\((?:[a-z-]+:)?(--[a-z0-9_-]+)\)$/;
-/** Variants and modifiers in front of the utility: `hover:`, `data-[state=open]:`, `!`, `-`. */
-const VARIANTS = /^(?:[a-z0-9-]+(?:\[[^\]]*\]|\([^)]*\))?:)+/;
+/**
+ * Variants in front of the utility, each ending in `:`: `hover:`,
+ * `data-[state=open]:`, `supports-(--x):`, `[&>svg]:`, `*:`, `**:`, `@md:`.
+ */
+const VARIANTS =
+  /^(?:(?:\*{1,2}|@?[a-z0-9-]+(?:\[[^\]]*\]|\([^)]*\))?|\[[^\]]*\]):)+/;
+/** `!` in either of Tailwind's positions and the negative `-` prefix. */
+const MODIFIERS = { lead: /^[!-]+/, trail: /!$/ };
+
+/** A theme utility from the Tailwind binding: `bg-lq-bg-primary`, `rounded-lq-control`… */
+const THEME_UTILITY = new RegExp(`^([a-z-]+?)-(lq-[a-z0-9-]+?)${OPACITY}$`);
+/**
+ * The theme namespace a utility prefix reads, as the installed Tailwind
+ * resolves it. Unlisted prefixes (`gap`, `h`, `size`, `max-w`…) read sizes,
+ * which may be `spacing` or `container`.
+ */
+function namespacesOf(prefix: string): string[] {
+  if (new RegExp(`^(${COLOR_UTILITY})$`).test(prefix)) return ["color"];
+  if (/^rounded(-[a-z]+)?$/.test(prefix)) return ["radius"];
+  if (/^(inset-)?shadow$/.test(prefix)) return ["shadow"];
+  if (prefix === "z") return ["z-index"];
+  if (/^(duration|delay)$/.test(prefix)) return ["transition-duration"];
+  if (prefix === "ease") return ["ease"];
+  if (prefix === "font") return ["font"];
+  if (prefix === "opacity") return ["opacity"];
+  return ["spacing", "container"];
+}
 
 /** Why a class token violates the rule, or null when it is fine. */
 export function classViolation(
   token: string,
-  known: KnownProperties,
+  known: Known,
   component = "screen",
 ): string | null {
-  const utility = token.replace(VARIANTS, "").replace(/^[!-]+/, "");
+  const utility = token
+    .replace(VARIANTS, "")
+    .replace(MODIFIERS.lead, "")
+    .replace(MODIFIERS.trail, "");
   const variable = utility.match(VARIABLE_FORM);
   if (variable) return variableViolation(variable[1], known, component);
   const property = utility.match(ARBITRARY_PROPERTY);
@@ -213,12 +302,23 @@ export function classViolation(
     const literals = literalsIn(property[1], property[2], known, component);
     return literals.length ? literals.join(", ") : null;
   }
-  // A theme utility from the Tailwind binding: bg-lq-bg-primary, rounded-lq-control…
-  if (/-lq-[a-z0-9-]+(\/\d+)?$/.test(utility)) return null;
+  const themed = utility.match(THEME_UTILITY);
+  if (themed) {
+    // `shadow-lq-sm` is the shadow namespace; `shadow-lq-bg-primary` would be a colour.
+    const [, prefix, suffix] = themed;
+    const namespaces =
+      prefix === "shadow" || prefix === "inset-shadow"
+        ? ["shadow", "color"]
+        : namespacesOf(prefix);
+    if (namespaces.some((ns) => known.theme.get(ns)?.has(suffix))) return null;
+    return `${suffix} binds no role in ${namespaces.join(" or ")}`;
+  }
   const arbitrary = utility.match(ARBITRARY_VALUE);
   if (arbitrary) {
-    const inner = arbitrary.at(-1) ?? "";
-    if (/^var\(--lq-/.test(inner)) return null;
+    // A type hint (`bg-[color:var(--lq-…)]`) is Tailwind's, not a literal.
+    const inner = (arbitrary.at(-1) ?? "").replace(/^[a-z-]+:/, "");
+    const ref = inner.match(/^var\((--[a-z0-9_-]+)\)$/);
+    if (ref) return variableViolation(ref[1], known, component);
     return `arbitrary value ${inner}`;
   }
   if (PALETTE_CLASS.test(utility)) return "palette colour";
@@ -237,7 +337,7 @@ const STRING_LITERAL =
 export function scanClasses(
   source: string,
   file: string,
-  known: KnownProperties,
+  known: Known,
 ): Finding[] {
   const findings: Finding[] = [];
   const component = componentOf(file);
@@ -271,33 +371,49 @@ export function scanClasses(
 // ---------------------------------------------------------------- walk
 
 const CSS = /\.css$/;
+const HTML = /\.html?$/;
 const CODE = /\.(tsx|ts|jsx|js|mjs)$/;
 const SKIP =
   /(^|\/)(node_modules|dist|\.next|examples\/anti)(\/|$)|\.d\.ts$|\.test\.tsx?$/;
+const scannable = (name: string) =>
+  CSS.test(name) || HTML.test(name) || CODE.test(name);
 
+/** Every scannable file under a folder, or the file itself when given one. */
 export async function* sourceFiles(root: string): AsyncGenerator<string> {
+  if ((await stat(root)).isFile()) {
+    if (scannable(root)) yield root;
+    return;
+  }
   for (const entry of await readdir(root, { withFileTypes: true })) {
     const full = path.join(root, entry.name);
     if (SKIP.test(full)) continue;
     if (entry.isDirectory()) yield* sourceFiles(full);
-    else if (CSS.test(entry.name) || CODE.test(entry.name)) yield full;
+    else if (scannable(entry.name)) yield full;
   }
+}
+
+/** The scanner for a file, by its extension. */
+export function scanFile(
+  source: string,
+  file: string,
+  known: Known,
+): Finding[] {
+  if (CSS.test(file)) return scanCss(source, file, known);
+  if (HTML.test(file)) return scanHtml(source, file, known);
+  return scanClasses(source, file, known);
 }
 
 export async function checkTokens(
   roots: string[],
-  known: KnownProperties,
+  known: Known,
   relativeTo = process.cwd(),
 ): Promise<Finding[]> {
   const findings: Finding[] = [];
   for (const root of roots) {
     for await (const file of sourceFiles(root)) {
       const source = await readFile(file, "utf8");
-      const rel = path.relative(relativeTo, file);
       findings.push(
-        ...(CSS.test(file)
-          ? scanCss(source, rel, known)
-          : scanClasses(source, rel, known)),
+        ...scanFile(source, path.relative(relativeTo, file), known),
       );
     }
   }
