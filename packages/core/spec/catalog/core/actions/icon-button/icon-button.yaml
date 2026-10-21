@@ -198,6 +198,7 @@ tokens:
     - motion.duration.fast
     - motion.easing.standard
     - opacity.disabled
+    - motion.duration.spin
 content:
   label: Verb first, then the object, as the aria-label ("Send message", "Close dialog", "Copy code").
   limits: Never the icon's name ("Arrow up", "X") as the label.

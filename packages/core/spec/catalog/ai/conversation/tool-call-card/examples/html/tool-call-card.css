@@ -94,7 +94,7 @@
   border: 2px solid currentColor;
   border-top-color: transparent;
   border-radius: var(--lq-radius-pill);
-  animation: lq-tool-spin 1s linear infinite;
+  animation: lq-tool-spin var(--lq-motion-duration-spin) linear infinite;
 }
 
 /* elapsed: after 10 s while running; outside any live region (LQ-WAIT-01) */
@@ -124,7 +124,7 @@
 }
 [data-lacquer="tool-call-card"][data-state="input-streaming"]
   [data-slot="name"] {
-  animation: lq-tool-pulse 2s ease-in-out infinite;
+  animation: lq-tool-pulse var(--lq-motion-duration-pulse) ease-in-out infinite;
 }
 [data-lacquer="tool-call-card"][data-state="input-available"]
   [data-slot="status"] {

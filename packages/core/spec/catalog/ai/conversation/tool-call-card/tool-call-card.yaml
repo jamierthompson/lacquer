@@ -242,6 +242,8 @@ tokens:
     - space.inset.sm
     - space.gap.sm
     - motion.duration.base
+    - motion.duration.spin
+    - motion.duration.pulse
 content:
   label:
     'Humanised verb + target. "Searching the web for ''x''", "Reading src/app.tsx", "Running npm test".

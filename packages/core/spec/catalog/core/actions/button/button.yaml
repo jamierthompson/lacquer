@@ -209,6 +209,7 @@ tokens:
     - focus.ring.offset
     - motion.duration.fast
     - opacity.disabled
+    - motion.duration.spin
 content:
   label:
     Verb first, then the object — "Save changes", "Delete 3 files". Sentence case. Three words or fewer

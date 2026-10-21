@@ -155,7 +155,7 @@
   border: 2px solid currentColor;
   border-top-color: transparent;
   border-radius: var(--lq-radius-pill);
-  animation: lq-button-spin 1s linear infinite;
+  animation: lq-button-spin var(--lq-motion-duration-spin) linear infinite;
 }
 
 [data-lacquer="button"] > [data-slot="label"] {
