@@ -1,0 +1,24 @@
+{
+  "name": "@lacquer/grade",
+  "version": "0.1.0",
+  "description": "The Lacquer grader: drives a component through its spec and writes the finish report. Today: the LQ-TOKEN-01 source check.",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "lacquer-grade": "./src/cli.ts"
+  },
+  "scripts": {
+    "check": "node src/cli.ts tokens",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@lacquer/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}

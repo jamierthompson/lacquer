@@ -1,7 +1,8 @@
 # Lacquer finish grade — the rubric.
 #
 # A "finish report" grades one screen (or one component) against the catalog.
-# This is the grader's contract; the grader package itself is not written yet.
+# This is the grader's contract. packages/grade runs its first check
+# (LQ-TOKEN-01 over source); the runner and the report writer are next.
 # The grader does not invent criteria: every finding cites a rule id from
 # dist/rules.json, and every rule belongs to exactly one dimension below.
 # The dimensions are what a person would feel; the rules are how a machine
