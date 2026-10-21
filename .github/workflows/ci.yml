@@ -30,8 +30,9 @@ jobs:
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
-      # Validates every spec, compiles dist/, checks SKILL.md output is
-      # current, and validates the registry.
+      # Validates every spec and the bindings, compiles dist/, checks that
+      # generated files (SKILL.md, tailwind.theme.css, the base registry item)
+      # are current, runs the LQ-TOKEN-01 source check, validates the registry.
       - run: pnpm check
       - run: pnpm test
       - run: pnpm build
