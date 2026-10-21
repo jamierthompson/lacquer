@@ -147,7 +147,7 @@ export interface Spec {
     renderer: string;
     /** Relative to the entry folder. */
     file?: string;
-    /** The package that ships it, e.g. @lacquer/react, with the named export. */
+    /** The package or registry item that ships it, with the named export. */
     package?: string;
     export?: string;
     status?: string;

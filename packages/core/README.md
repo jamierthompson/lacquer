@@ -2,8 +2,8 @@
 
 The spec layer: the schema, the vocabulary, the rules, the bindings and every
 component's contract, compiled to JSON. Everything else in the repo reads from
-here: the registry, the site, the grader, the MCP server and the generated
-skills. Nothing here depends on a framework.
+here: the registry, the site, the MCP server, the generated skills and, once
+it lands, the grader. Nothing here depends on a framework.
 
 `spec/README.md` covers writing the files in `spec/`. This file explains the
 model.
@@ -27,15 +27,16 @@ Take `button` (`spec/catalog/core/actions/button/button.yaml`). The spec says:
 From that one file the build produces:
 
 1. `SKILL.md` beside it — the agent-facing document, with `guidance.md` merged in and every cited rule stated in full under **Required** / **Forbidden**.
-2. `dist/components/button.json` — the same data with shared rules resolved, for the MCP server and grader.
+2. `dist/components/button.json` — the same data with shared rules resolved, for the MCP server and the grader.
 3. A row in `dist/index.json` — for search.
 4. Its local rules merged into `dist/rules.json` — so `LQ-BUTTON-01` has the same standing as `LQ-STATE-01`.
 
-And three consumers use it without touching YAML:
+And three consumers use it without touching YAML (the first exists today; the
+grader and the registry implementation arrive with the next milestones):
 
-- **An agent building UI** calls `lacquer_search("confirm delete")` → `alert-dialog`, `lacquer_get` for the contract, `lacquer_example` for a starting point, `lacquer_tokens` to resolve roles to custom properties, then `lacquer_lint` on its output before returning it.
-- **The grader** detects a `<button>` in a screen, loads `dist/components/button.json`, runs the `detect.static` hint of every resolved rule, and emits findings that cite `LQ-BUTTON-02` with the fix text straight from the spec. See `grading/samples/report.example.json` for what that looks like.
-- **A person or a tool porting it** reads `examples/html/button.html` and `button.css`: the markup pattern, every state as an attribute, every value as a `var(--lq-…)`. A React, Vue, Svelte or Web Component version is a translation of that file, not a second design.
+- **An agent building UI** calls `lacquer_search("confirm delete")` → `alert-dialog`, `lacquer_get` for the contract, `lacquer_example` for a starting point, `lacquer_tokens` to resolve roles to custom properties, and, once the grade tools exist, `lacquer_lint` on its output before returning it.
+- **The grader** will load `dist/components/button.json`, drive the registry's button through every state the spec names, run every rule whose `detect` hint it can execute, and emit findings that cite `LQ-BUTTON-02` with the fix text straight from the spec. `grading/samples/report.example.json` is the shape of that report.
+- **The registry implementation**, and anyone porting the entry, reads `examples/html/button.html` and `button.css`: the markup pattern, every state as an attribute, every value as a role through the binding. The React version on Base UI and Tailwind is a translation of that file, not a second design.
 
 ## The two catalogs
 
@@ -88,7 +89,8 @@ Three places define rules, one id space:
 | `<id>.yaml` → `rules.local` | rules only one entry can state        | `LQ-BUTTON-03` |
 
 `grading/rubric.yaml` maps rule prefixes to dimensions and levels to
-deductions; a finish report is the list of findings plus the resulting scores.
+deductions; a finish report will be the list of findings plus the resulting
+scores, in the shape of `grading/report.schema.json`.
 
 ## Token roles and the binding
 
@@ -96,40 +98,43 @@ A spec never names a value or a class. It names a role: `color.bg.primary`,
 `radius.control`, `motion.duration.fast`. The binding
 (`spec/bindings/html.yaml`) maps every role to a CSS custom property, derived
 mechanically: `color.bg.primary` is `--lq-color-bg-primary`. Component CSS reads
-roles only, through `var()`. The token lint (LQ-TOKEN-01/02) resolves every
-property an implementation reads back to a role and fails on any literal.
+roles only, through `var()`. The grader's token check (LQ-TOKEN-01/02) will
+resolve every property an implementation reads back to a role and fail on any
+literal.
 
 The binding names properties, never values. `html.theme.css` beside it is a
 reference theme that gives each property a default so the examples render on
 their own; a product overrides any of them and nothing in `spec/catalog/`
-changes. A design tool, a CLI or a Tailwind preset can generate its own output
-from the same binding, because custom properties are the one token format every
-tool already understands.
+changes. A second binding maps the same roles to another stack; the
+`tailwind` binding for the registry is the next one.
 
 ## Renderers
 
-HTML is the reference. The contract of a component is anatomy + states + ARIA +
-keyboard + token roles, and all of that is expressible in markup and a
-stylesheet with no framework in the way.
+HTML is the html binding's reference. The contract of a component is anatomy
 
-- `examples/html/<id>.html` is the reference implementation: a page you can
+- states + ARIA + keyboard + token roles, and all of that is expressible in
+  markup and a stylesheet, so every entry carries one.
+
+* `examples/html/<id>.html` is the reference implementation: a page you can
   open that documents the markup pattern and shows every state and variant.
-- `examples/html/<id>.css` styles it, reading only binding properties. The root
+* `examples/html/<id>.css` styles it, reading only binding properties. The root
   carries `data-lacquer="<id>"`, every part carries `data-slot`, every state is
   an attribute (`disabled`, `aria-busy`, `aria-expanded`, `data-state`).
-- `examples/html/<example-id>.html` are fragments an agent copies: one file per
+* `examples/html/<example-id>.html` are fragments an agent copies: one file per
   example id in the spec, captured in the state it demonstrates.
-- `examples/anti/<example-id>.html` are forbidden usage, each citing the rules
+* `examples/anti/<example-id>.html` are forbidden usage, each citing the rules
   it breaks, so the grader has negative fixtures.
 
-This is why the catalog is usable by **any** framework. HTML is what every
-framework produces, so the HTML reference is the one every framework can read
-and port, and the one the grader's runtime mode inspects anyway.
-The React implementation of an entry lives in the registry
+HTML is what every framework produces, so the HTML reference is the one any
+framework can read and port, and the one the grader's runtime mode will
+inspect.
+
+The React implementation of an entry will live in the registry
 (`apps/site/registry/lacquer/<group>/<id>/`), written from the spec on Base UI
-and Tailwind through the `tailwind` binding, and registered in the entry's
-`implementations`. The Oct 14 implementations on the html binding are at the
-git tag `catalog-2026-10`.
+and Tailwind through a `tailwind` binding that maps the same roles to Tailwind
+theme variables, and registered in the entry's `implementations`. Neither
+exists yet. The Oct 14 implementations on the html binding are at the git tag
+`catalog-2026-10`.
 
 ## Authoring workflow
 

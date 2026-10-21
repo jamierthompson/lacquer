@@ -1,4 +1,4 @@
-# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+# Source of truth for this entry. SKILL.md and dist/ are generated from it by `pnpm build`.
 
 id: message-state-machine
 name: Message state machine
@@ -211,8 +211,8 @@ api:
     assistant-ui `isRunning`, or your own reducer). Components receive it as a prop. No component may compute
     its state from message text. The reducer is a lookup in the transitions table above: the status only
     changes on a listed (from, on) pair, and every other event is ignored (LQ-MACHINE-04). The React
-    implementation in @lacquer/react reads the table from the compiled spec, so the code cannot drift from
-    this file.
+    implementation will ship the table in its own file, with a test that asserts it equals this one, so the
+    code cannot drift from this file.
 accessibility:
   name: Not applicable; this principle defines the announcements other components make.
   announcements:

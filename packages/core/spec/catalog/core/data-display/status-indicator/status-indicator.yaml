@@ -1,4 +1,4 @@
-# Source of truth for this entry. SKILL.md and spec/dist are generated from it by `npm run spec:build`.
+# Source of truth for this entry. SKILL.md and dist/ are generated from it by `pnpm build`.
 
 id: status-indicator
 name: Status Indicator

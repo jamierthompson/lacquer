@@ -106,7 +106,7 @@ Every listed state needs a visual treatment **and** an accessibility expression 
 
 Events: `send`, `reasoning-delta`, `tool-input-start`, `approval-requested`, `approval-responded`, `text-delta`, `finish`, `error`, `stop`, `retry`, `regenerate`.
 
-Expose one `status` value per thread and one `state` per tool part, from the transport (AI SDK `status`, assistant-ui `isRunning`, or your own reducer). Components receive it as a prop. No component may compute its state from message text. The reducer is a lookup in the transitions table above: the status only changes on a listed (from, on) pair, and every other event is ignored (LQ-MACHINE-04). The React implementation in @lacquer/react reads the table from the compiled spec, so the code cannot drift from this file.
+Expose one `status` value per thread and one `state` per tool part, from the transport (AI SDK `status`, assistant-ui `isRunning`, or your own reducer). Components receive it as a prop. No component may compute its state from message text. The reducer is a lookup in the transitions table above: the status only changes on a listed (from, on) pair, and every other event is ignored (LQ-MACHINE-04). The React implementation will ship the table in its own file, with a test that asserts it equals this one, so the code cannot drift from this file.
 
 ## Accessibility
 

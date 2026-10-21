@@ -8,7 +8,7 @@
  *
  * The server is deliberately dumb: it reads @lacquer/core's dist/ that the build
  * validated and answers questions about it. All intelligence lives in the
- * catalog data — the same files feed the skills, the site and the grader.
+ * catalog data — the same files feed the skills, the site and, later, the grader.
  */
 import { readFile } from "node:fs/promises";
 import {

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://lacquer.dev/schema/component.schema.json",
   "title": "Lacquer component spec",
-  "description": "The framework-agnostic contract for one catalog entry: what it is, what it is made of, every state it must express, how it must behave for keyboard and assistive tech, which token roles it consumes, when to use it, what is forbidden, and where its examples live. Authored as YAML in spec/catalog/**; compiled to JSON in spec/dist/. Enums marked `x-vocab` are injected from spec/schema/vocab.yaml by the build. While an entry is a draft only id, catalog, group and status are required; the full contract is required once it is stable.",
+  "description": "The contract for one catalog entry: what it is, what it is made of, every state it must express, how it must behave for keyboard and assistive tech, which token roles it consumes, when to use it, what is forbidden, and where its examples live. Authored as YAML in spec/catalog/**; compiled to JSON in dist/. Enums marked `x-vocab` are injected from spec/schema/vocab.yaml by the build. While an entry is a draft only id, catalog, group and status are required; the full contract is required once it is stable.",
   "type": "object",
   "additionalProperties": false,
   "required": ["id", "catalog", "group", "status"],
@@ -390,7 +390,7 @@
 
     "implementations": {
       "type": "array",
-      "description": "Concrete code for a renderer: the reference implementation of this entry. Either a file in the entry folder (the HTML reference) or a named export of a package (a framework implementation such as @lacquer/react).",
+      "description": "Concrete code for a renderer: the reference implementation of this entry. Either a file in the entry folder (the HTML reference) or a named export of a package or registry item (a framework implementation).",
       "items": {
         "type": "object",
         "additionalProperties": false,
@@ -404,7 +404,7 @@
           },
           "package": {
             "type": "string",
-            "description": "The package that ships the implementation, e.g. @lacquer/react."
+            "description": "The package or registry item that ships the implementation, e.g. @lacquer/tool-call-card."
           },
           "export": {
             "type": "string",

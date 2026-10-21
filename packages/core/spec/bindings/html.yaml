@@ -2,7 +2,7 @@
 #
 # A spec names roles (`color.bg.primary`). A binding says what that role is
 # called in a real stack so examples can be written, linted and graded. This
-# is Lacquer's only shipped binding: plain CSS custom properties, which every
+# is Lacquer's only shipped binding for now: plain CSS custom properties, which every
 # framework, build tool and design tool can consume. The property name is the
 # role with dots replaced by dashes and an `lq-` prefix, so it can be derived
 # mechanically and never collides with a consumer's own variables.

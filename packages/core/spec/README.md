@@ -1,13 +1,14 @@
 # The Lacquer spec layer
 
-This folder is the framework-agnostic source of truth for Lacquer. Everything
-else in the repo — the generated skills, the registry, the MCP server and
-the grader — reads from here. Nothing here depends on any framework or product.
+This folder is the source of truth for Lacquer. Everything
+else in the repo — the generated skills, the registry, the MCP server and,
+once it lands, the grader — reads from here. Nothing here depends on any
+framework or product.
 
-The catalog structure, the authoring workflow and the definition of done are in
-the root [README](../../../README.md); the rules for working here are in
-[AGENTS.md](../../../AGENTS.md). This file covers only what is specific to
-writing the files in `spec/`.
+The model behind the catalog, the authoring workflow and the definition of
+done are in the package [README](../README.md); the rules for working here
+are in [AGENTS.md](../../../AGENTS.md). This file covers only what is specific
+to writing the files in `spec/`.
 
 ## What is in here
 
@@ -53,13 +54,11 @@ Every entry's SKILL.md lists what it is still missing.
 
 ## Registering an implementation
 
-The React implementation lives in the registry, under
+The React implementation will live in the registry, under
 `apps/site/registry/lacquer/<group>/<id>/`, as the item the shadcn CLI
-installs. The entry registers it under `implementations` with
-`renderer: react`, the registry item name and the named `export`. The build
-checks that an entry which names a registry item has one, and that the
-item's states file covers every state the spec names. The Oct 14
-implementations on the html binding are at the git tag `catalog-2026-10`;
-`message-state-machine` there reads its own `machine` block from the compiled
-entry so the reducer cannot drift from the YAML, and the registry version
-keeps that test.
+installs, and the entry will register it under `implementations` with
+`renderer: react`, the registry item name and the named `export`. No entry
+does yet. The Oct 14 implementations on the html binding are at the git tag
+`catalog-2026-10`; `message-state-machine` there reads its own `machine`
+block from the compiled entry so the reducer cannot drift from the YAML, and
+the registry version keeps that guarantee as a test.

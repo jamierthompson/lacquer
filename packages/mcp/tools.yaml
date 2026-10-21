@@ -1,6 +1,7 @@
 # Lacquer MCP server — tool manifest.
 #
-# This is the contract the server will implement. Every tool reads from
+# This is the contract the server implements: the read tools exist today; the
+# grade tools land with the grader package. Every tool reads from
 # @lacquer/core's dist/ (never from the YAML), so the server is a thin, stateless reader
 # over files the build already validated. Tool names are verbs an agent would
 # reach for mid-task; descriptions are written for the model that will call
@@ -13,10 +14,10 @@ server:
   name: lacquer
   version: 0.1.0
   description: >
-    The finishing school for AI-generated UI. A framework-agnostic catalog of UI
-    components and AI-interface patterns, each with anatomy, states, accessibility
-    contract, token roles, forbidden usage and examples — plus tools that grade
-    generated UI against it.
+    Lacquer, an AI-native design system: the finishing school for AI-generated UI.
+    Every component and AI-interface pattern has a contract with anatomy, states,
+    accessibility, token roles, forbidden usage and examples, modelled as data —
+    and, once the grader lands, tools that grade UI against it.
   reads:
     - dist/index.json
     - dist/catalog.json
@@ -148,7 +149,7 @@ tools:
       properties:
         product_type: { type: string, enum: [classic, ai-augmented, ai-native] }
 
-  # ---------------------------------------------------------------- grade tools
+  # ------------------------- grade tools: PLANNED, not implemented; they land with packages/grade
   - name: lacquer_lint
     phase: grade
     description: >
@@ -211,6 +212,7 @@ tools:
         report: { type: object }
       required: [source]
 
+# PLANNED, not implemented.
 resources:
   - uri: lacquer://catalog/index
     description: dist/index.json
@@ -223,6 +225,7 @@ resources:
   - uri: lacquer://binding/{name}
     description: spec/bindings/{name}.yaml
 
+# PLANNED, not implemented.
 prompts:
   - name: build-with-lacquer
     description: System prompt fragment that tells an agent to search the catalog before inventing a component, resolve tokens through the binding, and lint before returning.

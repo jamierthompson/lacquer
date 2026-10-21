@@ -1,8 +1,8 @@
 # Shared rules every catalog entry may cite. These are the cross-component
-# checks the grader runs on any screen; component-local rules live inside each
+# checks the grader will run on any screen; component-local rules live inside each
 # entry's YAML under rules.local. The AI-loop rules (LQ-WAIT, LQ-STREAM,
 # LQ-TOOL, LQ-GATE …) live in ai-loop.yaml; the build merges every file here
-# plus every local rule into spec/dist/rules.json: one catalog, one id space.
+# plus every local rule into dist/rules.json: one catalog, one id space.
 #
 # Ids follow the existing convention: LQ-<AREA>-<NN>.
 
