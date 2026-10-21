@@ -5,16 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/build-registry.ts && next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "check": "shadcn registry validate",
+    "check": "node scripts/build-registry.ts --check && shadcn registry validate",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "registry": "node scripts/build-registry.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
+    "@lacquer/core": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.5.0",
     "fumadocs-core": "^16.17.7",

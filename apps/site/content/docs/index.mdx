@@ -9,14 +9,19 @@ ships and on every pull request after.
 
 ## Install
 
-Add the registry once to `components.json`, then add components by name:
-
-```json
-{ "registries": { "@lacquer": "https://lacquer.dev/r/{name}.json" } }
-```
+Start a project on the Lacquer theme. The base item installs every token as
+a `--lq-*` custom property in light and dark, the matching Tailwind
+utilities, Base UI, and registers the `@lacquer` registry:
 
 ```bash
-npx shadcn add @lacquer/tool-call-card
+npx shadcn@latest init https://lacquer.dev/r/base.json
 ```
 
-Nothing is published yet. The first items land with the first composition.
+Then add components by name:
+
+```bash
+npx shadcn@latest add @lacquer/tool-call-card
+```
+
+The base is the only item so far. Components land one composition at a time,
+each with its spec, states, tests and finish report.
