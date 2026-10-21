@@ -90,8 +90,9 @@ interface Typography {
   fontFamily: string | string[];
   fontSize: Dimension | string;
   fontWeight: number | string;
+  /** Required by DTCG; always 0 here, see checkShape. */
+  letterSpacing: Dimension | string;
   lineHeight: number | string;
-  letterSpacing?: Dimension | string;
 }
 
 export interface LacquerExtensions {
@@ -404,9 +405,16 @@ function checkShape(type: TokenType, v: unknown): string | null {
       if (
         t.fontWeight === undefined ||
         t.lineHeight === undefined ||
-        t.fontFamily === undefined
+        t.fontFamily === undefined ||
+        t.letterSpacing === undefined
       )
-        return "typography needs fontFamily, fontSize, fontWeight, lineHeight";
+        return "typography needs fontFamily, fontSize, fontWeight, letterSpacing, lineHeight (DTCG 9.8)";
+      if (!dimOrAlias(t.letterSpacing))
+        return "typography.letterSpacing must be a dimension";
+      // The html binding emits a typography role as the `font` shorthand,
+      // which has no letter-spacing slot; a non-zero tracking would be lost.
+      if (isDim(t.letterSpacing) && t.letterSpacing.value !== 0)
+        return "typography.letterSpacing must be 0: the font shorthand cannot carry it (add a tracking role instead)";
       return null;
     }
     case "shorthand": {
