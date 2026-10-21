@@ -564,6 +564,29 @@ export function deriveBindings(set: TokenSet): {
   };
 }
 
+/**
+ * Two roles that derive the same binding name: the later would silently
+ * shadow the earlier in the stylesheet, so the build refuses it. A role
+ * steers its names through `$extensions["dev.lacquer"].tailwind`.
+ */
+export function bindingCollisions(binding: Binding): string[] {
+  const problems: string[] = [];
+  for (const key of ["var", "class"] as const) {
+    const seen = new Map<string, string>();
+    for (const [role, bound] of Object.entries(binding.roles)) {
+      const name = bound[key];
+      if (!name) continue;
+      const other = seen.get(name);
+      if (other)
+        problems.push(
+          `${role} and ${other} both derive the ${binding.id} ${key} ${name}`,
+        );
+      seen.set(name, role);
+    }
+  }
+  return problems;
+}
+
 /** The `@theme inline` aliases: theme variable -> `var(--lq-…)`, for roles bound to a namespace. */
 export function themeAliases(
   html: Binding,

@@ -39,6 +39,7 @@ import {
   type Vocab,
 } from "./lib/spec.ts";
 import {
+  bindingCollisions,
   deriveBindings,
   HTML_THEME_FILE,
   readTokens,
@@ -576,6 +577,8 @@ async function main() {
   );
   for (const p of problems) err(null, `spec/tokens: ${p}`);
   const { html, tailwind } = deriveBindings(tokenSet);
+  for (const p of [...bindingCollisions(html), ...bindingCollisions(tailwind)])
+    err(null, `spec/tokens: ${p}`);
   const theme = themeOf(tokenSet);
 
   if (errors.length) {
