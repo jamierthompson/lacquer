@@ -8,11 +8,12 @@
  *
  * The server is deliberately dumb: it reads @lacquer/core's dist/ that the build
  * validated and answers questions about it. All intelligence lives in the
- * catalog data — the same files feed the skills, the site and, later, the grader.
+ * catalog data — the same files feed the skills, the site, and the grader.
  */
 import { readFile } from "node:fs/promises";
 import {
   type IndexEntry,
+  loadBindings,
   loadComponent,
   loadIndex,
   loadRules,
@@ -21,7 +22,6 @@ import {
 } from "@lacquer/core";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { parse as parseYaml } from "yaml";
 import { z } from "zod";
 
 const index = await loadIndex();
@@ -187,16 +187,14 @@ server.tool(
 
 server.tool(
   "lacquer_tokens",
-  "Resolve token roles (or a component's consumed roles) to CSS custom property names through a binding.",
+  "Resolve token roles (or a component's consumed roles) through a binding: `html` gives the --lq-* custom property, `tailwind` the theme variable and utility class.",
   {
     roles: z.array(z.string()).optional(),
     id: z.string().optional(),
-    binding: z.string().default("html"),
+    binding: z.enum(["html", "tailwind"]).default("html"),
   },
   async ({ roles, id, binding }) => {
-    const b = parseYaml(
-      await readFile(resolvePath(`spec/bindings/${binding}.yaml`), "utf8"),
-    ) as { roles: Record<string, { var: string }> };
+    const b = (await loadBindings())[binding];
     const wanted =
       roles ?? (id ? ((await component(id)).tokens?.consumes ?? []) : []);
     return text(

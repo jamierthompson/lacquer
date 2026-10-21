@@ -24,7 +24,7 @@ server:
     - dist/components/<id>.json
     - dist/rules.json
     - spec/catalog/**/SKILL.md
-    - spec/bindings/*.yaml
+    - dist/bindings.json
 
 tools:
   # ---------------------------------------------------------------- read tools
@@ -129,14 +129,16 @@ tools:
     phase: read
     description: >
       Resolve token roles to a concrete system through a binding. Given roles (or a
-      component id, to get its consumed roles) and a binding name, return the CSS
-      custom property to use for each. Never guess a property name: resolve it.
+      component id, to get its consumed roles) and a binding name, return what to
+      write for each: the `html` binding gives the --lq-* custom property, the
+      `tailwind` binding the theme variable and the utility class. Never guess a
+      property or class name: resolve it.
     input:
       type: object
       properties:
         roles: { type: array, items: { type: string } }
         id: { type: string }
-        binding: { type: string, default: html }
+        binding: { type: string, enum: [html, tailwind], default: html }
 
   - name: lacquer_catalog
     phase: read
@@ -163,7 +165,7 @@ tools:
       properties:
         source: { type: string, description: The code or serialized DOM. }
         language: { type: string, enum: [tsx, jsx, html, vue, svelte, dom] }
-        binding: { type: string, default: html }
+        binding: { type: string, enum: [html, tailwind], default: html }
         components:
           {
             type: array,
@@ -223,7 +225,7 @@ resources:
   - uri: lacquer://rules
     description: dist/rules.json
   - uri: lacquer://binding/{name}
-    description: spec/bindings/{name}.yaml
+    description: "dist/bindings.json, the {name} binding derived from spec/tokens"
 
 # PLANNED, not implemented.
 prompts:
