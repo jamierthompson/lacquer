@@ -3,7 +3,6 @@ dist/
 .DS_Store
 *.log
 *.tsbuildinfo
-PLAN.md
 
 # next.js
 .next/
