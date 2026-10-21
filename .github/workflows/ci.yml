@@ -27,6 +27,10 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # @lacquer/core's dist/ is what the other packages import (types,
+      # loaders, bindings.json); on a fresh checkout it does not exist until
+      # core builds, so core builds before anything type-checks against it.
+      - run: pnpm --filter @lacquer/core build
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
