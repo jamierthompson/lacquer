@@ -297,11 +297,6 @@ rules:
       detect:
         static: A loading, streaming or done boolean stored in thread state alongside a status.
       fix: Derive the boolean from status at the point of use (`status !== "idle" && !terminal`).
-implementations:
-  - renderer: react
-    package: "@lacquer/react"
-    export: useMessageMachine
-    status: reference
 grading:
   weight: 2
   notes: Violations here cascade into every component in the transcript; graded once per screen, weighted high.

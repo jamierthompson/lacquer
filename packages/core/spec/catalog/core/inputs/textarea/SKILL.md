@@ -137,7 +137,6 @@ What the grader enforces. MUST = defect, SHOULD = deduction.
 ## Implementations
 
 - html: `examples/html/textarea.html` (reference)
-- react: `@lacquer/react#Textarea` (reference)
 
 ## Sources
 

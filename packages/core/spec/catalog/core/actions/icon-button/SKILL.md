@@ -142,7 +142,6 @@ What the grader enforces. MUST = defect, SHOULD = deduction.
 ## Implementations
 
 - html: `examples/html/icon-button.html` (reference)
-- react: `@lacquer/react#IconButton` (reference)
 
 ## Sources
 

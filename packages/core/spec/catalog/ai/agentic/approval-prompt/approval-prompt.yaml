@@ -434,10 +434,6 @@ implementations:
   - renderer: html
     file: examples/html/approval-prompt.html
     status: reference
-  - renderer: react
-    package: "@lacquer/react"
-    export: ApprovalPrompt
-    status: reference
 grading:
   weight: 2
   notes: The one component that stands between an agent and a side effect; a defect here is a safety defect, so it is weighted like the state machine.

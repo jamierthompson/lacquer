@@ -143,10 +143,6 @@ What the grader enforces. MUST = defect, SHOULD = deduction.
 - **LQ-MACHINE-05** (MUST) No second source of truth for the lifecycle. A thread holds one status value; no `isLoading`, `isStreaming` or `done` flag lives beside it that could disagree with it.
   Fix: Derive the boolean from status at the point of use (`status !== "idle" && !terminal`).
 
-## Implementations
-
-- react: `@lacquer/react#useMessageMachine` (reference)
-
 ## Exemplars
 
 - AI Elements Tool — seven states with badge labels.

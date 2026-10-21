@@ -372,10 +372,6 @@ implementations:
   - renderer: html
     file: examples/html/tool-call-card.html
     status: reference
-  - renderer: react
-    package: "@lacquer/react"
-    export: ToolCallCard
-    status: reference
 grading:
   weight: 1.5
   notes: >-

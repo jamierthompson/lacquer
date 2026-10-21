@@ -234,10 +234,6 @@ implementations:
   - renderer: html
     file: examples/html/icon-button.html
     status: reference
-  - renderer: react
-    package: "@lacquer/react"
-    export: IconButton
-    status: reference
 sources:
   - https://www.w3.org/WAI/ARIA/apg/patterns/button/
   - https://m3.material.io/components

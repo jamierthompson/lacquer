@@ -164,7 +164,6 @@ What the grader enforces. MUST = defect, SHOULD = deduction.
 ## Implementations
 
 - html: `examples/html/thinking-indicator.html` (reference)
-- react: `@lacquer/react#ThinkingIndicator` (reference)
 
 ## Exemplars
 

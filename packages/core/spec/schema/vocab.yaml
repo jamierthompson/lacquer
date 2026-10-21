@@ -145,7 +145,7 @@ component_aliases:
 # renderer consumes the `html` binding's custom properties.
 renderers:
   html: Plain HTML + CSS custom properties. The reference every framework can read.
-  react: "@lacquer/react: components written from the spec; the site renders them live beside the contract."
+  react: "React on Base UI and Tailwind, distributed as a shadcn registry item from apps/site/registry; the site renders it live beside the contract."
 
 rule_levels:
   MUST: Violation is a defect. Grader scores it as a failure.

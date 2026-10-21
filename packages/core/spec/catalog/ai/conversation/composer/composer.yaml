@@ -415,10 +415,6 @@ implementations:
   - renderer: html
     file: examples/html/composer.html
     status: reference
-  - renderer: react
-    package: "@lacquer/react"
-    export: Composer
-    status: reference
 grading:
   weight: 1.5
   notes: One per screen, but every turn starts here; a wrong primary control is the most visible defect in an AI product.

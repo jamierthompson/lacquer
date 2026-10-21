@@ -221,10 +221,6 @@ implementations:
   - renderer: html
     file: examples/html/textarea.html
     status: reference
-  - renderer: react
-    package: "@lacquer/react"
-    export: Textarea
-    status: reference
 sources:
   - https://m3.material.io/components
   - https://carbondesignsystem.com/components/overview/components/

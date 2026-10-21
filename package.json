@@ -1,21 +1,27 @@
 {
   "name": "lacquer",
   "version": "0.1.0",
-  "description": "The finishing school for AI-generated UI: a framework-agnostic catalog of UI components and AI-interface patterns, with the rules to grade generated UI against it.",
+  "description": "AI-native design system. The finishing school for AI-generated UI.",
   "license": "MIT",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@11.18.0",
   "engines": {
-    "node": ">=22.18"
+    "node": "24.x"
   },
   "scripts": {
     "build": "pnpm -r build",
     "check": "pnpm -r check",
-    "dev": "pnpm --filter @lacquer/core build && pnpm --filter @lacquer/react build && pnpm --parallel --filter @lacquer/react --filter @lacquer/site dev",
+    "dev": "pnpm --filter @lacquer/site dev",
+    "start": "pnpm --filter @lacquer/site start",
     "mcp": "pnpm --filter @lacquer/mcp start",
+    "lint": "biome check",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "test:e2e": "pnpm --filter @lacquer/site test:e2e",
+    "gate": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm check && pnpm test && pnpm build"
   },
   "devDependencies": {
     "prettier": "^3.9.10"

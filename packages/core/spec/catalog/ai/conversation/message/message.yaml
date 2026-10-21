@@ -300,10 +300,6 @@ implementations:
   - renderer: html
     file: examples/html/message.html
     status: reference
-  - renderer: react
-    package: "@lacquer/react"
-    export: Message
-    status: reference
 grading:
   weight: 1.5
   notes: One per turn, so a defect here repeats down the whole thread; the status region is graded once per turn.

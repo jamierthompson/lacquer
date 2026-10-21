@@ -1,7 +1,7 @@
 # The Lacquer spec layer
 
 This folder is the framework-agnostic source of truth for Lacquer. Everything
-else in the repo — the generated skills, `@lacquer/react`, the MCP server and
+else in the repo — the generated skills, the registry, the MCP server and
 the grader — reads from here. Nothing here depends on any framework or product.
 
 The catalog structure, the authoring workflow and the definition of done are in
@@ -51,11 +51,15 @@ anti-examples. `tool-call-card` is an AI component with lifecycle states and an
 HTML reference; `message-state-machine` is a principle with a `machine` block.
 Every entry's SKILL.md lists what it is still missing.
 
-## Registering a React implementation
+## Registering an implementation
 
-The code lives in `packages/react/src/<id>.ts(x)` and is exported from
-`@lacquer/react`. The entry registers it under `implementations` with
-`renderer: react`, the `package` and the named `export`. It may import the
-compiled entry from `@lacquer/core/components/<id>.json`;
-`message-state-machine` reads its own `machine` block that way, so the reducer
-cannot drift from the YAML.
+The React implementation lives in the registry, under
+`apps/site/registry/lacquer/<group>/<id>/`, as the item the shadcn CLI
+installs. The entry registers it under `implementations` with
+`renderer: react`, the registry item name and the named `export`. The build
+checks that an entry which names a registry item has one, and that the
+item's states file covers every state the spec names. The Oct 14
+implementations on the html binding are at the git tag `catalog-2026-10`;
+`message-state-machine` there reads its own `machine` block from the compiled
+entry so the reducer cannot drift from the YAML, and the registry version
+keeps that test.

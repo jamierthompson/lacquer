@@ -222,10 +222,6 @@ implementations:
   - renderer: html
     file: examples/html/thinking-indicator.html
     status: reference
-  - renderer: react
-    package: "@lacquer/react"
-    export: ThinkingIndicator
-    status: reference
 grading:
   weight: 1
   notes: Graded once per turn; the first thing a user sees after sending, so a defect here is seen every time.

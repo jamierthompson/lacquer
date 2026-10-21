@@ -239,7 +239,6 @@ What the grader enforces. MUST = defect, SHOULD = deduction.
 ## Implementations
 
 - html: `examples/html/approval-prompt.html` (reference)
-- react: `@lacquer/react#ApprovalPrompt` (reference)
 
 ## Exemplars
 
