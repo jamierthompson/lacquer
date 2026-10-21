@@ -1,0 +1,22 @@
+---
+title: Lacquer
+description: An AI-native design system. The finishing school for AI-generated UI.
+---
+
+Lacquer is a design system for AI interfaces. Every component has a written
+contract, is built from that contract, and is graded against it before it
+ships and on every pull request after.
+
+## Install
+
+Add the registry once to `components.json`, then add components by name:
+
+```json
+{ "registries": { "@lacquer": "https://lacquer.dev/r/{name}.json" } }
+```
+
+```bash
+npx shadcn add @lacquer/tool-call-card
+```
+
+Nothing is published yet. The first items land with the first composition.

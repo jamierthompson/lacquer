@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "lacquer",
+  "homepage": "https://lacquer.dev",
+  "items": [],
+  "include": [
+    "registry/lacquer/foundations/registry.json",
+    "registry/lacquer/conversation/registry.json",
+    "registry/lacquer/agentic/registry.json",
+    "registry/lacquer/generation/registry.json",
+    "registry/lacquer/trust/registry.json",
+    "registry/lacquer/augmentation/registry.json",
+    "registry/lacquer/onboarding/registry.json",
+    "registry/lacquer/actions/registry.json",
+    "registry/lacquer/inputs/registry.json",
+    "registry/lacquer/selection/registry.json",
+    "registry/lacquer/overlays/registry.json",
+    "registry/lacquer/feedback/registry.json",
+    "registry/lacquer/data-display/registry.json",
+    "registry/lacquer/navigation/registry.json",
+    "registry/lacquer/layout/registry.json",
+    "registry/lacquer/typography/registry.json",
+    "registry/lacquer/media/registry.json",
+    "registry/lacquer/utilities/registry.json"
+  ]
+}
