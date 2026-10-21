@@ -31,11 +31,12 @@ From that one file the build produces:
 3. A row in `dist/index.json` — for search.
 4. Its local rules merged into `dist/rules.json` — so `LQ-BUTTON-01` has the same standing as `LQ-STATE-01`.
 
-And three consumers use it without touching YAML (the first exists today; the
-grader and the registry implementation arrive with the next milestones):
+And three consumers use it without touching YAML (the MCP server exists, the
+grader has its first check, the registry implementation arrives with the
+first composition):
 
 - **An agent building UI** calls `lacquer_search("confirm delete")` → `alert-dialog`, `lacquer_get` for the contract, `lacquer_example` for a starting point, `lacquer_tokens` to resolve roles to custom properties, and, once the grade tools exist, `lacquer_lint` on its output before returning it.
-- **The grader** will load `dist/components/button.json`, drive the registry's button through every state the spec names, run every rule whose `detect` hint it can execute, and emit findings that cite `LQ-BUTTON-02` with the fix text straight from the spec. `grading/samples/report.example.json` is the shape of that report.
+- **The grader** (`packages/grade`) will load `dist/components/button.json`, drive the registry's button through every state the spec names, run every rule whose `detect` hint it can execute, and emit findings that cite `LQ-BUTTON-02` with the fix text straight from the spec. `grading/samples/report.example.json` is the shape of that report. Today it runs one of those rules, LQ-TOKEN-01, statically over source.
 - **The registry implementation**, and anyone porting the entry, reads `examples/html/button.html` and `button.css`: the markup pattern, every state as an attribute, every value as a role through the binding. The React version on Base UI and Tailwind is a translation of that file, not a second design.
 
 ## The two catalogs
@@ -92,21 +93,37 @@ Three places define rules, one id space:
 deductions; a finish report will be the list of findings plus the resulting
 scores, in the shape of `grading/report.schema.json`.
 
-## Token roles and the binding
+## Tokens, roles and the bindings
 
 A spec never names a value or a class. It names a role: `color.bg.primary`,
-`radius.control`, `motion.duration.fast`. The binding
-(`spec/bindings/html.yaml`) maps every role to a CSS custom property, derived
-mechanically: `color.bg.primary` is `--lq-color-bg-primary`. Component CSS reads
-roles only, through `var()`. The grader's token check (LQ-TOKEN-01/02) will
-resolve every property an implementation reads back to a role and fail on any
-literal.
+`radius.control`, `motion.duration.fast`. A role is a token's path in
+`spec/tokens/`, written in the W3C Design Tokens Community Group format
+(Format Module 2025.10): `lacquer.tokens.json` holds every role with its
+`$type`, `$description` and light `$value`, `dark.tokens.json` holds only the
+roles that change, and `lacquer.resolver.json` (Resolver Module 2025.10) says
+how the two compose under a `theme` modifier. That file set is the single
+source: a new role is one entry there, and every binding picks it up.
 
-The binding names properties, never values. `html.theme.css` beside it is a
-reference theme that gives each property a default so the examples render on
-their own; a product overrides any of them and nothing in `spec/catalog/`
-changes. A second binding maps the same roles to another stack; the
-`tailwind` binding for the registry is the next one.
+A binding is a derivation, not a list. The **html** binding reads a role as a
+custom property, `--lq-` plus the path with dashes: `--lq-color-bg-primary`.
+The **tailwind** binding reads it as a Tailwind 4 theme variable and utility
+chosen from the token's type and category: `--color-lq-bg-primary`, used as
+`bg-lq-bg-primary`; `rounded-lq-control`; `shadow-lq-sm`; `z-lq-modal`. Every
+theme variable aliases the html property, so retheming the `--lq-*` properties
+rethemes both. A role whose type has no Tailwind namespace (a padding
+shorthand, a `typography` setting, the focus ring) keeps its `--lq-*` property
+and is read with Tailwind's variable syntax, `p-(--lq-space-inset-control-md)`.
+The few places the derivation needs steering sit on the token itself, in
+`$extensions["dev.lacquer"]`.
+
+The build validates the tokens (types and shapes, aliases, categories against
+`vocab.yaml`), derives both bindings into `dist/bindings.json`, and generates
+the two stylesheets in `spec/bindings/`: `html.theme.css`, which the catalog's
+HTML examples link, and `tailwind.theme.css`, which the site imports and the
+registry's base item is built from. Component CSS reads roles only, through
+`var(--lq-…)`; registry code reads them through the `lq-` utilities.
+`@lacquer/grade` runs the LQ-TOKEN-01 check over both today; the grader's
+token dimension grows from it.
 
 ## Renderers
 
@@ -131,10 +148,9 @@ inspect.
 
 The React implementation of an entry will live in the registry
 (`apps/site/registry/lacquer/<group>/<id>/`), written from the spec on Base UI
-and Tailwind through a `tailwind` binding that maps the same roles to Tailwind
-theme variables, and registered in the entry's `implementations`. Neither
-exists yet. The Oct 14 implementations on the html binding are at the git tag
-`catalog-2026-10`.
+and Tailwind through the `tailwind` binding, and registered in the entry's
+`implementations`. The binding exists; no component does yet. The Oct 14
+implementations on the html binding are at the git tag `catalog-2026-10`.
 
 ## Authoring workflow
 

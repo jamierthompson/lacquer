@@ -79,7 +79,7 @@ Chips are list items with remove buttons named 'Remove {name}'; additions announ
 
 ## Tokens
 
-Roles, not values. Resolve through the binding (spec/bindings/html.yaml) to CSS custom properties.
+Roles, not values. A role is a token path in spec/tokens; the html binding reads it as `--lq-<role-with-dashes>`, the tailwind binding as an `lq-` utility (dist/bindings.json has both).
 
 Consumes: `color.bg.surface-secondary`, `radius.pill`, `type.label.sm`, `color.border.subtle`.
 
@@ -94,8 +94,8 @@ What the grader enforces. MUST = defect, SHOULD = deduction.
 
 ### Forbidden
 
-- **LQ-TOKEN-01** (MUST) No literal values. Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).
-  Fix: Replace with the role's custom property from the binding (see spec/bindings/html.yaml).
+- **LQ-TOKEN-01** (MUST) No literal values. Component styles read token roles only, through the binding (its custom properties or its utility classes); no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`, `bg-zinc-900`, `rounded-lg`).
+  Fix: Replace with the role's `--lq-*` property or its `lq-` utility class; both are derived from the role's path in spec/tokens (see dist/bindings.json).
 
 ## Exemplars
 

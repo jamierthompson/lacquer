@@ -13,8 +13,10 @@
     "./catalog.json": "./dist/catalog.json",
     "./index.json": "./dist/index.json",
     "./rules.json": "./dist/rules.json",
+    "./bindings.json": "./dist/bindings.json",
     "./components/*.json": "./dist/components/*.json",
     "./bindings/*": "./spec/bindings/*",
+    "./tokens/*": "./spec/tokens/*",
     "./catalog/*": "./spec/catalog/*",
     "./package.json": "./package.json"
   },

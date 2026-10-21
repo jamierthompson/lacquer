@@ -5,6 +5,10 @@
  *   -> dist/rules.json             one rule catalog, one id space
  *   -> dist/components/<id>.json
  *   -> spec/catalog/**\/<id>/SKILL.md   generated from the YAML + optional guidance.md
+ * spec/tokens/*.tokens.json + lacquer.resolver.json   (DTCG 2025.10)
+ *   -> dist/bindings.json          both derived bindings, the theme values, the Tailwind aliases
+ *   -> spec/bindings/html.theme.css       generated: the html binding's reference theme
+ *   -> spec/bindings/tailwind.theme.css   generated: the Tailwind binding's stylesheet
  *
  * Validation: JSON Schema (ajv) with vocab enums injected; folder and path
  * must match id/catalog/group; cited shared rules must exist; local rule ids
@@ -13,14 +17,14 @@
  * an entry still lacks is listed as `missing` in dist and SKILL.md: reported
  * while the entry is a draft, an error once it is stable.
  *
- * `--check` exits 1 when any committed generated file (SKILL.md) is stale
- * instead of writing it; dist/ is build output and is always written.
+ * `--check` exits 1 when any committed generated file (SKILL.md, the two
+ * theme stylesheets) is stale instead of writing it; dist/ is build output
+ * and is always written.
  */
 import { access, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
-
 import {
   CATALOG_DIR,
   DIST_DIR,
@@ -34,6 +38,16 @@ import {
   type SpecEntry,
   type Vocab,
 } from "./lib/spec.ts";
+import {
+  deriveBindings,
+  HTML_THEME_FILE,
+  readTokens,
+  renderHtmlTheme,
+  renderTailwindTheme,
+  TAILWIND_THEME_FILE,
+  themeAliases,
+  theme as themeOf,
+} from "./lib/tokens.ts";
 
 const check = process.argv.includes("--check");
 const errors: string[] = [];
@@ -428,7 +442,7 @@ export function renderSkill(
     out.push(
       "## Tokens",
       "",
-      "Roles, not values. Resolve through the binding (spec/bindings/html.yaml) to CSS custom properties.",
+      "Roles, not values. A role is a token path in spec/tokens; the html binding reads it as `--lq-<role-with-dashes>`, the tailwind binding as an `lq-` utility (dist/bindings.json has both).",
       "",
     );
     if (s.tokens.consumes?.length)
@@ -557,6 +571,13 @@ async function main() {
       for (const x of m) err(entry, `stable entry is missing ${x}`);
   }
 
+  const { set: tokenSet, problems } = await readTokens(
+    new Set(Object.keys(vocab.token_categories)),
+  );
+  for (const p of problems) err(null, `spec/tokens: ${p}`);
+  const { html, tailwind } = deriveBindings(tokenSet);
+  const theme = themeOf(tokenSet);
+
   if (errors.length) {
     console.error(`\n${errors.length} error(s):`);
     for (const e of errors) console.error(`  ${e}`);
@@ -648,6 +669,18 @@ async function main() {
   );
   for (const c of components)
     await emit(path.join(DIST_DIR, "components", `${c.id}.json`), json(c));
+  await emit(
+    path.join(DIST_DIR, "bindings.json"),
+    json({
+      version: 1,
+      html,
+      tailwind,
+      theme,
+      aliases: themeAliases(html, tailwind),
+    }),
+  );
+  await emit(HTML_THEME_FILE, renderHtmlTheme(theme));
+  await emit(TAILWIND_THEME_FILE, renderTailwindTheme(html, tailwind, theme));
   for (const entry of entries)
     await emit(
       path.join(entry.dir, "SKILL.md"),
@@ -664,6 +697,9 @@ async function main() {
   );
   console.log(
     `${withGaps} entries list ${gapCount} missing item(s); see each SKILL.md or dist/components/<id>.json → missing`,
+  );
+  console.log(
+    `${tokenSet.tokens.size} token roles (${tokenSet.contexts.join(", ")}) bound in html and tailwind; ${Object.keys(theme.dark).length} dark overrides`,
   );
   if (check && stale) {
     console.error(`\n${stale} generated file(s) out of date. Run: pnpm build`);

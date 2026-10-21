@@ -61,7 +61,7 @@ Respects prefers-reduced-motion; avoids strobing at high token rates (WCAG 2.2.2
 
 ## Tokens
 
-Roles, not values. Resolve through the binding (spec/bindings/html.yaml) to CSS custom properties.
+Roles, not values. A role is a token path in spec/tokens; the html binding reads it as `--lq-<role-with-dashes>`, the tailwind binding as an `lq-` utility (dist/bindings.json has both).
 
 Consumes: `stream.cursor-blink`, `stream.reveal-duration`, `shimmer.duration`, `motion.reduce`.
 

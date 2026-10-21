@@ -63,7 +63,7 @@ All steps must announce state once, never continuously; reduced motion disables 
 
 ## Tokens
 
-Roles, not values. Resolve through the binding (spec/bindings/html.yaml) to CSS custom properties.
+Roles, not values. A role is a token path in spec/tokens; the html binding reads it as `--lq-<role-with-dashes>`, the tailwind binding as an `lq-` utility (dist/bindings.json has both).
 
 Consumes: `stream.reveal-duration`, `shimmer.duration`, `motion.reduce`.
 

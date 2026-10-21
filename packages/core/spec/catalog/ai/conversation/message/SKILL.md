@@ -125,7 +125,7 @@ Announcements: One polite status region per assistant message, visually hidden, 
 
 ## Tokens
 
-Roles, not values. Resolve through the binding (spec/bindings/html.yaml) to CSS custom properties.
+Roles, not values. A role is a token path in spec/tokens; the html binding reads it as `--lq-<role-with-dashes>`, the tailwind binding as an `lq-` utility (dist/bindings.json has both).
 
 Consumes: `color.bg.secondary`, `color.fg.on-secondary`, `color.fg.default`, `color.fg.muted`, `radius.lg`, `space.gap.xs`, `space.gap.sm`, `space.inset.sm`, `type.body.md`, `type.label.sm`, `size.measure.prose`.
 
@@ -158,8 +158,8 @@ What the grader enforces. MUST = defect, SHOULD = deduction.
 
 ### Forbidden
 
-- **LQ-TOKEN-01** (MUST) No literal values. Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).
-  Fix: Replace with the role's custom property from the binding (see spec/bindings/html.yaml).
+- **LQ-TOKEN-01** (MUST) No literal values. Component styles read token roles only, through the binding (its custom properties or its utility classes); no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`, `bg-zinc-900`, `rounded-lg`).
+  Fix: Replace with the role's `--lq-*` property or its `lq-` utility class; both are derived from the role's path in spec/tokens (see dist/bindings.json).
 - **LQ-STREAM-02** (MUST) No reflow beyond one line. Streaming must not reflow previously rendered content by more than one line height.
 - **LQ-MESSAGE-03** (MUST) Nothing clears on stop or error. Entering cancelled or error never removes or replaces content already rendered; cancelled appends the stopped note and error appends the inline error.
   Fix: Render the note and the error after the content; never reset the content on a status change.

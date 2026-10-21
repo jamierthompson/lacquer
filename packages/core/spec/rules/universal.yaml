@@ -51,7 +51,7 @@ rules:
     detect:
       static: Class or style removes outline and no focus-visible ring class/rule exists on the same element.
       runtime: Tab to the element; the focused and unfocused screenshots must differ at ≥3:1 along the element's edge.
-    fix: Use `focus-visible:ring-2 ring-ring ring-offset-2` (or the binding's equivalent) and keep `:focus` untouched.
+    fix: Draw the ring on `:focus-visible` from the binding's roles (`focus.ring.width`, `color.border.focus`, `focus.ring.offset`) and keep `:focus` untouched.
     applies_to: ["*"]
     source: wcag
 
@@ -81,11 +81,11 @@ rules:
     level: MUST
     polarity: forbid
     title: No literal values
-    statement: "Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`)."
+    statement: "Component styles read token roles only, through the binding (its custom properties or its utility classes); no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`, `bg-zinc-900`, `rounded-lg`)."
     rationale: Tokens are the primer; the component is the finish. A literal value breaks every theme at once.
     detect:
       static: "A declaration on a component part sets colour, radius, shadow, duration or z-index to anything other than `var(--lq-…)` (or a utility class that does not resolve to a role through the binding)."
-    fix: Replace with the role's custom property from the binding (see spec/bindings/html.yaml).
+    fix: Replace with the role's `--lq-*` property or its `lq-` utility class; both are derived from the role's path in spec/tokens (see dist/bindings.json).
     applies_to: ["*"]
 
   - id: LQ-TOKEN-02

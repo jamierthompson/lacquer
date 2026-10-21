@@ -113,9 +113,9 @@ Announcements: Exactly one announcement per state change, polite except approval
 
 ## Tokens
 
-Roles, not values. Resolve through the binding (spec/bindings/html.yaml) to CSS custom properties.
+Roles, not values. A role is a token path in spec/tokens; the html binding reads it as `--lq-<role-with-dashes>`, the tailwind binding as an `lq-` utility (dist/bindings.json has both).
 
-Consumes: `color.status.pending`, `color.status.running`, `color.status.success`, `color.status.error`, `color.status.warning`, `color.bg.surface-secondary`, `color.fg.default`, `color.fg.muted`, `color.border.subtle`, `type.family.mono`, `type.body.md`, `type.label.sm`, `radius.md`, `space.inset.sm`, `space.gap.sm`, `motion.duration.base`.
+Consumes: `color.status.pending`, `color.status.running`, `color.status.success`, `color.status.error`, `color.status.warning`, `color.bg.surface-secondary`, `color.fg.default`, `color.fg.muted`, `color.border.subtle`, `type.family.mono`, `type.body.md`, `type.label.sm`, `radius.md`, `space.inset.sm`, `space.gap.sm`, `motion.duration.base`, `motion.duration.spin`, `motion.duration.pulse`.
 
 ## Content
 
@@ -158,9 +158,9 @@ What the grader enforces. MUST = defect, SHOULD = deduction.
 - **LQ-STATE-02** (MUST) No state by colour alone. No state is expressed by colour alone; every state has a second channel (icon, weight, border, position or text).
   Fix: Add an icon, border, weight or text change alongside the colour change.
 - **LQ-FOCUS-01** (MUST) Never remove focus without replacing it. No `outline: none` / `outline-0` / `focus:outline-none` without a `:focus-visible` replacement that has ≥3:1 contrast against both the component and the page.
-  Fix: Use `focus-visible:ring-2 ring-ring ring-offset-2` (or the binding's equivalent) and keep `:focus` untouched.
-- **LQ-TOKEN-01** (MUST) No literal values. Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).
-  Fix: Replace with the role's custom property from the binding (see spec/bindings/html.yaml).
+  Fix: Draw the ring on `:focus-visible` from the binding's roles (`focus.ring.width`, `color.border.focus`, `focus.ring.offset`) and keep `:focus` untouched.
+- **LQ-TOKEN-01** (MUST) No literal values. Component styles read token roles only, through the binding (its custom properties or its utility classes); no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`, `bg-zinc-900`, `rounded-lg`).
+  Fix: Replace with the role's `--lq-*` property or its `lq-` utility class; both are derived from the role's path in spec/tokens (see dist/bindings.json).
 - **LQ-TOOLCARD-03** (MUST) Never render model HTML. Output is JSON, text, or a component registered by the product; a string from the model is never set as innerHTML.
   Fix: Render text, or map the tool name to a registered component.
 

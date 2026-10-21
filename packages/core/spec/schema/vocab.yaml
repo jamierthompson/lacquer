@@ -101,9 +101,10 @@ states:
   output-error: { ai: true }
   output-denied: { ai: true, aliases: [denied] }
 
-# Token roles. A spec names the *role* it consumes, never a value. Bindings
-# (spec/bindings/*.yaml) map roles to a concrete system's names. Roles are
-# dotted paths; the first segment is the category.
+# Token roles. A spec names the *role* it consumes, never a value. A role is
+# a token's path in spec/tokens (DTCG); the build derives every binding's
+# names from it. Roles are dotted paths; the first segment is the category and
+# must be listed here.
 token_categories:
   color: Backgrounds, foregrounds, borders, status, scrim. `color.<surface|fg|border|status>.<role>`
   space: Insets and gaps. `space.<inset|gap>.<size>`

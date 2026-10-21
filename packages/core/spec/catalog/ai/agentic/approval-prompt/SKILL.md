@@ -176,7 +176,7 @@ Announcements: The title is the thread's only assertive announcement, once, on e
 
 ## Tokens
 
-Roles, not values. Resolve through the binding (spec/bindings/html.yaml) to CSS custom properties.
+Roles, not values. A role is a token path in spec/tokens; the html binding reads it as `--lq-<role-with-dashes>`, the tailwind binding as an `lq-` utility (dist/bindings.json has both).
 
 Consumes: `color.status.warning`, `color.status.error`, `color.status.success`, `color.fg.default`, `color.fg.muted`, `color.bg.surface`, `color.bg.surface-tertiary`, `color.border.default`, `radius.md`, `radius.sm`, `space.inset.sm`, `space.gap.xs`, `space.gap.sm`, `type.body.md`, `type.label.sm`, `type.label.md`, `type.family.mono`.
 
@@ -218,9 +218,9 @@ What the grader enforces. MUST = defect, SHOULD = deduction.
 - **LQ-STATE-02** (MUST) No state by colour alone. No state is expressed by colour alone; every state has a second channel (icon, weight, border, position or text).
   Fix: Add an icon, border, weight or text change alongside the colour change.
 - **LQ-FOCUS-01** (MUST) Never remove focus without replacing it. No `outline: none` / `outline-0` / `focus:outline-none` without a `:focus-visible` replacement that has ≥3:1 contrast against both the component and the page.
-  Fix: Use `focus-visible:ring-2 ring-ring ring-offset-2` (or the binding's equivalent) and keep `:focus` untouched.
-- **LQ-TOKEN-01** (MUST) No literal values. Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).
-  Fix: Replace with the role's custom property from the binding (see spec/bindings/html.yaml).
+  Fix: Draw the ring on `:focus-visible` from the binding's roles (`focus.ring.width`, `color.border.focus`, `focus.ring.offset`) and keep `:focus` untouched.
+- **LQ-TOKEN-01** (MUST) No literal values. Component styles read token roles only, through the binding (its custom properties or its utility classes); no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`, `bg-zinc-900`, `rounded-lg`).
+  Fix: Replace with the role's `--lq-*` property or its `lq-` utility class; both are derived from the role's path in spec/tokens (see dist/bindings.json).
 - **LQ-APPROVAL-03** (MUST) No always without a scope. The Always option is rendered only when a scope is given, its label names that scope, and the scope never exceeds what the payload shows.
   Fix: Pass `alwaysScope` only when the rule can be stated in the label ("npm test in this repo"); omit it otherwise.
 - **LQ-APPROVAL-04** (MUST) Never answered by the transport. The decide event fires from the user's activation of an option, Enter or Esc, and from nothing else; no timer, transport message or default selects allow, and a time-out resolves to timed-out, which is a deny.

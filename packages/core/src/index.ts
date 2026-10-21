@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import type {
+  Bindings,
   Catalog,
   CatalogComponent,
   IndexEntry,
@@ -31,3 +32,4 @@ export const loadCatalog = (): Promise<Catalog> => json("dist/catalog.json");
 export const loadRules = (): Promise<RuleCatalog> => json("dist/rules.json");
 export const loadComponent = (id: string): Promise<CatalogComponent> =>
   json(`dist/components/${id}.json`);
+export const loadBindings = (): Promise<Bindings> => json("dist/bindings.json");

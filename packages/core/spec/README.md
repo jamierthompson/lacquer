@@ -1,9 +1,8 @@
 # The Lacquer spec layer
 
 This folder is the source of truth for Lacquer. Everything
-else in the repo — the generated skills, the registry, the MCP server and,
-once it lands, the grader — reads from here. Nothing here depends on any
-framework or product.
+else in the repo — the generated skills, the registry, the MCP server and the
+grader — reads from here. Nothing here depends on any framework or product.
 
 The model behind the catalog, the authoring workflow and the definition of
 done are in the package [README](../README.md); the rules for working here
@@ -20,9 +19,13 @@ spec/
   rules/
     universal.yaml          cross-component rules (LQ-STATE, LQ-FOCUS, LQ-TOKEN …)
     ai-loop.yaml            agent-loop rules (LQ-WAIT, LQ-STREAM, LQ-TOOL, LQ-GATE …)
-  bindings/
-    html.yaml               token role -> CSS custom property (the contract)
-    html.theme.css          reference theme: a default for every property, so examples render
+  tokens/
+    lacquer.tokens.json     every token role with its type and light value (DTCG Format Module 2025.10)
+    dark.tokens.json        the roles whose value changes in dark
+    lacquer.resolver.json   how the two compose: a `theme` modifier, light | dark (Resolver Module 2025.10)
+  bindings/                 GENERATED from tokens/; never edited
+    html.theme.css          the html binding's reference theme (dark follows the system preference)
+    tailwind.theme.css      the Tailwind binding's stylesheet (@theme aliases; dark is the `dark` class)
   catalog/
     core/<group>/<id>/      product-agnostic components
     ai/<group>/<id>/        AI-interface components, patterns and principles

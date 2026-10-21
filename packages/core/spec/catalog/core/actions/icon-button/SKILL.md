@@ -102,9 +102,9 @@ Focus: Focus stays on the button after activation unless the action moves it del
 
 ## Tokens
 
-Roles, not values. Resolve through the binding (spec/bindings/html.yaml) to CSS custom properties.
+Roles, not values. A role is a token path in spec/tokens; the html binding reads it as `--lq-<role-with-dashes>`, the tailwind binding as an `lq-` utility (dist/bindings.json has both).
 
-Consumes: `color.bg.primary`, `color.bg.primary-hover`, `color.fg.on-primary`, `color.bg.secondary`, `color.bg.secondary-hover`, `color.fg.on-secondary`, `color.bg.accent`, `color.bg.selected`, `color.bg.destructive`, `color.bg.destructive-hover`, `color.fg.on-destructive`, `color.fg.default`, `color.border.input`, `color.border.focus`, `radius.control`, `radius.pill`, `size.control.xs`, `size.control.sm`, `size.control.md`, `size.control.lg`, `size.icon.sm`, `size.icon.md`, `focus.ring.width`, `focus.ring.offset`, `motion.duration.fast`, `motion.easing.standard`, `opacity.disabled`.
+Consumes: `color.bg.primary`, `color.bg.primary-hover`, `color.fg.on-primary`, `color.bg.secondary`, `color.bg.secondary-hover`, `color.fg.on-secondary`, `color.bg.accent`, `color.bg.selected`, `color.bg.destructive`, `color.bg.destructive-hover`, `color.fg.on-destructive`, `color.fg.default`, `color.border.input`, `color.border.focus`, `radius.control`, `radius.pill`, `size.control.xs`, `size.control.sm`, `size.control.md`, `size.control.lg`, `size.icon.sm`, `size.icon.md`, `focus.ring.width`, `focus.ring.offset`, `motion.duration.fast`, `motion.easing.standard`, `opacity.disabled`, `motion.duration.spin`.
 
 ## Content
 
@@ -135,9 +135,9 @@ What the grader enforces. MUST = defect, SHOULD = deduction.
 - **LQ-STATE-02** (MUST) No state by colour alone. No state is expressed by colour alone; every state has a second channel (icon, weight, border, position or text).
   Fix: Add an icon, border, weight or text change alongside the colour change.
 - **LQ-FOCUS-01** (MUST) Never remove focus without replacing it. No `outline: none` / `outline-0` / `focus:outline-none` without a `:focus-visible` replacement that has ≥3:1 contrast against both the component and the page.
-  Fix: Use `focus-visible:ring-2 ring-ring ring-offset-2` (or the binding's equivalent) and keep `:focus` untouched.
-- **LQ-TOKEN-01** (MUST) No literal values. Component styles read token roles only, through the binding's custom properties; no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`).
-  Fix: Replace with the role's custom property from the binding (see spec/bindings/html.yaml).
+  Fix: Draw the ring on `:focus-visible` from the binding's roles (`focus.ring.width`, `color.border.focus`, `focus.ring.offset`) and keep `:focus` untouched.
+- **LQ-TOKEN-01** (MUST) No literal values. Component styles read token roles only, through the binding (its custom properties or its utility classes); no literal colours, radii, shadows, durations or z-indexes (`#7c3aed`, `oklch(…)`, `border-radius: 12px`, `z-index: 50`, `300ms`, `bg-zinc-900`, `rounded-lg`).
+  Fix: Replace with the role's `--lq-*` property or its `lq-` utility class; both are derived from the role's path in spec/tokens (see dist/bindings.json).
 
 ## Implementations
 

@@ -116,7 +116,7 @@ Announcements: Each transition maps to exactly one announcement, listed per stat
 
 ## Tokens
 
-Roles, not values. Resolve through the binding (spec/bindings/html.yaml) to CSS custom properties.
+Roles, not values. A role is a token path in spec/tokens; the html binding reads it as `--lq-<role-with-dashes>`, the tailwind binding as an `lq-` utility (dist/bindings.json has both).
 
 Defines: `color.status.pending`, `color.status.running`, `color.status.success`, `color.status.error`, `color.status.warning`.
 

@@ -206,3 +206,41 @@ export interface RuleCatalog {
   count: number;
   rules: Rule[];
 }
+
+// ---------------------------------------------------------------- bindings
+
+/** One role's binding: the property or theme variable, and for Tailwind the canonical utility. */
+export interface BindingRole {
+  var: string;
+  class?: string;
+  /** The token's DTCG $type (`shorthand` for a padding shorthand group). */
+  type?: string;
+  description?: string;
+  deprecated?: boolean | string;
+}
+
+/** A binding, derived from spec/tokens by the build: token roles mapped onto one stack. */
+export interface Binding {
+  id: string;
+  renderer: string;
+  version: number;
+  /** The binding whose properties this one aliases (tailwind extends html). */
+  extends?: string;
+  roles: Record<string, BindingRole>;
+}
+
+/** The reference theme's values by custom property, per mode. */
+export interface Theme {
+  light: Record<string, string>;
+  dark: Record<string, string>;
+}
+
+/** dist/bindings.json: both bindings, the theme values and the Tailwind aliases. */
+export interface Bindings {
+  version: number;
+  html: Binding;
+  tailwind: Binding;
+  theme: Theme;
+  /** Tailwind theme variable -> `var(--lq-…)`, what `@theme inline` declares. */
+  aliases: Record<string, string>;
+}

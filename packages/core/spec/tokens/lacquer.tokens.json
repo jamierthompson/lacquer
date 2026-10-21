@@ -1,0 +1,763 @@
+{
+  "$description": "Lacquer's token roles and their reference values (light). DTCG Format Module 2025.10. A spec consumes a role by its path, color.bg.primary; bindings derive every property and class name from the path and the type.",
+  "color": {
+    "$type": "color",
+    "$description": "Backgrounds, foregrounds, borders and status colours. Roles, never a palette.",
+    "bg": {
+      "surface": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "hex": "#ffffff"
+        }
+      },
+      "surface-secondary": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "hex": "#ffffff"
+        }
+      },
+      "surface-tertiary": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9569, 0.9569, 0.9608],
+          "hex": "#f4f4f5"
+        }
+      },
+      "primary": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.0941, 0.0941, 0.1059],
+          "hex": "#18181b"
+        }
+      },
+      "primary-hover": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.1529, 0.1529, 0.1647],
+          "hex": "#27272a"
+        }
+      },
+      "secondary": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9569, 0.9569, 0.9608],
+          "hex": "#f4f4f5"
+        }
+      },
+      "secondary-hover": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8941, 0.8941, 0.9059],
+          "hex": "#e4e4e7"
+        }
+      },
+      "accent": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9569, 0.9569, 0.9608],
+          "hex": "#f4f4f5"
+        }
+      },
+      "destructive": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8627, 0.149, 0.149],
+          "hex": "#dc2626"
+        }
+      },
+      "destructive-hover": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.7255, 0.1098, 0.1098],
+          "hex": "#b91c1c"
+        }
+      },
+      "selected": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8941, 0.8941, 0.9059],
+          "hex": "#e4e4e7"
+        }
+      },
+      "scrim": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0, 0, 0],
+          "alpha": 0.5
+        }
+      }
+    },
+    "fg": {
+      "default": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.0353, 0.0353, 0.0431],
+          "hex": "#09090b"
+        }
+      },
+      "muted": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.4431, 0.4431, 0.4784],
+          "hex": "#71717a"
+        }
+      },
+      "on-primary": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9804, 0.9804, 0.9804],
+          "hex": "#fafafa"
+        }
+      },
+      "on-secondary": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.0941, 0.0941, 0.1059],
+          "hex": "#18181b"
+        }
+      },
+      "on-destructive": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "hex": "#ffffff"
+        }
+      },
+      "link": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.0941, 0.0941, 0.1059],
+          "hex": "#18181b"
+        }
+      }
+    },
+    "border": {
+      "default": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8941, 0.8941, 0.9059],
+          "hex": "#e4e4e7"
+        }
+      },
+      "subtle": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9412, 0.9412, 0.9451],
+          "hex": "#f0f0f1"
+        }
+      },
+      "input": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8314, 0.8314, 0.8471],
+          "hex": "#d4d4d8"
+        }
+      },
+      "focus": {
+        "$extensions": {
+          "dev.lacquer": {
+            "tailwind": {
+              "class": "outline-lq-border-focus"
+            }
+          }
+        },
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.0941, 0.0941, 0.1059],
+          "hex": "#18181b"
+        }
+      },
+      "danger": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8627, 0.149, 0.149],
+          "hex": "#dc2626"
+        }
+      }
+    },
+    "status": {
+      "pending": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.4431, 0.4431, 0.4784],
+          "hex": "#71717a"
+        }
+      },
+      "running": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.1451, 0.3882, 0.9216],
+          "hex": "#2563eb"
+        }
+      },
+      "success": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.0863, 0.6392, 0.2902],
+          "hex": "#16a34a"
+        }
+      },
+      "error": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8627, 0.149, 0.149],
+          "hex": "#dc2626"
+        }
+      },
+      "warning": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.851, 0.4667, 0.0235],
+          "hex": "#d97706"
+        }
+      }
+    },
+    "accent": {
+      "ai": {
+        "$description": "The AI accent. An alias of a brand token, never a new hue (LQ-STYLE-01).",
+        "$value": "{color.bg.primary}"
+      }
+    }
+  },
+  "radius": {
+    "$type": "dimension",
+    "$description": "Corner rounding by what it is on: a control, a surface, a pill.",
+    "control": {
+      "$value": {
+        "value": 0.375,
+        "unit": "rem"
+      }
+    },
+    "surface": {
+      "$value": {
+        "value": 0.5,
+        "unit": "rem"
+      }
+    },
+    "pill": {
+      "$value": {
+        "value": 9999,
+        "unit": "px"
+      }
+    },
+    "sm": {
+      "$value": {
+        "value": 0.25,
+        "unit": "rem"
+      }
+    },
+    "md": {
+      "$value": {
+        "value": 0.375,
+        "unit": "rem"
+      }
+    },
+    "lg": {
+      "$value": {
+        "value": 0.5,
+        "unit": "rem"
+      }
+    }
+  },
+  "space": {
+    "$type": "dimension",
+    "$description": "Insets and gaps. Control insets are padding shorthands: a block and an inline dimension.",
+    "inset": {
+      "control": {
+        "sm": {
+          "$description": "Padding for a control: block then inline.",
+          "$extensions": {
+            "dev.lacquer": {
+              "shorthand": "padding"
+            }
+          },
+          "block": {
+            "$value": {
+              "value": 0.375,
+              "unit": "rem"
+            }
+          },
+          "inline": {
+            "$value": {
+              "value": 0.75,
+              "unit": "rem"
+            }
+          }
+        },
+        "md": {
+          "$description": "Padding for a control: block then inline.",
+          "$extensions": {
+            "dev.lacquer": {
+              "shorthand": "padding"
+            }
+          },
+          "block": {
+            "$value": {
+              "value": 0.5,
+              "unit": "rem"
+            }
+          },
+          "inline": {
+            "$value": {
+              "value": 1,
+              "unit": "rem"
+            }
+          }
+        },
+        "lg": {
+          "$description": "Padding for a control: block then inline.",
+          "$extensions": {
+            "dev.lacquer": {
+              "shorthand": "padding"
+            }
+          },
+          "block": {
+            "$value": {
+              "value": 0.75,
+              "unit": "rem"
+            }
+          },
+          "inline": {
+            "$value": {
+              "value": 1.5,
+              "unit": "rem"
+            }
+          }
+        }
+      },
+      "sm": {
+        "$value": {
+          "value": 0.75,
+          "unit": "rem"
+        }
+      },
+      "md": {
+        "$value": {
+          "value": 1,
+          "unit": "rem"
+        }
+      },
+      "lg": {
+        "$value": {
+          "value": 1.5,
+          "unit": "rem"
+        }
+      }
+    },
+    "gap": {
+      "xs": {
+        "$value": {
+          "value": 0.25,
+          "unit": "rem"
+        }
+      },
+      "sm": {
+        "$value": {
+          "value": 0.5,
+          "unit": "rem"
+        }
+      },
+      "md": {
+        "$value": {
+          "value": 1,
+          "unit": "rem"
+        }
+      },
+      "lg": {
+        "$value": {
+          "value": 1.5,
+          "unit": "rem"
+        }
+      }
+    }
+  },
+  "size": {
+    "$type": "dimension",
+    "$description": "Control heights, icon sizes and the prose measure.",
+    "control": {
+      "xs": {
+        "$value": {
+          "value": 1.75,
+          "unit": "rem"
+        }
+      },
+      "sm": {
+        "$value": {
+          "value": 2,
+          "unit": "rem"
+        }
+      },
+      "md": {
+        "$value": {
+          "value": 2.25,
+          "unit": "rem"
+        }
+      },
+      "lg": {
+        "$value": {
+          "value": 2.5,
+          "unit": "rem"
+        }
+      }
+    },
+    "icon": {
+      "sm": {
+        "$value": {
+          "value": 0.875,
+          "unit": "rem"
+        }
+      },
+      "md": {
+        "$value": {
+          "value": 1,
+          "unit": "rem"
+        }
+      }
+    },
+    "measure": {
+      "prose": {
+        "$type": "number",
+        "$description": "The widest an assistant message grows, in characters.",
+        "$extensions": {
+          "dev.lacquer": {
+            "unit": "ch"
+          }
+        },
+        "$value": 65
+      }
+    }
+  },
+  "type": {
+    "$type": "typography",
+    "$description": "Text styles as whole settings, and the two families.",
+    "label": {
+      "sm": {
+        "$value": {
+          "fontFamily": "{type.family.sans}",
+          "fontSize": {
+            "value": 0.75,
+            "unit": "rem"
+          },
+          "fontWeight": 500,
+          "lineHeight": 1.3333
+        }
+      },
+      "md": {
+        "$value": {
+          "fontFamily": "{type.family.sans}",
+          "fontSize": {
+            "value": 0.875,
+            "unit": "rem"
+          },
+          "fontWeight": 500,
+          "lineHeight": 1.4286
+        }
+      }
+    },
+    "body": {
+      "md": {
+        "$value": {
+          "fontFamily": "{type.family.sans}",
+          "fontSize": {
+            "value": 0.875,
+            "unit": "rem"
+          },
+          "fontWeight": 400,
+          "lineHeight": 1.4286
+        }
+      }
+    },
+    "heading": {
+      "md": {
+        "$value": {
+          "fontFamily": "{type.family.sans}",
+          "fontSize": {
+            "value": 1.125,
+            "unit": "rem"
+          },
+          "fontWeight": 600,
+          "lineHeight": 1
+        }
+      }
+    },
+    "family": {
+      "mono": {
+        "$type": "fontFamily",
+        "$value": ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"]
+      },
+      "sans": {
+        "$type": "fontFamily",
+        "$value": ["ui-sans-serif", "system-ui", "sans-serif"]
+      }
+    }
+  },
+  "shadow": {
+    "$type": "shadow",
+    "$description": "Elevation.",
+    "sm": {
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [0, 0, 0],
+            "alpha": 0.05
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 2,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        }
+      ]
+    },
+    "md": {
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [0, 0, 0],
+            "alpha": 0.1
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 4,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 6,
+            "unit": "px"
+          },
+          "spread": {
+            "value": -1,
+            "unit": "px"
+          }
+        },
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [0, 0, 0],
+            "alpha": 0.1
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 2,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 4,
+            "unit": "px"
+          },
+          "spread": {
+            "value": -2,
+            "unit": "px"
+          }
+        }
+      ]
+    },
+    "lg": {
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [0, 0, 0],
+            "alpha": 0.1
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 10,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 15,
+            "unit": "px"
+          },
+          "spread": {
+            "value": -3,
+            "unit": "px"
+          }
+        },
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [0, 0, 0],
+            "alpha": 0.1
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 4,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 6,
+            "unit": "px"
+          },
+          "spread": {
+            "value": -4,
+            "unit": "px"
+          }
+        }
+      ]
+    }
+  },
+  "z": {
+    "$type": "number",
+    "$description": "Stacking contexts.",
+    "dropdown": {
+      "$value": 40
+    },
+    "modal": {
+      "$value": 50
+    },
+    "toast": {
+      "$value": 60
+    }
+  },
+  "motion": {
+    "$type": "duration",
+    "$description": "Durations and the standard easing.",
+    "duration": {
+      "fast": {
+        "$value": {
+          "value": 100,
+          "unit": "ms"
+        }
+      },
+      "base": {
+        "$value": {
+          "value": 200,
+          "unit": "ms"
+        }
+      },
+      "spin": {
+        "$description": "One revolution of a spinner.",
+        "$extensions": {
+          "dev.lacquer": {
+            "tailwind": {
+              "namespace": null,
+              "property": "animation-duration"
+            }
+          }
+        },
+        "$value": {
+          "value": 1,
+          "unit": "s"
+        }
+      },
+      "pulse": {
+        "$description": "One cycle of a pending pulse.",
+        "$extensions": {
+          "dev.lacquer": {
+            "tailwind": {
+              "namespace": null,
+              "property": "animation-duration"
+            }
+          }
+        },
+        "$value": {
+          "value": 2,
+          "unit": "s"
+        }
+      }
+    },
+    "easing": {
+      "standard": {
+        "$type": "cubicBezier",
+        "$value": [0, 0, 0.2, 1]
+      }
+    }
+  },
+  "focus": {
+    "$type": "dimension",
+    "$description": "Focus ring geometry.",
+    "ring": {
+      "width": {
+        "$extensions": {
+          "dev.lacquer": {
+            "tailwind": {
+              "class": "outline-(length:--lq-focus-ring-width)"
+            }
+          }
+        },
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        }
+      },
+      "offset": {
+        "$extensions": {
+          "dev.lacquer": {
+            "tailwind": {
+              "class": "outline-offset-(--lq-focus-ring-offset)"
+            }
+          }
+        },
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        }
+      }
+    }
+  },
+  "opacity": {
+    "$type": "number",
+    "$description": "Disabled opacity.",
+    "disabled": {
+      "$value": 0.5
+    }
+  },
+  "shimmer": {
+    "$description": "The thinking-indicator shimmer.",
+    "duration": {
+      "$type": "duration",
+      "$description": "One sweep of the thinking-indicator shimmer.",
+      "$extensions": {
+        "dev.lacquer": {
+          "tailwind": {
+            "namespace": null,
+            "property": "animation-duration"
+          }
+        }
+      },
+      "$value": {
+        "value": 1.8,
+        "unit": "s"
+      }
+    },
+    "highlight": {
+      "$description": "The bright point of the shimmer sweep; an alias of a foreground role.",
+      "$extensions": {
+        "dev.lacquer": {
+          "tailwind": {
+            "class": "via-lq-shimmer-highlight"
+          }
+        }
+      },
+      "$value": "{color.fg.default}"
+    }
+  }
+}
