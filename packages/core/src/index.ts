@@ -6,6 +6,7 @@
  */
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import type {
   Bindings,
@@ -17,8 +18,16 @@ import type {
 
 export type * from "./types.ts";
 
-/** The package directory. Every path in the catalog is relative to it. */
-export const CORE_DIR = path.resolve(import.meta.dirname, "..");
+/**
+ * The package directory. Every path in the catalog is relative to it.
+ * Resolved from `import.meta.url`, which a bundler keeps pointing at the
+ * source file; `import.meta.dirname` does not survive one, and a relative
+ * `new URL()` is taken for an asset reference.
+ */
+export const CORE_DIR = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+);
 
 /** Absolute path of a catalog-relative path (an entry's `path`, `skill` or example `file`). */
 export const resolvePath = (relative: string): string =>
