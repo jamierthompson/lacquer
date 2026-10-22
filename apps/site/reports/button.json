@@ -1,0 +1,225 @@
+{
+  "version": 1,
+  "mode": "runtime",
+  "generated_at": "2026-10-22T14:43:43.013Z",
+  "component": "button",
+  "subject": {
+    "kind": "url",
+    "renderer": "html",
+    "language": "html",
+    "file": "packages/core/spec/catalog/core/actions/button/examples/html/button.html",
+    "binding": "html",
+    "hash": "sha256:d11c9b3872cd5ce7"
+  },
+  "detected": [
+    {
+      "id": "button",
+      "instances": 18,
+      "confidence": 1,
+      "how": "data-lacquer"
+    }
+  ],
+  "states": [
+    {
+      "id": "enabled",
+      "required": true,
+      "status": "pass",
+      "how": "default"
+    },
+    {
+      "id": "hover",
+      "required": true,
+      "status": "pass",
+      "how": "input: hover"
+    },
+    {
+      "id": "focus-visible",
+      "required": true,
+      "status": "pass",
+      "how": "input: keyboard-focus"
+    },
+    {
+      "id": "active",
+      "required": true,
+      "status": "pass",
+      "how": "input: press"
+    },
+    {
+      "id": "disabled",
+      "required": true,
+      "status": "pass",
+      "how": "attribute: aria-disabled=true"
+    },
+    {
+      "id": "loading",
+      "required": true,
+      "status": "pass",
+      "how": "attribute: aria-busy=true"
+    },
+    {
+      "id": "selected",
+      "required": false,
+      "status": "skipped",
+      "how": "attribute: aria-pressed=true",
+      "reason": "optional and not demonstrated"
+    }
+  ],
+  "rules": [
+    {
+      "id": "LQ-A11Y-02",
+      "level": "MUST",
+      "dimension": "accessibility",
+      "verdict": "pass",
+      "how": "runtime",
+      "findings": 0
+    },
+    {
+      "id": "LQ-ANAT-01",
+      "level": "SHOULD",
+      "dimension": "structure",
+      "verdict": "pass",
+      "how": "runtime",
+      "findings": 0
+    },
+    {
+      "id": "LQ-BUTTON-01",
+      "level": "MUST",
+      "dimension": "structure",
+      "verdict": "pass",
+      "how": "runtime",
+      "findings": 0
+    },
+    {
+      "id": "LQ-BUTTON-02",
+      "level": "MUST",
+      "dimension": "states",
+      "verdict": "pass",
+      "how": "runtime",
+      "findings": 0
+    },
+    {
+      "id": "LQ-BUTTON-03",
+      "level": "MUST",
+      "dimension": "composition",
+      "verdict": "pass",
+      "how": "runtime",
+      "findings": 0
+    },
+    {
+      "id": "LQ-BUTTON-04",
+      "level": "SHOULD",
+      "dimension": "structure",
+      "verdict": "skipped",
+      "reason": "Needs a press handler to inspect; the html reference has none. Lands with the React implementation."
+    },
+    {
+      "id": "LQ-BUTTON-05",
+      "level": "MUST",
+      "dimension": "accessibility",
+      "verdict": "pass",
+      "how": "runtime",
+      "findings": 0
+    },
+    {
+      "id": "LQ-BUTTON-06",
+      "level": "SHOULD",
+      "dimension": "composition",
+      "verdict": "skipped",
+      "reason": "Needs a form whose validity the button is bound to; none in the subject."
+    },
+    {
+      "id": "LQ-COPY-01",
+      "level": "SHOULD",
+      "dimension": "content",
+      "verdict": "pass",
+      "how": "runtime",
+      "findings": 0
+    },
+    {
+      "id": "LQ-FOCUS-01",
+      "level": "MUST",
+      "dimension": "accessibility",
+      "verdict": "pass",
+      "how": "runtime",
+      "findings": 0
+    },
+    {
+      "id": "LQ-MOTION-02",
+      "level": "MUST",
+      "dimension": "accessibility",
+      "verdict": "pass",
+      "how": "runtime",
+      "findings": 0
+    },
+    {
+      "id": "LQ-NAME-01",
+      "level": "MUST",
+      "dimension": "accessibility",
+      "verdict": "pass",
+      "how": "runtime",
+      "findings": 0
+    },
+    {
+      "id": "LQ-SEM-01",
+      "level": "MUST",
+      "dimension": "structure",
+      "verdict": "pass",
+      "how": "runtime",
+      "findings": 0
+    },
+    {
+      "id": "LQ-STATE-01",
+      "level": "MUST",
+      "dimension": "states",
+      "verdict": "pass",
+      "how": "runtime",
+      "findings": 0
+    },
+    {
+      "id": "LQ-STATE-02",
+      "level": "MUST",
+      "dimension": "states",
+      "verdict": "pass",
+      "how": "runtime",
+      "findings": 0
+    },
+    {
+      "id": "LQ-STATE-03",
+      "level": "MUST",
+      "dimension": "states",
+      "verdict": "pass",
+      "how": "runtime",
+      "findings": 0
+    },
+    {
+      "id": "LQ-TOKEN-01",
+      "level": "MUST",
+      "dimension": "tokens",
+      "verdict": "pass",
+      "how": "static",
+      "findings": 0
+    },
+    {
+      "id": "LQ-TOKEN-02",
+      "level": "SHOULD",
+      "dimension": "tokens",
+      "verdict": "pass",
+      "how": "static",
+      "findings": 0
+    }
+  ],
+  "score": {
+    "overall": 100,
+    "letter": "A",
+    "dimensions": {
+      "structure": 100,
+      "states": 100,
+      "accessibility": 100,
+      "tokens": 100,
+      "content": 100,
+      "composition": 100
+    }
+  },
+  "findings": [],
+  "summary": "Zero MUST findings: Button is finished. 6 of 6 required states pass. 16 of 16 rules run pass, 2 skipped. A, 100/100."
+}

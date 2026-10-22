@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "mode": "runtime",
+  "generated_at": "2026-10-22T14:43:43.120Z",
+  "component": "message-state-machine",
+  "subject": {
+    "kind": "source",
+    "renderer": "react",
+    "language": "typescript",
+    "file": "apps/site/registry/lacquer/foundations/message-state-machine/message-state-machine.ts",
+    "package": "@lacquer/message-state-machine",
+    "hash": "sha256:e0bb7c3a2188d8f8"
+  },
+  "detected": [
+    {
+      "id": "message-state-machine",
+      "instances": 1,
+      "confidence": 1,
+      "how": "module"
+    }
+  ],
+  "states": [
+    {
+      "id": "idle",
+      "required": true,
+      "status": "pass",
+      "how": "status: idle"
+    },
+    {
+      "id": "submitted",
+      "required": true,
+      "status": "pass",
+      "how": "status: submitted"
+    },
+    {
+      "id": "streaming",
+      "required": true,
+      "status": "pass",
+      "how": "status: streaming:reasoning, streaming:tool, streaming:text"
+    },
+    {
+      "id": "awaiting-approval",
+      "required": true,
+      "status": "pass",
+      "how": "status: awaiting-approval"
+    },
+    {
+      "id": "complete",
+      "required": true,
+      "status": "pass",
+      "how": "status: complete"
+    },
+    {
+      "id": "error",
+      "required": true,
+      "status": "pass",
+      "how": "status: error"
+    },
+    {
+      "id": "cancelled",
+      "required": true,
+      "status": "pass",
+      "how": "status: cancelled"
+    }
+  ],
+  "rules": [
+    {
+      "id": "LQ-A11Y-01",
+      "level": "MUST",
+      "dimension": "accessibility",
+      "verdict": "skipped",
+      "reason": "A consumer rule: live regions belong to the components that stream; checked there."
+    },
+    {
+      "id": "LQ-ERR-01",
+      "level": "MUST",
+      "dimension": "ai-conduct",
+      "verdict": "skipped",
+      "reason": "A consumer rule: checked on composer and message, which hold the draft and the error."
+    },
+    {
+      "id": "LQ-MACHINE-01",
+      "level": "MUST",
+      "dimension": "ai-conduct",
+      "verdict": "skipped",
+      "reason": "A consumer rule: checked on the components that render from the machine, not on the machine."
+    },
+    {
+      "id": "LQ-MACHINE-02",
+      "level": "MUST",
+      "dimension": "ai-conduct",
+      "verdict": "skipped",
+      "reason": "A consumer rule: the composer is what wires Stop and Regenerate; checked on composer."
+    },
+    {
+      "id": "LQ-MACHINE-03",
+      "level": "MUST",
+      "dimension": "ai-conduct",
+      "verdict": "skipped",
+      "reason": "A consumer rule: checked on message, which keeps the partial output."
+    },
+    {
+      "id": "LQ-MACHINE-04",
+      "level": "MUST",
+      "dimension": "ai-conduct",
+      "verdict": "pass",
+      "how": "runtime",
+      "findings": 0
+    },
+    {
+      "id": "LQ-MACHINE-05",
+      "level": "MUST",
+      "dimension": "ai-conduct",
+      "verdict": "pass",
+      "how": "static",
+      "findings": 0
+    },
+    {
+      "id": "LQ-RECOVER-01",
+      "level": "MUST",
+      "dimension": "ai-conduct",
+      "verdict": "skipped",
+      "reason": "A consumer rule: checked on composer and message, which render the controls."
+    }
+  ],
+  "score": {
+    "overall": 100,
+    "letter": "A",
+    "dimensions": {
+      "ai-conduct": 100
+    }
+  },
+  "findings": [],
+  "summary": "Zero MUST findings: Message state machine is finished. 7 of 7 required states pass. 2 of 2 rules run pass, 6 skipped. A, 100/100."
+}

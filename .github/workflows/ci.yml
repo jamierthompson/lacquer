@@ -38,13 +38,13 @@ jobs:
       # generated files (SKILL.md, tailwind.theme.css, the base registry item)
       # are current, runs the LQ-TOKEN-01 source check, validates the registry.
       - run: pnpm check
-      - run: pnpm test
-      - run: pnpm build
 
+      # The grader's tests drive Chromium, so the browser is installed before
+      # `pnpm test`; the site's e2e and the grader share one Playwright version.
       - name: Resolve the Playwright version
         id: playwright
         run: echo "version=$(node -p "require('playwright/package.json').version")" >> "$GITHUB_OUTPUT"
-        working-directory: apps/site
+        working-directory: packages/grade
       - name: Cache Playwright browsers
         id: playwright-cache
         uses: actions/cache@v5
@@ -52,9 +52,16 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
       - if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: pnpm --filter @lacquer/site exec playwright install --with-deps chromium
+        run: pnpm --filter @lacquer/grade exec playwright install --with-deps chromium
       - if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: pnpm --filter @lacquer/site exec playwright install-deps chromium
+        run: pnpm --filter @lacquer/grade exec playwright install-deps chromium
+
+      - run: pnpm test
+      # The finish reports: every committed baseline in apps/site/reports is
+      # regenerated; a MUST finding, a lost state, a rule that passed and now
+      # fails, or a lower score fails the job.
+      - run: pnpm grade:check
+      - run: pnpm build
       # playwright.config.ts serves the build from `pnpm start` when CI is set.
       - run: pnpm test:e2e
       # Last, so a new advisory on a transitive dependency does not hide a

@@ -18,8 +18,20 @@ An AI-native design system; the finishing school for AI-generated UI. Read
 - Likewise generated and committed: everything in
   `packages/core/spec/bindings/` (the two theme stylesheets) and
   `apps/site/registry/lacquer/foundations/registry.json` (the base item), all
-  from `packages/core/spec/tokens/`. Change the tokens, run `pnpm build`,
-  commit the result.
+  from `packages/core/spec/tokens/`, plus the SKILL.md copied into a registry
+  item's folder. Change the tokens, run `pnpm build`, commit the result.
+- Finish reports are written by the grader, never by hand:
+  `pnpm grade <id> --write` commits `apps/site/reports/<id>.json`, and
+  `pnpm grade:check` (CI runs it) regrades every baseline and fails on a MUST
+  finding or on drift. A spec's `implementations` is what the grader grades;
+  register the implementation there. When the grader finds the spec wrong,
+  correct the spec; when it finds the implementation wrong, correct that;
+  when the grader itself is wrong, fix the check and its fixture test.
+- Every state's expression lives in `vocab.yaml` beside the state: its
+  `attribute` (`aria-busy=true`) or the `input` that reaches it. Drivers and
+  LQ-STATE-03 read it; never hard-code a state's attribute elsewhere.
+- Every rule id maps to exactly one dimension in `grading/rubric.yaml`; the
+  build fails otherwise. A new local rule needs a home there.
 - Every enum lives in `packages/core/spec/schema/vocab.yaml`. Add a state,
   group or token category there, not inline.
 - A spec names token **roles**, never values or classes. A role is a token

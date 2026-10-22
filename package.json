@@ -18,6 +18,8 @@
     "lint": "biome check",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "grade": "pnpm --filter @lacquer/grade grade",
+    "grade:check": "pnpm --filter @lacquer/grade grade check",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
     "test:e2e": "pnpm --filter @lacquer/site test:e2e",

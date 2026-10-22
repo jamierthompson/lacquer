@@ -3,6 +3,9 @@
 packages/core/spec/bindings/html.theme.css
 packages/core/spec/bindings/tailwind.theme.css
 apps/site/registry/lacquer/foundations/registry.json
+apps/site/registry/lacquer/foundations/message-state-machine/SKILL.md
+# Written by the grader (lacquer-grade <id> --write).
+apps/site/reports/*.json
 **/dist
 **/.next
 **/.source

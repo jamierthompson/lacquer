@@ -17,6 +17,7 @@ nvm use        # Node 24
 pnpm install
 pnpm dev       # the site on http://localhost:3000
 pnpm gate      # what CI runs: format, lint, typecheck, check, test, build
+pnpm grade:check  # regrade every finish report and fail on drift (CI runs it too)
 pnpm test:e2e  # Playwright with axe against the site
 pnpm mcp       # the MCP server over stdio
 ```
@@ -28,7 +29,9 @@ A pnpm workspace.
 ```
 packages/core   the spec layer: schema, vocabulary, rules, bindings and
                 every component's contract, compiled to dist/
-packages/grade  the grader; today its first check, LQ-TOKEN-01 over source
+packages/grade  the grader: drives an implementation through its spec's
+                states, runs the rules, axe and the source scans, writes
+                the finish report
 packages/mcp    the MCP server over the spec layer
 apps/site       Next 16: the site, the registry and its routes
 ```
@@ -55,8 +58,31 @@ stale, if a pairing misses, or if any component source sets a literal colour,
 radius, shadow, duration or z-index (LQ-TOKEN-01). The site renders its
 `/foundations` pages from the same compiled bindings.
 
-`packages/core/README.md` explains the model behind the spec layer and
-`packages/core/spec/README.md` how to write a spec. `AGENTS.md` has the rules
+## The grader and the finish report
+
+A spec registers its implementations, and `@lacquer/grade` grades each one
+against the contract: it reaches every state the spec names (by input for
+hover, focus and active, by the vocabulary's attribute for the rest), runs
+every rule with a detect clause it can execute, runs axe, scans the source
+for literals and undeclared roles, and writes a finish report in the shape of
+`packages/core/grading/report.schema.json`, scored by `grading/rubric.yaml`.
+A rule it cannot execute yet is listed as skipped with the reason. A
+composition is finished at zero MUST findings; the report is committed as
+`apps/site/reports/<id>.json`, rendered at `/reports/<id>`, and CI regrades
+it on every pull request, failing on a MUST finding, a lost state, a rule that
+passed and now fails, or a lower score. Two are graded today: `button`'s html
+reference and the message state machine, which ships as
+`@lacquer/message-state-machine` with the transitions table in the module a
+consumer installs and a test that holds it to the spec's.
+
+```bash
+pnpm grade button            # grade and print
+pnpm grade button --write    # commit the baseline
+```
+
+`packages/core/README.md` explains the model behind the spec layer,
+`packages/core/spec/README.md` how to write a spec and
+`packages/grade/README.md` what each check does. `AGENTS.md` has the rules
 for working here.
 
 ## License
