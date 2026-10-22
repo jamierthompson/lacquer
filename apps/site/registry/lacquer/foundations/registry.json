@@ -278,6 +278,38 @@
         "spec": "packages/core/spec/tokens"
       },
       "docs": "Dark mode follows the system preference by default; a `light` or `dark` class on <html> (next-themes, not installed by this item) or on any scope overrides it. The family roles are the platform stacks; set a brand face by overriding --lq-type-family-sans and --lq-type-family-mono. Lacquer components read token roles only, through the --lq-* properties and the lq- utilities (LQ-TOKEN-01); retheme by overriding --lq-* on :root and .dark. The roles and their values live in packages/core/spec/tokens (DTCG 2025.10), in OKLCH with every contrast pairing checked by the build; this item is generated from them."
+    },
+    {
+      "name": "message-state-machine",
+      "type": "registry:lib",
+      "title": "Message state machine",
+      "author": "Jamie Thompson (https://lacquer.dev)",
+      "description": "The assistant-turn lifecycle every AI component renders from: nine statuses, eleven events, and a reducer that is a lookup in the transitions table. Ships the table in the module, a useMessageMachine hook, and the skill that tells an agent how to use it.",
+      "dependencies": [
+        "react"
+      ],
+      "files": [
+        {
+          "path": "message-state-machine/message-state-machine.ts",
+          "type": "registry:lib",
+          "target": "lib/lacquer/message-state-machine.ts"
+        },
+        {
+          "path": "message-state-machine/use-message-machine.ts",
+          "type": "registry:hook",
+          "target": "lib/lacquer/use-message-machine.ts"
+        },
+        {
+          "path": "message-state-machine/SKILL.md",
+          "type": "registry:file",
+          "target": "~/.claude/skills/lacquer-message-state-machine/SKILL.md"
+        }
+      ],
+      "categories": [
+        "foundations",
+        "ai"
+      ],
+      "docs": "Hold one status per thread, from the transport, and pass it to every AI component as a prop; derive Send/Stop and the terminal check from it with isPending and isTerminal. The status changes only through a row of TRANSITIONS; an event with no row is ignored (LQ-MACHINE-04). Nothing lives beside the status (LQ-MACHINE-05). The spec, its finish report and the skill are at https://lacquer.dev/foundations/message-state-machine."
     }
   ]
 }
