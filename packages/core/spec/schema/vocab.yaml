@@ -58,48 +58,118 @@ status:
   deprecated: Kept for reference; do not build new work on it.
 
 # The universal interaction-state matrix. Canonical ids, with other systems'
-# names as aliases. `base` states are the five every interactive component
-# must implement (LQ-STATE-01).
+# names as aliases. `base` marks the five every interactive component
+# must have (LQ-STATE-01). `attribute` is how the state is expressed in
+# markup, as `name` or `name=value`, in priority order: the first is what an
+# implementation sets, any is what the grader accepts (LQ-STATE-03). `input`
+# names the state that only input can reach: the grader drives it with the
+# pointer or the keyboard and no attribute expresses it.
 states:
   enabled: { base: true, meaning: The resting, interactive default. }
-  hover: { base: true, meaning: Pointer is over the target. }
-  focus-visible: { base: true, meaning: Keyboard (or other non-pointer) focus. }
+  hover: { base: true, meaning: Pointer is over the target., input: hover }
+  focus-visible:
+    {
+      base: true,
+      meaning: Keyboard (or other non-pointer) focus.,
+      input: keyboard-focus,
+    }
   active:
-    { base: true, meaning: Held down mid-interaction., aliases: [pressed] }
-  disabled: { base: true, meaning: Not available now. }
-  selected: { meaning: Chosen and stays chosen., aliases: [checked] }
-  indeterminate: { meaning: Some, but not all, descendants are checked. }
-  expanded: { meaning: A disclosure is open. }
+    {
+      base: true,
+      meaning: Held down mid-interaction.,
+      aliases: [pressed],
+      input: press,
+    }
+  disabled:
+    {
+      base: true,
+      meaning: Not available now.,
+      attribute: [disabled, aria-disabled=true],
+    }
+  selected:
+    {
+      meaning: Chosen and stays chosen.,
+      aliases: [checked],
+      attribute: [aria-selected=true, aria-pressed=true, aria-checked=true],
+    }
+  indeterminate:
+    {
+      meaning: Some,
+      but not all,
+      descendants are checked.,
+      attribute: [aria-checked=mixed],
+    }
+  expanded: { meaning: A disclosure is open., attribute: [aria-expanded=true] }
   read-only:
-    { meaning: Visible and selectable but not editable., aliases: [readonly] }
-  loading: { meaning: An operation is in flight. }
-  invalid: { meaning: Validation or operation failed., aliases: [error] }
-  success: { meaning: Completed or validated. }
-  warning: { meaning: Allowed, but with consequences. }
-  dragging: { meaning: The item is being moved. }
-  drop-target: { meaning: A valid destination while dragging. }
+    {
+      meaning: Visible and selectable but not editable.,
+      aliases: [readonly],
+      attribute: [readonly, aria-readonly=true],
+    }
+  loading: { meaning: An operation is in flight., attribute: [aria-busy=true] }
+  invalid:
+    {
+      meaning: Validation or operation failed.,
+      aliases: [error],
+      attribute: [aria-invalid=true],
+    }
+  success: { meaning: Completed or validated., attribute: [data-state=success] }
+  warning:
+    {
+      meaning: Allowed,
+      but with consequences.,
+      attribute: [data-state=warning],
+    }
+  dragging:
+    { meaning: The item is being moved., attribute: [data-state=dragging] }
+  drop-target:
+    {
+      meaning: A valid destination while dragging.,
+      attribute: [data-state=drop-target],
+    }
   current:
-    { meaning: Where you are in a navigation set., aliases: [active-page] }
-  placeholder: { meaning: Empty input showing a format hint. }
-  filled: { meaning: The input holds a value. }
-  empty: { meaning: The container has no content to show. }
-  skeleton: { meaning: Content is loading and its shape is known. }
+    {
+      meaning: Where you are in a navigation set.,
+      aliases: [active-page],
+      attribute: [aria-current],
+    }
+  placeholder:
+    {
+      meaning: Empty input showing a format hint.,
+      attribute: [data-state=placeholder],
+    }
+  filled: { meaning: The input holds a value., attribute: [data-state=filled] }
+  empty:
+    {
+      meaning: The container has no content to show.,
+      attribute: [data-state=empty],
+    }
+  skeleton:
+    {
+      meaning: Content is loading and its shape is known.,
+      attribute: [data-state=skeleton],
+    }
   # AI lifecycle states (message and tool machines). Declared here so a
-  # component may list them; the machines themselves live in the principle specs.
-  idle: { ai: true }
-  submitted: { ai: true }
-  streaming: { ai: true }
-  awaiting-approval: { ai: true }
-  complete: { ai: true }
-  error: { ai: true }
-  cancelled: { ai: true }
-  input-streaming: { ai: true, aliases: [pending] }
-  input-available: { ai: true, aliases: [running] }
-  approval-requested: { ai: true }
-  approval-responded: { ai: true }
-  output-available: { ai: true, aliases: [completed] }
-  output-error: { ai: true }
-  output-denied: { ai: true, aliases: [denied] }
+  # component may list them; the machines themselves live in the principle
+  # specs, and a component renders one as data-state="<id>".
+  idle: { ai: true, attribute: [data-state=idle] }
+  submitted: { ai: true, attribute: [data-state=submitted] }
+  streaming: { ai: true, attribute: [data-state=streaming] }
+  awaiting-approval: { ai: true, attribute: [data-state=awaiting-approval] }
+  complete: { ai: true, attribute: [data-state=complete] }
+  error: { ai: true, attribute: [data-state=error] }
+  cancelled: { ai: true, attribute: [data-state=cancelled] }
+  input-streaming:
+    { ai: true, aliases: [pending], attribute: [data-state=input-streaming] }
+  input-available:
+    { ai: true, aliases: [running], attribute: [data-state=input-available] }
+  approval-requested: { ai: true, attribute: [data-state=approval-requested] }
+  approval-responded: { ai: true, attribute: [data-state=approval-responded] }
+  output-available:
+    { ai: true, aliases: [completed], attribute: [data-state=output-available] }
+  output-error: { ai: true, attribute: [data-state=output-error] }
+  output-denied:
+    { ai: true, aliases: [denied], attribute: [data-state=output-denied] }
 
 # Token roles. A spec names the *role* it consumes, never a value. A role is
 # a token's path in spec/tokens (DTCG); the build derives every binding's

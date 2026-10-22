@@ -14,7 +14,16 @@ export interface Vocab {
   status: Record<string, string>;
   states: Record<
     string,
-    { base?: boolean; ai?: boolean; meaning?: string; aliases?: string[] }
+    {
+      base?: boolean;
+      ai?: boolean;
+      meaning?: string;
+      aliases?: string[];
+      /** How the state is expressed in markup: `name` or `name=value`, in priority order. */
+      attribute?: string[];
+      /** The input that reaches the state when no attribute expresses it. */
+      input?: "hover" | "keyboard-focus" | "press";
+    }
   >;
   token_categories: Record<string, string>;
   component_aliases: Record<string, string>;
@@ -256,4 +265,27 @@ export interface Bindings {
   aliases: Record<string, string>;
   /** Every contrast pairing the tokens declare, with its measured ratio; the build fails on a miss. */
   contrast: ContrastPairing[];
+}
+
+/** grading/rubric.yaml: how findings become scores. */
+export interface Rubric {
+  version: number;
+  dimensions: Record<
+    string,
+    {
+      weight: number;
+      question: string;
+      rule_prefixes: string[];
+      applies_when?: string;
+    }
+  >;
+  deductions: {
+    MUST: number;
+    SHOULD: number;
+    MAY: number;
+    repeat_instance: number;
+    repeat_cap: number;
+  };
+  letter_grades: Record<"A" | "B" | "C" | "D" | "F", number>;
+  gate: { cap_at_c_if_must_in: string[] };
 }

@@ -120,6 +120,18 @@ rules:
     applies_to: ["*"]
     source: wcag
 
+  - id: LQ-A11Y-02
+    level: MUST
+    polarity: require
+    title: Passes axe
+    statement: A rendered component has no axe-core violations at WCAG 2.2 AA plus axe's best-practice rules, in every state it demonstrates.
+    rationale: axe catches the mechanical half of accessibility (names, roles, contrast, landmarks); the rest of the rules cover what it cannot see.
+    detect:
+      runtime: Inject axe-core into the rendered page and run it with the wcag2a, wcag2aa, wcag21a, wcag21aa, wcag22aa and best-practice tags; any violation is a finding.
+    fix: Read the violation's help URL; the fix is usually a missing name, landmark or contrast pairing.
+    applies_to: ["*"]
+    source: wcag
+
   - id: LQ-LOAD-01
     level: MUST
     polarity: require

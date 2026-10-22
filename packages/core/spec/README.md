@@ -15,7 +15,8 @@ to writing the files in `spec/`.
 spec/
   schema/
     component.schema.json   the contract for one entry (JSON Schema 2020-12)
-    vocab.yaml              every enum, once: kinds, groups, tiers, states, token roles, aliases
+    vocab.yaml              every enum, once: kinds, groups, tiers, states (each with the attribute
+                            or input that expresses it, which the grader drives), token roles, aliases
   rules/
     universal.yaml          cross-component rules (LQ-STATE, LQ-FOCUS, LQ-TOKEN …)
     ai-loop.yaml            agent-loop rules (LQ-WAIT, LQ-STREAM, LQ-TOOL, LQ-GATE …)
@@ -63,11 +64,13 @@ Every entry's SKILL.md lists what it is still missing.
 
 ## Registering an implementation
 
-The React implementation will live in the registry, under
-`apps/site/registry/lacquer/<group>/<id>/`, as the item the shadcn CLI
-installs, and the entry will register it under `implementations` with
-`renderer: react`, the registry item name and the named `export`. No entry
-does yet. The Oct 14 implementations on the html binding are at the git tag
-`catalog-2026-10`; `message-state-machine` there reads its own `machine`
-block from the compiled entry so the reducer cannot drift from the YAML, and
-the registry version keeps that guarantee as a test.
+`implementations` is what the grader grades. An html reference is
+`renderer: html` with its `file`; a registry item is `renderer: react` with
+`package: "@lacquer/<id>"` and the named `export`, living under
+`apps/site/registry/lacquer/<group>/<id>/` as the item the shadcn CLI
+installs. `message-state-machine` registers `@lacquer/message-state-machine`:
+the transitions table is inline in the module a consumer installs, and a test
+in `apps/site/tests/unit/` plus the grader's LQ-MACHINE-04 check hold it to
+this file's `machine` block. The Oct 14 React components on the html binding
+are at the git tag `catalog-2026-10`; each is rewritten on Base UI and
+Tailwind as its composition goes through the loop.

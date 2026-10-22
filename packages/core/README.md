@@ -36,7 +36,7 @@ grader has its first check, the registry implementation arrives with the
 first composition):
 
 - **An agent building UI** calls `lacquer_search("confirm delete")` → `alert-dialog`, `lacquer_get` for the contract, `lacquer_example` for a starting point, `lacquer_tokens` to resolve roles to custom properties, and, once the grade tools exist, `lacquer_lint` on its output before returning it.
-- **The grader** (`packages/grade`) will load `dist/components/button.json`, drive the registry's button through every state the spec names, run every rule whose `detect` hint it can execute, and emit findings that cite `LQ-BUTTON-02` with the fix text straight from the spec. `grading/samples/report.example.json` is the shape of that report. Today it runs one of those rules, LQ-TOKEN-01, statically over source.
+- **The grader** (`packages/grade`) loads `dist/components/button.json`, resolves the implementations the spec registers, drives each through every state the spec names (the vocab says how each state is expressed), runs every rule whose `detect` clause it can execute, runs axe, scans the source, and writes the finish report in the shape of `grading/report.schema.json`, scored by `grading/rubric.yaml` (compiled to `dist/rubric.json`). Findings cite the rule, `LQ-BUTTON-02`, with the fix text straight from the spec; rules it cannot execute yet are skipped with the reason. `grading/samples/report.example.json` is a hand-written illustration for a screen; `apps/site/reports/` holds the real ones.
 - **The registry implementation**, and anyone porting the entry, reads `examples/html/button.html` and `button.css`: the markup pattern, every state as an attribute, every value as a role through the binding. The React version on Base UI and Tailwind is a translation of that file, not a second design.
 
 ## The two catalogs
@@ -89,9 +89,11 @@ Three places define rules, one id space:
 | `spec/rules/ai-loop.yaml`   | what a trustworthy agent surface does | `LQ-GATE-01`   |
 | `<id>.yaml` → `rules.local` | rules only one entry can state        | `LQ-BUTTON-03` |
 
-`grading/rubric.yaml` maps rule prefixes to dimensions and levels to
-deductions; a finish report will be the list of findings plus the resulting
-scores, in the shape of `grading/report.schema.json`.
+`grading/rubric.yaml` maps rule prefixes (or exact ids) to dimensions and
+levels to deductions; every rule must belong to exactly one dimension, and
+the build fails otherwise. A finish report is the list of findings, every
+rule's verdict and the state coverage, plus the resulting scores, in the
+shape of `grading/report.schema.json`.
 
 ## Tokens, roles and the bindings
 

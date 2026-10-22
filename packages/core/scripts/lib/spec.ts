@@ -10,9 +10,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
 
-import type { Example, Rule, Spec, Vocab } from "../../src/types.ts";
+import type { Example, Rubric, Rule, Spec, Vocab } from "../../src/types.ts";
 
-export type { Example, Rule, Spec, Vocab };
+export type { Example, Rubric, Rule, Spec, Vocab };
 
 export const ROOT = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -28,6 +28,8 @@ export const SCHEMA_FILE = path.join(
 export const VOCAB_FILE = path.join(SPEC_DIR, "schema", "vocab.yaml");
 export const SPEC_RULES_DIR = path.join(SPEC_DIR, "rules");
 export const DIST_DIR = path.join(ROOT, "dist");
+export const GRADING_DIR = path.join(ROOT, "grading");
+export const RUBRIC_FILE = path.join(GRADING_DIR, "rubric.yaml");
 
 export interface SpecEntry {
   spec: Spec;
@@ -127,4 +129,22 @@ export async function readSpecs(root = CATALOG_DIR): Promise<SpecEntry[]> {
   };
   await walk(root);
   return entries;
+}
+
+/** The grading rubric: dimensions by rule prefix, deductions, letters, the gate. */
+export async function readRubric(file = RUBRIC_FILE): Promise<Rubric> {
+  return parseYaml(await readFile(file, "utf8")) as Rubric;
+}
+
+/** The rubric dimension a rule id belongs to, by its longest matching prefix. */
+export function dimensionOf(rubric: Rubric, ruleId: string): string | null {
+  let best: { name: string; length: number } | null = null;
+  for (const [name, d] of Object.entries(rubric.dimensions))
+    for (const prefix of d.rule_prefixes)
+      if (
+        (ruleId === prefix || ruleId.startsWith(`${prefix}-`)) &&
+        (!best || prefix.length > best.length)
+      )
+        best = { name, length: prefix.length };
+  return best?.name ?? null;
 }

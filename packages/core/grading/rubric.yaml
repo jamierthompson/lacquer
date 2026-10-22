@@ -1,10 +1,10 @@
 # Lacquer finish grade — the rubric.
 #
 # A "finish report" grades one screen (or one component) against the catalog.
-# This is the grader's contract. packages/grade runs its first check
-# (LQ-TOKEN-01 over source); the runner and the report writer are next.
+# This is the grader's contract: packages/grade reads it from dist/rubric.json.
 # The grader does not invent criteria: every finding cites a rule id from
-# dist/rules.json, and every rule belongs to exactly one dimension below.
+# dist/rules.json, and every rule belongs to exactly one dimension below (the
+# build fails on a rule no dimension claims; an exact id beats a prefix).
 # The dimensions are what a person would feel; the rules are how a machine
 # finds it. Scores are 0–100 per dimension and overall; letter grades are for
 # humans, the numbers are for CI gates.
@@ -17,8 +17,11 @@
 #   the same rule firing many times counts once at full and then -2 per extra
 #   instance, capped at -10 extra, so a repeated button defect is worse than a
 #   single one but does not zero the screen.
-# Overall = weighted mean of dimensions; a screen with any unresolved MUST in
-# `structure` or `accessibility` cannot grade above C regardless of the mean.
+# Overall = weighted mean of the dimensions that had at least one rule run
+# (a dimension whose rules were all skipped is not scored); a subject with
+# any unresolved MUST in `structure` or `accessibility` cannot grade above C
+# regardless of the mean. A skipped rule (one the grader cannot execute yet)
+# is listed with its reason and does not score either way.
 
 version: 1
 
@@ -27,7 +30,15 @@ dimensions:
     weight: 1.0
     question: Is it built from the right components, with the right native elements and parts?
     rule_prefixes:
-      [LQ-SEM, LQ-ANAT, LQ-LAYER, LQ-BUTTON-01, LQ-BUTTON-04, LQ-DIALOG-03]
+      [
+        LQ-SEM,
+        LQ-ANAT,
+        LQ-LAYER,
+        LQ-BUTTON-01,
+        LQ-BUTTON-04,
+        LQ-DIALOG-03,
+        LQ-APPROVAL-05,
+      ]
   states:
     weight: 1.0
     question: Does every interactive thing look and behave differently in every state it can be in?
@@ -44,6 +55,10 @@ dimensions:
         LQ-DIALOG-01,
         LQ-DIALOG-02,
         LQ-BUTTON-05,
+        LQ-APPROVAL-02,
+        LQ-COMPOSER-03,
+        LQ-MESSAGE-02,
+        LQ-THINK-04,
       ]
   tokens:
     weight: 0.8
@@ -52,12 +67,19 @@ dimensions:
   content:
     weight: 0.6
     question: Do labels, titles and messages say what happens, specifically?
-    rule_prefixes: [LQ-COPY, LQ-GATE-02, LQ-TOOL-01]
+    rule_prefixes: [LQ-COPY, LQ-GATE-02, LQ-TOOL-01, LQ-THINK-01, LQ-THINK-03]
   composition:
     weight: 0.6
     question: Is emphasis disciplined, is the right thing primary, are decisions (dialog vs drawer, select vs combobox) honest?
     rule_prefixes:
-      [LQ-BUTTON-03, LQ-BUTTON-06, LQ-DIALOG-04, LQ-DISCLOSE, LQ-TOOLCARD-04]
+      [
+        LQ-BUTTON-03,
+        LQ-BUTTON-06,
+        LQ-DIALOG-04,
+        LQ-DISCLOSE,
+        LQ-TOOLCARD-04,
+        LQ-MESSAGE-04,
+      ]
   ai-conduct:
     weight: 1.0
     question: For AI surfaces only — does it wait, stream, act, ask, recover and disclose the way a trustworthy agent should?
@@ -74,6 +96,15 @@ dimensions:
         LQ-MACHINE,
         LQ-TOOLCARD-01,
         LQ-TOOLCARD-03,
+        LQ-APPROVAL-01,
+        LQ-APPROVAL-03,
+        LQ-APPROVAL-04,
+        LQ-COMPOSER-01,
+        LQ-COMPOSER-02,
+        LQ-COMPOSER-04,
+        LQ-MESSAGE-01,
+        LQ-MESSAGE-03,
+        LQ-THINK-02,
       ]
     applies_when: any ai-catalog component is detected on the screen
 

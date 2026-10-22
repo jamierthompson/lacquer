@@ -13,7 +13,9 @@ import type {
   Catalog,
   CatalogComponent,
   IndexEntry,
+  Rubric,
   RuleCatalog,
+  Vocab,
 } from "./types.ts";
 
 export type * from "./types.ts";
@@ -42,3 +44,7 @@ export const loadRules = (): Promise<RuleCatalog> => json("dist/rules.json");
 export const loadComponent = (id: string): Promise<CatalogComponent> =>
   json(`dist/components/${id}.json`);
 export const loadBindings = (): Promise<Bindings> => json("dist/bindings.json");
+export const loadVocab = (): Promise<Vocab> => json("dist/vocab.json");
+export const loadRubric = (): Promise<Rubric> => json("dist/rubric.json");
+/** The finish report's JSON Schema, for validating a report. */
+export const REPORT_SCHEMA = resolvePath("grading/report.schema.json");

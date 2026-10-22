@@ -4,6 +4,9 @@
  *   -> dist/index.json             the light listing search and MCP use
  *   -> dist/rules.json             one rule catalog, one id space
  *   -> dist/components/<id>.json
+ *   -> dist/vocab.json             the vocabulary, for the grader's drivers
+ * grading/rubric.yaml
+ *   -> dist/rubric.json            the scoring contract; every rule must map to one dimension
  *   -> spec/catalog/**\/<id>/SKILL.md   generated from the YAML + optional guidance.md
  * spec/tokens/*.tokens.json + lacquer.resolver.json   (DTCG 2025.10)
  *   -> dist/bindings.json          both derived bindings, the theme values, the Tailwind aliases
@@ -28,8 +31,10 @@ import addFormats from "ajv-formats";
 import {
   CATALOG_DIR,
   DIST_DIR,
+  dimensionOf,
   ROOT,
   type Rule,
+  readRubric,
   readSchema,
   readSharedRules,
   readSpecs,
@@ -547,6 +552,7 @@ async function main() {
 
   const sharedList = await readSharedRules();
   const shared = new Map(sharedList.map((r) => [r.id, r]));
+  const rubric = await readRubric();
   const entries = await readSpecs();
   const ids = new Set(entries.map((e) => e.spec.id));
   const dupes = entries
@@ -595,6 +601,17 @@ async function main() {
   for (const entry of entries)
     for (const r of entry.spec.rules?.local ?? [])
       allRules.push({ ...r, owner: entry.spec.id });
+
+  // Every rule scores in exactly one rubric dimension, or the grader could
+  // not place its finding.
+  for (const r of allRules)
+    if (!dimensionOf(rubric, r.id))
+      errors.push(`grading/rubric.yaml: no dimension claims ${r.id}`);
+  if (errors.length) {
+    console.error(`\n${errors.length} error(s):`);
+    for (const e of errors) console.error(`  ${e}`);
+    process.exit(1);
+  }
 
   const gaps = new Map<string, string[]>();
   const components = entries.map((entry) => {
@@ -686,6 +703,8 @@ async function main() {
       contrast: pairings,
     }),
   );
+  await emit(path.join(DIST_DIR, "vocab.json"), json(vocab));
+  await emit(path.join(DIST_DIR, "rubric.json"), json(rubric));
   await emit(HTML_THEME_FILE, renderHtmlTheme(theme));
   await emit(TAILWIND_THEME_FILE, renderTailwindTheme(html, tailwind, theme));
   for (const entry of entries)

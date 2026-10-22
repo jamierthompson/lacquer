@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://lacquer.dev/schema/report.schema.json",
   "title": "Lacquer finish report",
-  "description": "The finish report: the output of the grader and of the lacquer_lint and lacquer_grade tools once they exist. One report per screen or component. Every finding cites a rule id from dist/rules.json; scores follow grading/rubric.yaml.",
+  "description": "The finish report: the output of the grader (@lacquer/grade) and of the lacquer_grade tool. One report per subject: a component's registered implementation, or a screen. Every finding cites a rule id from dist/rules.json; scores follow grading/rubric.yaml. A subject is finished when its report has zero MUST findings.",
   "type": "object",
   "additionalProperties": false,
   "required": ["version", "mode", "subject", "detected", "score", "findings"],
@@ -10,17 +10,33 @@
     "version": { "type": "integer", "const": 1 },
     "mode": { "type": "string", "enum": ["static", "runtime"] },
     "generated_at": { "type": "string", "format": "date-time" },
+    "component": {
+      "type": "string",
+      "description": "The catalog id the subject implements, when the report grades one entry against its own contract."
+    },
     "subject": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "kind": { "type": "string", "enum": ["source", "dom", "url"] },
+        "renderer": {
+          "type": "string",
+          "description": "The spec's implementation renderer: html, react."
+        },
         "language": { "type": "string" },
         "url": { "type": "string" },
+        "file": {
+          "type": "string",
+          "description": "Repo-relative path of the implementation the grader opened or imported."
+        },
+        "package": {
+          "type": "string",
+          "description": "The registry item or package that ships the implementation."
+        },
         "binding": { "type": "string" },
         "hash": {
           "type": "string",
-          "description": "Content hash so reports can be compared across runs."
+          "description": "Content hash of the subject's source so reports can be compared across runs."
         }
       }
     },
@@ -37,7 +53,67 @@
           "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
           "how": {
             "type": "string",
-            "description": "data-slot | aria | heuristic | name"
+            "description": "data-slot | aria | heuristic | name | module"
+          }
+        }
+      }
+    },
+    "states": {
+      "type": "array",
+      "description": "State coverage: every state the spec names, with whether the subject demonstrated it and whether it passed the state rules. The coverage grid on the report page.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "required", "status"],
+        "properties": {
+          "id": { "type": "string" },
+          "required": { "type": "boolean" },
+          "status": {
+            "type": "string",
+            "enum": ["pass", "fail", "missing", "skipped"],
+            "description": "pass: driven and clean. fail: driven and at least one finding names it. missing: the spec requires it and the subject does not demonstrate it. skipped: optional and not demonstrated, or not drivable for this subject (reason says why)."
+          },
+          "how": {
+            "type": "string",
+            "description": "How the grader reached it: an attribute (`aria-busy=true`), an input (`hover`), a machine status, or a fixture name."
+          },
+          "reason": { "type": "string" },
+          "findings": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Finding ids that name this state."
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "description": "Every rule the grader considered for this subject, with its verdict. A rule the grader cannot execute yet is `skipped` with the reason, never left out.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "level", "dimension", "verdict"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^LQ-[A-Z0-9]+-\\d{2}$" },
+          "level": { "type": "string", "enum": ["MUST", "SHOULD", "MAY"] },
+          "dimension": { "type": "string" },
+          "verdict": {
+            "type": "string",
+            "enum": ["pass", "fail", "skipped"]
+          },
+          "how": {
+            "type": "string",
+            "enum": ["static", "runtime"],
+            "description": "Which detect clause ran."
+          },
+          "reason": {
+            "type": "string",
+            "description": "For skipped: why the grader could not run it against this subject."
+          },
+          "findings": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "How many findings cite the rule."
           }
         }
       }
@@ -55,6 +131,7 @@
         },
         "dimensions": {
           "type": "object",
+          "description": "Only the dimensions in which at least one rule ran.",
           "additionalProperties": {
             "type": "number",
             "minimum": 0,
@@ -87,6 +164,10 @@
           "component": {
             "type": "string",
             "description": "Catalog id, or 'screen' for universal findings."
+          },
+          "state": {
+            "type": "string",
+            "description": "The state the finding was observed in, when it was."
           },
           "message": {
             "type": "string",
