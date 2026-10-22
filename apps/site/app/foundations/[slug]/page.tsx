@@ -320,11 +320,7 @@ function Modes({
       {(["light", "dark"] as const).map((mode) => (
         <div
           key={mode}
-          className={cn(
-            mode,
-            "rounded-lq-sm bg-lq-bg-surface p-lq-gap-xs",
-            mode === "dark" ? "p-1" : "p-1",
-          )}
+          className={cn(mode, "rounded-lq-sm bg-lq-bg-surface p-lq-gap-xs")}
         >
           {children(mode)}
         </div>

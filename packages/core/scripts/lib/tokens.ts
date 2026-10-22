@@ -378,14 +378,15 @@ function checkShape(type: TokenType, v: unknown): string | null {
       if (c.hex !== undefined && !/^#[0-9a-f]{6}$/.test(c.hex))
         return "color.hex must be 6-digit lowercase hex";
       if (c.colorSpace === "oklch") {
-        const [l, ch, h] = c.components;
-        if ([l, ch, h].some((x) => typeof x !== "number"))
-          return "oklch needs numeric [l, c, h]";
-        const value = { l: l as number, c: ch as number, h: h as number };
+        const value = oklchOf(c);
+        if (!value) return 'oklch needs [l, c, h], each a number or "none"';
         if (!inSrgb(value))
           return "oklch value is outside sRGB; it is refused, not clipped";
         const expected = toHex(value);
-        if (c.hex !== undefined && c.hex !== expected)
+        // Every OKLCH role carries its sRGB fallback, and the build keeps it true.
+        if (c.hex === undefined)
+          return `an oklch color needs its hex fallback; set it to ${expected}`;
+        if (c.hex !== expected)
           return `color.hex ${c.hex} is not its oklch value; set it to ${expected}`;
       }
       return null;
@@ -457,6 +458,15 @@ function checkShape(type: TokenType, v: unknown): string | null {
 
 // ---------------------------------------------------------------- contrast
 
+/** An oklch value's [l, c, h] as numbers (DTCG's "none" is 0); null if malformed. */
+function oklchOf(c: Color): Oklch | null {
+  if (c.components.length !== 3) return null;
+  const [l, ch, h] = c.components.map((x) => (x === "none" ? 0 : x));
+  if ([l, ch, h].some((x) => typeof x !== "number" || !Number.isFinite(x)))
+    return null;
+  return { l: l as number, c: ch as number, h: h as number };
+}
+
 /** A colour role's sRGB in one context, following aliases; null when not a colour. */
 function srgbOf(
   set: TokenSet,
@@ -473,14 +483,20 @@ function srgbOf(
   const target = aliasTarget(v);
   if (target) return srgbOf(set, target, context, seen);
   const c = v as Color;
+  // A translucent colour has no single sRGB to measure: what it reads
+  // against shows through it. The pairing is refused, not passed.
+  if ((c.alpha ?? 1) !== 1) return null;
   if (c.colorSpace === "oklch") {
-    const [l, ch, h] = c.components as number[];
-    const value: Oklch = { l, c: ch, h };
+    const value = oklchOf(c);
     // An out-of-gamut value is already a shape problem; it has no sRGB to measure.
-    return inSrgb(value) ? oklchToSrgb(value) : null;
+    return value && inSrgb(value) ? oklchToSrgb(value) : null;
   }
   if (c.hex) return hexToSrgb(c.hex);
-  if (c.colorSpace === "srgb") return c.components as Rgb;
+  if (
+    c.colorSpace === "srgb" &&
+    c.components.every((x) => typeof x === "number")
+  )
+    return c.components as Rgb;
   return null;
 }
 
@@ -511,8 +527,11 @@ export function checkContrast(set: TokenSet): {
           );
           continue;
         }
-        const ratio = Math.round(contrastRatio(fg, bg) * 100) / 100;
-        const pass = ratio >= min;
+        // The floor is judged on the exact ratio; the report rounds it, so a
+        // value a hair under 3:1 cannot round its way to a pass.
+        const exact = contrastRatio(fg, bg);
+        const pass = exact >= min;
+        const ratio = Math.round(exact * 100) / 100;
         pairings.push({ role, on, context, min, ratio, pass });
         if (!pass)
           problems.push(
