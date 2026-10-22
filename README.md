@@ -47,9 +47,13 @@ pnpm dlx shadcn@latest init https://lacquer.dev/r/base.json
 
 It installs every `--lq-*` value in light and dark, the `lq-` utilities
 (`bg-lq-bg-primary`, `rounded-lq-control`), Base UI and the `@lacquer`
-registry. The two theme stylesheets and the registry item are generated from
-the tokens, and `pnpm check` fails if any is stale or if any component source
-sets a literal colour, radius, shadow, duration or z-index (LQ-TOKEN-01).
+registry. Dark mode follows the system preference unless a `light` or `dark`
+class says otherwise. The colours are OKLCH, and every text and boundary pairing the tokens declare is measured
+by the build against its WCAG floor. The two theme stylesheets and the
+registry item are generated from the tokens, and `pnpm check` fails if any is
+stale, if a pairing misses, or if any component source sets a literal colour,
+radius, shadow, duration or z-index (LQ-TOKEN-01). The site renders its
+`/foundations` pages from the same compiled bindings.
 
 `packages/core/README.md` explains the model behind the spec layer and
 `packages/core/spec/README.md` how to write a spec. `AGENTS.md` has the rules

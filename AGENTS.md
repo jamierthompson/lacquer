@@ -27,6 +27,18 @@ An AI-native design system; the finishing school for AI-generated UI. Read
   dark overrides in `dark.tokens.json`); every binding's property and class
   names are derived from the path and `$type`, so a new role is one token
   entry. Steer a derivation only through `$extensions["dev.lacquer"]`.
+- Colour values are written by hand in OKLCH, in the token files; there is
+  no generator in this repo, because values sometimes have to be nudged by
+  eye. Every colour carries a `hex` the build checks against its OKLCH
+  value, and every `contrast` pairing a token declares must clear its floor
+  in both themes or the build fails; an out-of-gamut colour is refused, not
+  clipped. The brand is one hue; AI is signalled with it or not at all
+  (LQ-STYLE-01).
+- One dark-mode convention everywhere: the system preference by default, a
+  `light` or `dark` class on the root or a scope wins. Both generated
+  stylesheets, the base item and the site (next-themes, class attribute)
+  follow it; never add a second mechanism.
+- The site is a Lacquer consumer. Site chrome reads `lq-` utilities only.
 - Component code reads roles only: `var(--lq-…)` in CSS, `lq-` utilities or
   `(--lq-…)` in Tailwind. A property a component exposes as a parameter is
   scoped to it, `--lq-<id>-…`, and declared in its spec. `pnpm check` runs
