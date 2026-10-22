@@ -10,7 +10,9 @@
  * validated and answers questions about it. All intelligence lives in the
  * catalog data — the same files feed the skills, the site, and the grader.
  */
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   type IndexEntry,
   loadBindings,
@@ -248,6 +250,34 @@ server.tool(
       by_status: by("status"),
       starter_set: starter,
     });
+  },
+);
+
+// ---------------------------------------------------------------- grade
+
+/** The committed finish reports: apps/site/reports/<id>.json, written by lacquer-grade. */
+const REPORTS = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../../apps/site/reports",
+);
+
+server.tool(
+  "lacquer_report",
+  "The finish report for a graded component: its letter and dimension scores, state coverage, every rule's verdict (pass, fail, or skipped with the reason) and every finding with its fix. Call with no id to list the components that have one. A component with zero MUST findings is finished.",
+  { id: z.string().optional() },
+  async ({ id }) => {
+    const files = (await readdir(REPORTS).catch(() => [] as string[]))
+      .filter((f) => f.endsWith(".json"))
+      .map((f) => f.slice(0, -5))
+      .sort();
+    if (!id) return text({ reports: files });
+    if (!files.includes(id))
+      return text({
+        error: `No report for "${id}". Graded: ${files.join(", ")}`,
+      });
+    return text(
+      JSON.parse(await readFile(path.join(REPORTS, `${id}.json`), "utf8")),
+    );
   },
 );
 

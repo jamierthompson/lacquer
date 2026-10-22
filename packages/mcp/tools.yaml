@@ -1,7 +1,7 @@
 # Lacquer MCP server — tool manifest.
 #
-# This is the contract the server implements: the read tools exist today; the
-# grade tools land with the grader package. Every tool reads from
+# This is the contract the server implements: the read tools, and the first
+# grade tool, which serves the finish reports the grader committed. Every tool reads from
 # @lacquer/core's dist/ (never from the YAML), so the server is a thin, stateless reader
 # over files the build already validated. Tool names are verbs an agent would
 # reach for mid-task; descriptions are written for the model that will call
@@ -25,6 +25,7 @@ server:
     - dist/rules.json
     - spec/catalog/**/SKILL.md
     - dist/bindings.json
+    - apps/site/reports/<id>.json
 
 tools:
   # ---------------------------------------------------------------- read tools
@@ -152,6 +153,20 @@ tools:
         product_type: { type: string, enum: [classic, ai-augmented, ai-native] }
 
   # ------------------------- grade tools: PLANNED, not implemented; they land with packages/grade
+  - name: lacquer_report
+    phase: grade
+    description: >
+      The finish report for a graded component: letter and dimension scores,
+      state coverage, every rule's verdict (pass, fail, or skipped with the
+      reason) and every finding with its fix. No id lists the graded
+      components. Zero MUST findings means finished. Reads the committed
+      baseline the grader wrote; it does not run the grader.
+    input:
+      type: object
+      properties:
+        id: { type: string }
+    reads: [apps/site/reports/<id>.json]
+
   - name: lacquer_lint
     phase: grade
     description: >
