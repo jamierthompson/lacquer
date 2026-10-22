@@ -23,8 +23,13 @@
       loading         aria-busy="true" aria-disabled="true" + a [data-slot="spinner"] before the label
       selected        aria-pressed="true"   (toggle usage only — see toggle-button)
 
-    This page shows the full state and variant matrix. The examples beside it
-    are fragments an agent copies.
+    aria-disabled keeps the control focusable, so a press on it has to be
+    refused in script; the one listener at the end of the page is that gate
+    (LQ-BUTTON-02), and it is the only script the pattern needs.
+
+    This page shows the full state and variant matrix, one section per row
+    so each is a view with at most one primary (LQ-BUTTON-03). The examples
+    beside it are fragments an agent copies.
   -->
     <link rel="stylesheet" href="../../../../../../bindings/html.theme.css" />
     <link rel="stylesheet" href="button.css" />
@@ -55,148 +60,178 @@
     </style>
   </head>
   <body>
-    <h1>Button</h1>
+    <main>
+      <h1>Button</h1>
 
-    <h2>Emphasis</h2>
-    <div class="row">
-      <button type="button" data-lacquer="button" data-emphasis="primary">
-        <span data-slot="label">Save changes</span>
-      </button>
-      <button type="button" data-lacquer="button" data-emphasis="secondary">
-        <span data-slot="label">Duplicate</span>
-      </button>
-      <button type="button" data-lacquer="button" data-emphasis="tertiary">
-        <span data-slot="label">Rename</span>
-      </button>
-      <button type="button" data-lacquer="button" data-emphasis="outline">
-        <span data-slot="label">Export…</span>
-      </button>
-      <button type="button" data-lacquer="button" data-emphasis="ghost">
-        <span data-slot="label">Dismiss</span>
-      </button>
-      <button type="button" data-lacquer="button" data-emphasis="link">
-        <span data-slot="label">View history</span>
-      </button>
-      <button type="button" data-lacquer="button" data-emphasis="destructive">
-        <span data-slot="label">Delete project</span>
-      </button>
-    </div>
+      <section aria-labelledby="emphasis">
+        <h2 id="emphasis">Emphasis</h2>
+        <div class="row">
+          <button type="button" data-lacquer="button" data-emphasis="primary">
+            <span data-slot="label">Save changes</span>
+          </button>
+          <button type="button" data-lacquer="button" data-emphasis="secondary">
+            <span data-slot="label">Duplicate</span>
+          </button>
+          <button type="button" data-lacquer="button" data-emphasis="tertiary">
+            <span data-slot="label">Rename</span>
+          </button>
+          <button type="button" data-lacquer="button" data-emphasis="outline">
+            <span data-slot="label">Export…</span>
+          </button>
+          <button type="button" data-lacquer="button" data-emphasis="ghost">
+            <span data-slot="label">Dismiss</span>
+          </button>
+          <button type="button" data-lacquer="button" data-emphasis="link">
+            <span data-slot="label">View history</span>
+          </button>
+          <button
+            type="button"
+            data-lacquer="button"
+            data-emphasis="destructive"
+          >
+            <span data-slot="label">Delete project</span>
+          </button>
+        </div>
+      </section>
 
-    <h2>Size</h2>
-    <div class="row">
-      <button
-        type="button"
-        data-lacquer="button"
-        data-emphasis="secondary"
-        data-size="xs"
-      >
-        <span data-slot="label">Extra small</span>
-      </button>
-      <button
-        type="button"
-        data-lacquer="button"
-        data-emphasis="secondary"
-        data-size="sm"
-      >
-        <span data-slot="label">Small</span>
-      </button>
-      <button
-        type="button"
-        data-lacquer="button"
-        data-emphasis="secondary"
-        data-size="md"
-      >
-        <span data-slot="label">Medium</span>
-      </button>
-      <button
-        type="button"
-        data-lacquer="button"
-        data-emphasis="secondary"
-        data-size="lg"
-      >
-        <span data-slot="label">Large</span>
-      </button>
-    </div>
+      <section aria-labelledby="size">
+        <h2 id="size">Size</h2>
+        <div class="row">
+          <button
+            type="button"
+            data-lacquer="button"
+            data-emphasis="secondary"
+            data-size="xs"
+          >
+            <span data-slot="label">Extra small</span>
+          </button>
+          <button
+            type="button"
+            data-lacquer="button"
+            data-emphasis="secondary"
+            data-size="sm"
+          >
+            <span data-slot="label">Small</span>
+          </button>
+          <button
+            type="button"
+            data-lacquer="button"
+            data-emphasis="secondary"
+            data-size="md"
+          >
+            <span data-slot="label">Medium</span>
+          </button>
+          <button
+            type="button"
+            data-lacquer="button"
+            data-emphasis="secondary"
+            data-size="lg"
+          >
+            <span data-slot="label">Large</span>
+          </button>
+        </div>
+      </section>
 
-    <h2>States</h2>
-    <div class="row">
-      <button type="button" data-lacquer="button" data-emphasis="primary">
-        <span data-slot="label">Enabled</span>
-      </button>
-      <button
-        type="button"
-        data-lacquer="button"
-        data-emphasis="primary"
-        disabled
-      >
-        <span data-slot="label">Disabled</span>
-      </button>
-      <button
-        type="button"
-        data-lacquer="button"
-        data-emphasis="primary"
-        aria-disabled="true"
-        aria-describedby="why"
-      >
-        <span data-slot="label">Soft-disabled</span>
-      </button>
-      <span id="why" style="color: var(--lq-color-fg-muted)"
-        >stays focusable; the reason is discoverable</span
-      >
-      <button
-        type="button"
-        data-lacquer="button"
-        data-emphasis="primary"
-        aria-busy="true"
-        aria-disabled="true"
-      >
-        <span data-slot="spinner" aria-hidden="true"></span>
-        <span data-slot="label">Loading</span>
-      </button>
-    </div>
-    <p style="color: var(--lq-color-fg-muted)">
-      Hover, focus-visible and active are live: use the pointer and the
-      keyboard.
-    </p>
+      <section aria-labelledby="states">
+        <h2 id="states">States</h2>
+        <div class="row">
+          <button type="button" data-lacquer="button" data-emphasis="secondary">
+            <span data-slot="label">Enabled</span>
+          </button>
+          <button
+            type="button"
+            data-lacquer="button"
+            data-emphasis="secondary"
+            disabled
+          >
+            <span data-slot="label">Disabled</span>
+          </button>
+          <button
+            type="button"
+            data-lacquer="button"
+            data-emphasis="secondary"
+            aria-disabled="true"
+            aria-describedby="why"
+          >
+            <span data-slot="label">Soft-disabled</span>
+          </button>
+          <span id="why" style="color: var(--lq-color-fg-muted)"
+            >stays focusable; the reason is discoverable</span
+          >
+          <button
+            type="button"
+            data-lacquer="button"
+            data-emphasis="secondary"
+            aria-busy="true"
+            aria-disabled="true"
+          >
+            <span data-slot="spinner" aria-hidden="true"></span>
+            <span data-slot="label">Loading</span>
+          </button>
+        </div>
+        <p style="color: var(--lq-color-fg-muted)">
+          Hover, focus-visible and active are live: use the pointer and the
+          keyboard.
+        </p>
+      </section>
 
-    <h2>With icons</h2>
-    <div class="row">
-      <button type="button" data-lacquer="button" data-emphasis="secondary">
-        <svg
-          data-slot="leading-icon"
-          aria-hidden="true"
-          viewBox="0 0 16 16"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
+      <section aria-labelledby="icons">
+        <h2 id="icons">With icons</h2>
+        <div class="row">
+          <button type="button" data-lacquer="button" data-emphasis="secondary">
+            <svg
+              data-slot="leading-icon"
+              aria-hidden="true"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path d="M8 3v10M3 8h10" />
+            </svg>
+            <span data-slot="label">Add item</span>
+          </button>
+          <button type="button" data-lacquer="button" data-emphasis="outline">
+            <span data-slot="label">Open settings</span>
+            <svg
+              data-slot="trailing-icon"
+              aria-hidden="true"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path d="M6 3l5 5-5 5" />
+            </svg>
+          </button>
+        </div>
+      </section>
+
+      <section aria-labelledby="full-width">
+        <h2 id="full-width">Full width</h2>
+        <button
+          type="button"
+          data-lacquer="button"
+          data-emphasis="primary"
+          data-full-width
         >
-          <path d="M8 3v10M3 8h10" />
-        </svg>
-        <span data-slot="label">Add item</span>
-      </button>
-      <button type="button" data-lacquer="button" data-emphasis="outline">
-        <span data-slot="label">Open settings</span>
-        <svg
-          data-slot="trailing-icon"
-          aria-hidden="true"
-          viewBox="0 0 16 16"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-        >
-          <path d="M6 3l5 5-5 5" />
-        </svg>
-      </button>
-    </div>
-
-    <h2>Full width</h2>
-    <button
-      type="button"
-      data-lacquer="button"
-      data-emphasis="primary"
-      data-full-width
-    >
-      <span data-slot="label">Continue</span>
-    </button>
+          <span data-slot="label">Continue</span>
+        </button>
+      </section>
+    </main>
+    <script>
+      // The press gate for aria-disabled: soft-disabled and loading controls
+      // stay focusable, so Enter, Space and the pointer must be refused here.
+      document.addEventListener(
+        "click",
+        (e) => {
+          if (e.target.closest?.('[aria-disabled="true"]')) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+          }
+        },
+        true,
+      );
+    </script>
   </body>
 </html>

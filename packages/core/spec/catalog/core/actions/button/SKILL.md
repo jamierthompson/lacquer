@@ -67,8 +67,8 @@ Parts in DOM order; each renders with `data-slot="<part>"`.
 | `leading-icon` |  | optional | slot. Optional icon before the label; decorative (aria-hidden). |
 | `label` |  | required | Visible text. Required unless the button is icon-only, in which case use Icon Button instead. |
 | `trailing-icon` |  | optional | slot. Optional icon after the label; usually a chevron or external-link glyph. |
-| `spinner` |  | optional | Replaces the leading icon while loading. Width is reserved so the label does not shift. |
-| `focus-ring` |  | required | Rendered by the focus-visible treatment, not a DOM node, but it is a part the grader looks for. |
+| `spinner` |  | optional | Shown centred over the content while loading. The label and icons keep their boxes, so the width holds and nothing beside the button shifts. |
+| `focus-ring` |  | optional | Not a DOM node. Rendered by the focus-visible treatment and checked by LQ-FOCUS-01, not by a data-slot. |
 
 ## Variants
 
@@ -87,7 +87,7 @@ Every listed state needs a visual treatment **and** an accessibility expression 
 | `focus-visible` | 2px ring in color.border.focus with focus.ring.offset, ≥3:1 against component and page. Use :focus-visible, not :focus. | Implicit. Never outline none without a replacement (LQ-FOCUS-01). |  |
 | `active` | Darken one step past hover or inset the surface; ~50ms so it feels immediate. | none (transient). |  |
 | `disabled` | opacity.disabled, pointer-events none, hover/active responses removed. Keep legible. | `disabled` removes it from tab order. Prefer `aria-disabled="true"` (soft-disable) for anything a user might reasonably try, so the reason can be discovered. |  |
-| `loading` | In-place spinner that preserves width; label opacity reduced; re-submission blocked. | aria-busy="true"; announce start and finish politely from the surrounding region, not the button. |  |
+| `loading` | The spinner is centred over the content; the label and icons keep their boxes at opacity 0, so the width holds and the name stays in the accessibility tree. Re-submission is blocked. | aria-busy="true"; announce start and finish politely from the surrounding region, not the button. |  |
 | `selected` (opt.) | Persistent color.bg.selected plus a weight or border change. Only for toggle usage — see Toggle Button. | aria-pressed="true". |  |
 
 ## API (framework-neutral)
@@ -130,7 +130,7 @@ A `div` with role="button" needs tabindex, Enter and Space handling and is still
 
 Roles, not values. A role is a token path in spec/tokens; the html binding reads it as `--lq-<role-with-dashes>`, the tailwind binding as an `lq-` utility (dist/bindings.json has both).
 
-Consumes: `color.bg.primary`, `color.bg.primary-hover`, `color.fg.on-primary`, `color.bg.secondary`, `color.bg.secondary-hover`, `color.fg.on-secondary`, `color.bg.destructive`, `color.bg.destructive-hover`, `color.fg.on-destructive`, `color.border.input`, `color.border.focus`, `color.fg.link`, `radius.control`, `space.inset.control.sm`, `space.inset.control.md`, `space.inset.control.lg`, `size.control.xs`, `size.control.sm`, `size.control.md`, `size.control.lg`, `size.icon.md`, `type.label.sm`, `type.label.md`, `focus.ring.width`, `focus.ring.offset`, `motion.duration.fast`, `opacity.disabled`, `motion.duration.spin`.
+Consumes: `color.bg.primary`, `color.bg.primary-hover`, `color.fg.on-primary`, `color.bg.secondary`, `color.bg.secondary-hover`, `color.fg.on-secondary`, `color.bg.destructive`, `color.bg.destructive-hover`, `color.fg.on-destructive`, `color.bg.accent`, `color.bg.surface`, `color.fg.default`, `color.border.input`, `color.border.focus`, `color.fg.link`, `radius.control`, `radius.pill`, `shadow.sm`, `space.gap.sm`, `space.inset.control.sm`, `space.inset.control.md`, `space.inset.control.lg`, `size.control.xs`, `size.control.sm`, `size.control.md`, `size.control.lg`, `size.icon.md`, `type.label.sm`, `type.label.md`, `focus.ring.width`, `focus.ring.offset`, `motion.duration.fast`, `motion.easing.standard`, `opacity.disabled`, `motion.duration.spin`.
 
 ## Content
 

@@ -58,9 +58,14 @@ anatomy:
     description: Optional icon after the label; usually a chevron or external-link glyph.
   - part: spinner
     required: false
-    description: Replaces the leading icon while loading. Width is reserved so the label does not shift.
+    description:
+      Shown centred over the content while loading. The label and icons keep their boxes, so the width
+      holds and nothing beside the button shifts.
   - part: focus-ring
-    description: Rendered by the focus-visible treatment, not a DOM node, but it is a part the grader looks for.
+    required: false
+    description:
+      Not a DOM node. Rendered by the focus-visible treatment and checked by LQ-FOCUS-01, not by a
+      data-slot.
 variants:
   - axis: emphasis
     values:
@@ -104,7 +109,9 @@ states:
       '`disabled` removes it from tab order. Prefer `aria-disabled="true"` (soft-disable) for anything a user
       might reasonably try, so the reason can be discovered.'
   - id: loading
-    treatment: In-place spinner that preserves width; label opacity reduced; re-submission blocked.
+    treatment:
+      The spinner is centred over the content; the label and icons keep their boxes at opacity 0, so the
+      width holds and the name stays in the accessibility tree. Re-submission is blocked.
     a11y: aria-busy="true"; announce start and finish politely from the surrounding region, not the button.
   - id: selected
     required: false
@@ -191,10 +198,16 @@ tokens:
     - color.bg.destructive
     - color.bg.destructive-hover
     - color.fg.on-destructive
+    - color.bg.accent
+    - color.bg.surface
+    - color.fg.default
     - color.border.input
     - color.border.focus
     - color.fg.link
     - radius.control
+    - radius.pill
+    - shadow.sm
+    - space.gap.sm
     - space.inset.control.sm
     - space.inset.control.md
     - space.inset.control.lg
@@ -208,6 +221,7 @@ tokens:
     - focus.ring.width
     - focus.ring.offset
     - motion.duration.fast
+    - motion.easing.standard
     - opacity.disabled
     - motion.duration.spin
 content:

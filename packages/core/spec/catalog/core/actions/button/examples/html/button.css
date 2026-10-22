@@ -51,12 +51,17 @@
   opacity: var(--lq-opacity-disabled);
 }
 
-/* loading: the spinner occupies the leading-icon slot so width is kept (LQ-BUTTON-02) */
+/*
+ * loading: the spinner is centred over the content and the content keeps
+ * its box at opacity 0, so the width holds and the label stays in the
+ * accessibility tree (LQ-BUTTON-02). visibility: hidden would drop the name.
+ */
 [data-lacquer="button"][aria-busy="true"] {
+  position: relative;
   cursor: progress;
 }
-[data-lacquer="button"][aria-busy="true"] > [data-slot="label"] {
-  opacity: 0.7;
+[data-lacquer="button"][aria-busy="true"] > :not([data-slot="spinner"]) {
+  opacity: 0;
 }
 
 /* --- emphasis (variant axis) -------------------------------------------- */
@@ -149,17 +154,15 @@
 }
 
 [data-lacquer="button"] > [data-slot="spinner"] {
+  position: absolute;
+  inset: 0;
+  margin: auto;
   inline-size: var(--lq-size-icon-md);
   block-size: var(--lq-size-icon-md);
-  flex: none;
   border: 2px solid currentColor;
   border-top-color: transparent;
   border-radius: var(--lq-radius-pill);
   animation: lq-button-spin var(--lq-motion-duration-spin) linear infinite;
-}
-
-[data-lacquer="button"] > [data-slot="label"] {
-  display: contents;
 }
 
 @keyframes lq-button-spin {
