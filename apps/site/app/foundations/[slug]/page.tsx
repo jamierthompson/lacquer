@@ -9,6 +9,7 @@ import {
   type Foundation,
   foundationBySlug,
 } from "@/lib/foundations";
+import { loadReport, type Report } from "@/lib/reports";
 import { cn } from "@/lib/utils";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -39,7 +40,11 @@ export default async function FoundationPage({ params }: Props) {
       {f.kind === "tokens" ? (
         <TokensFoundation f={f} bindings={bindings as Bindings} />
       ) : (
-        <PrincipleFoundation f={f} spec={await loadSpec(f.id)} />
+        <PrincipleFoundation
+          f={f}
+          spec={await loadSpec(f.id)}
+          report={await loadReport(f.id)}
+        />
       )}
     </main>
   );
@@ -436,13 +441,94 @@ const Ratio = ({ value, min }: { value?: number; min: number }) => (
 
 // ---------------------------------------------------------------- principles
 
+/** The machine block: every status with what the user sees, then the transitions table, which is the whole contract. */
+function Machine({
+  machine,
+}: {
+  machine: NonNullable<CatalogComponent["machine"]>;
+}) {
+  return (
+    <section className="mb-lq-inset-lg" aria-labelledby="machine">
+      <h2
+        id="machine"
+        className="mb-lq-inset-sm text-xl font-semibold tracking-tight"
+      >
+        The machine
+      </h2>
+      <p className="mb-lq-inset-sm max-w-lq-measure-prose text-sm leading-6 text-lq-fg-muted">
+        {machine.states.length} statuses from{" "}
+        <code className="font-lq-mono">{machine.initial}</code>,{" "}
+        {machine.transitions.length} rows. A status changes only through a row;
+        an event with no row for the current status is ignored.
+      </p>
+      <div className="mb-lq-inset-md overflow-x-auto rounded-lq-surface border border-lq-border-default">
+        <table className="w-full text-sm">
+          <thead className="bg-lq-bg-surface-secondary text-left text-xs text-lq-fg-muted">
+            <tr>
+              <th scope="col" className="px-lq-inset-sm py-2 font-medium">
+                Status
+              </th>
+              <th scope="col" className="px-lq-inset-sm py-2 font-medium">
+                The user sees
+              </th>
+              <th scope="col" className="px-lq-inset-sm py-2 font-medium">
+                Composer
+              </th>
+              <th scope="col" className="px-lq-inset-sm py-2 font-medium">
+                Announcement
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {machine.states.map((s) => (
+              <tr
+                key={s.id}
+                className="border-t border-lq-border-subtle align-top"
+              >
+                <td className="px-lq-inset-sm py-2 font-lq-mono text-xs">
+                  {s.id}
+                  {s.terminal ? (
+                    <span className="ml-1 text-lq-fg-muted">terminal</span>
+                  ) : null}
+                </td>
+                <td className="px-lq-inset-sm py-2">{s.user_sees}</td>
+                <td className="px-lq-inset-sm py-2 text-lq-fg-muted">
+                  {s.composer_control}
+                </td>
+                <td className="px-lq-inset-sm py-2 text-lq-fg-muted">
+                  {s.announcement}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <ul className="grid gap-lq-gap-xs font-lq-mono text-xs sm:grid-cols-2">
+        {machine.transitions.map((t) => (
+          <li
+            key={`${t.from}-${t.on}-${t.to}`}
+            className="flex flex-wrap items-center gap-x-2 rounded-lq-sm border border-lq-border-subtle px-lq-inset-sm py-1"
+          >
+            <span>{t.from}</span>
+            <span className="text-lq-accent-brand">--{t.on}--&gt;</span>
+            <span>{t.to}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 function PrincipleFoundation({
   f,
   spec,
+  report,
 }: {
   f: Extract<Foundation, { kind: "principle" }>;
   spec: CatalogComponent;
+  report: Report | null;
 }) {
+  const item = spec.implementations?.find((i) => i.package)?.package;
   const lists: { title: string; items?: string[] }[] = [
     { title: "Use when", items: spec.usage?.use_when },
     { title: "Avoid", items: spec.usage?.avoid_when },
@@ -464,7 +550,28 @@ function PrincipleFoundation({
             {spec.summary}
           </p>
         ) : null}
+        {report || item ? (
+          <div className="mt-lq-inset-md flex flex-wrap items-center gap-lq-gap-sm">
+            {report ? (
+              <Link
+                href={`/reports/${f.id}`}
+                className="inline-flex h-lq-control-md items-center gap-lq-gap-xs rounded-lq-control border border-lq-border-input px-lq-inset-md text-sm font-medium transition-colors duration-lq-fast ease-lq-standard hover:bg-lq-bg-accent"
+              >
+                <span className="font-lq-mono font-semibold text-lq-accent-brand">
+                  {report.score.letter}
+                </span>
+                Finish report
+              </Link>
+            ) : null}
+            {item ? (
+              <code className="inline-flex h-lq-control-md items-center rounded-lq-control bg-lq-bg-surface-tertiary px-lq-inset-md font-lq-mono text-sm">
+                npx shadcn@latest add {item}
+              </code>
+            ) : null}
+          </div>
+        ) : null}
       </header>
+      {spec.machine ? <Machine machine={spec.machine} /> : null}
       {spec.anatomy?.length ? (
         <section className="mb-lq-inset-lg">
           <h2 className="mb-lq-inset-sm text-xl font-semibold tracking-tight">

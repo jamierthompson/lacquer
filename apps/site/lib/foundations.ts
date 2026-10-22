@@ -60,6 +60,14 @@ export const FOUNDATIONS: Foundation[] = [
     categories: ["motion", "shimmer"],
   },
   {
+    slug: "message-state-machine",
+    title: "Message state machine",
+    blurb:
+      "Nine statuses, eleven events, one table: the assistant-turn lifecycle every AI component renders from.",
+    kind: "principle",
+    id: "message-state-machine",
+  },
+  {
     slug: "live-region-strategy",
     title: "Live-region strategy",
     blurb: "How screen-reader users experience streaming.",
