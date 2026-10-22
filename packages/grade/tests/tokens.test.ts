@@ -212,7 +212,7 @@ describe("scanHtml", () => {
       "<p style='border-radius: 12px'>b</p>",
     ].join("\n");
     const findings = scanHtml(html, "x.html", known);
-    expect(findings.map((f) => [f.evidence, f.location.line])).toEqual([
+    expect(findings.map((f) => [f.evidence, f.location?.line])).toEqual([
       ["#fff", 4],
       ["12px", 5],
     ]);
@@ -233,7 +233,9 @@ describe("scanClasses", () => {
       "registry/lacquer/actions/button/button.tsx",
       known,
     );
-    expect(findings.map((f) => [f.location.snippet, f.location.line])).toEqual([
+    expect(
+      findings.map((f) => [f.location?.snippet, f.location?.line]),
+    ).toEqual([
       ["shadow-md", 4],
       ["hover:bg-zinc-800", 4],
     ]);

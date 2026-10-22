@@ -1,7 +1,7 @@
 {
   "name": "@lacquer/grade",
   "version": "0.1.0",
-  "description": "The Lacquer grader: drives a component through its spec and writes the finish report. Today: the LQ-TOKEN-01 source check.",
+  "description": "The Lacquer grader: reads a component's contract from @lacquer/core, drives its registered implementation through every state the spec names, runs every rule it can execute, runs axe, scans the source, and writes the finish report.",
   "license": "MIT",
   "private": true,
   "type": "module",
@@ -9,12 +9,18 @@
     "lacquer-grade": "./src/cli.ts"
   },
   "scripts": {
+    "grade": "node src/cli.ts",
     "check": "node src/cli.ts tokens",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@lacquer/core": "workspace:*"
+    "@lacquer/core": "workspace:*",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "axe-core": "^4.11.1",
+    "colorjs.io": "^0.7.1",
+    "playwright": "^1.64.1"
   },
   "devDependencies": {
     "@types/node": "^24.13.3",
