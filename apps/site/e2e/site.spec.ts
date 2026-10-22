@@ -8,6 +8,12 @@ const PAGES: Record<string, string | RegExp> = {
   "/foundations": "Foundations",
   "/foundations/color": "Color",
   "/foundations/stop-regenerate-always": /Stop and regenerate/,
+  "/foundations/message-state-machine": /Message state machine/,
+  "/reports": "Finish reports",
+  "/reports/button": "button",
+  "/reports/message-state-machine": "message-state-machine",
+  "/blog": "Blog",
+  "/blog/one-message-state-machine": /one message state machine/i,
 };
 
 for (const [url, heading] of Object.entries(PAGES)) {

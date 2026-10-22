@@ -1,0 +1,127 @@
+---
+title: Every AI product shares one message state machine
+description: Nine statuses, eleven events, and a reducer that is a table lookup. Why the composer's Send becomes Stop because of the status and not a request in flight, and why nothing may live beside the table.
+date: 2026-10-22
+---
+
+Open any AI product and watch one turn. You type, you press Send, and Send
+becomes Stop. A thinking indicator appears. It is replaced by a reasoning
+disclosure, then a tool card that spins, then text arriving with a caret.
+Maybe the tool asks you for permission and everything pauses. Then the caret
+goes away, an actions bar appears, and Stop is Send again.
+
+Every product renders that sequence with its own components and its own
+look. Underneath, every one of them is walking the same machine. Lacquer
+names it once, in a spec, and makes every AI component render from it. It is
+the first thing built, before any component, because every component after it
+is a view of one value from it.
+
+## The table is the contract
+
+An assistant turn has nine statuses:
+
+| Status              | What the user sees                               | Composer |
+| ------------------- | ------------------------------------------------ | -------- |
+| idle                | Nothing pending.                                 | Send     |
+| submitted           | The user message, and the thinking indicator.    | Stop     |
+| streaming:reasoning | The reasoning disclosure, open and shimmering.   | Stop     |
+| streaming:tool      | A tool card in `input-available`.                | Stop     |
+| streaming:text      | Markdown rendering progressively with a caret.   | Stop     |
+| awaiting-approval   | The approval prompt; everything else paused.     | Stop     |
+| complete            | The actions bar; the caret removed.              | Send     |
+| error               | An inline error with Retry; the draft preserved. | Send     |
+| cancelled           | The partial output kept, marked "Stopped".       | Send     |
+
+And eleven events: `send`, `reasoning-delta`, `tool-input-start`,
+`text-delta`, `approval-requested`, `approval-responded`, `finish`, `error`,
+`stop`, `retry`, `regenerate`. The whole contract is a list of rows,
+`(from, on) → to`, twenty-eight of them. `idle` and `send` go to `submitted`.
+`streaming:text` and `finish` go to `complete`. `awaiting-approval` and
+`stop` go to `cancelled`. There is no row for `complete` and `finish`, so
+that event, arriving late, does nothing.
+
+A reducer over that table is a lookup:
+
+```ts
+export function transition(status: Status, event: Event): Status {
+  for (const row of TRANSITIONS)
+    if (row.from === status && row.on === event) return row.to;
+  return status;
+}
+```
+
+That is the entire reducer, and the design holds only while it stays that
+small. The moment an implementation adds a branch beside the table to handle
+a case the table did not anticipate, there is a tenth status the spec does
+not know about, and every component downstream renders it wrong. Lacquer
+writes that as a rule, LQ-MACHINE-04: the status changes only through a row
+of the table; an event with no row is ignored, never handled by an extra
+branch. The fix is always the same. Add the row to the spec first, and the
+table follows. Never the other way round.
+
+## Send becomes Stop because of the status
+
+The composer's primary control is the clearest example of why the status has
+to be the only input. The tempting implementation watches the network: a
+request is in flight, so show Stop. It is wrong twice. While a tool waits for
+the user's approval nothing is in flight, and the turn is not over, so the
+control must still be Stop. And a request can be in flight for reasons that
+are not a turn: a title being generated, a draft being saved.
+
+Derived from the status it is one line. Anything that is not `idle` and not
+terminal shows Stop:
+
+```ts
+export const isPending = (status: Status) =>
+  status !== initial && !isTerminal(status);
+```
+
+The same goes for every other component in the thread. The thinking indicator
+is rendered because the status is `submitted`, not because the message body
+is empty. The tool card spins because the status is `streaming:tool`, not
+because the output has no closing fence yet. When the status is the only
+input, every component agrees with every other one by construction, and the
+one place that can be wrong is the table. LQ-MACHINE-01 says it plainly: no
+component inspects message text to decide how to render.
+
+## Nothing lives beside it
+
+The second temptation is a flag. The status is there, and an `isLoading`
+boolean is added next to it because a component wanted one. Now there are two
+sources of truth, and they agree until the day a transition is added and only
+one of them is updated. LQ-MACHINE-05 forbids it: a thread holds one status
+value, and `isLoading`, `isStreaming` and `done` are derived at the point of
+use, never stored.
+
+The transport owns the status. The AI SDK calls it `status`, with
+`submitted`, `streaming`, `ready` and `error`; assistant-ui exposes
+`isRunning`; a custom backend has a reducer. Lacquer names the sub-states of
+`streaming` because they render as different components, but the composer
+does not care which sub-state it is in, and that is the point. Hold the
+status in one place, pass it down as a prop, and derive everything else.
+
+## Approval pauses the loop
+
+`awaiting-approval` is the one status the transport cannot leave on its own.
+The stream stops, the prompt takes focus, and the only way forward is the
+user's decision. A transport that answers its own approval prompt is the
+anti-pattern LQ-GATE-01 exists to forbid, so a test harness for this machine
+has to pause there too. It is the only assertive announcement in the whole
+turn. Everything else is polite, and streaming text is batched to at most one
+announcement every two seconds, because a screen reader hearing every token
+is not an accessible interface.
+
+## What ships, and what checks it
+
+The machine is a registry item, `@lacquer/message-state-machine`: the
+module with the table inline, a `useMessageMachine` hook over it, and the
+skill that tells an agent how to use it. The table lives in the file a
+consumer installs, not in the spec, because the consumer never sees the spec.
+A test in the repo asserts that the module's table equals the spec's, row for
+row, and the grader runs the same comparison every time it grades the module.
+Then it dispatches every event in every status and checks that the status
+changes only on a listed pair. That is the grader's first check, and the
+module's finish report is the first one on the site.
+
+Every AI component Lacquer builds after this renders from the status and
+never invents one. The tool call card is next.
