@@ -2,86 +2,144 @@
   "$description": "Lacquer's token roles and their reference values (light). DTCG Format Module 2025.10. A spec consumes a role by its path, color.bg.primary; bindings derive every property and class name from the path and the type.",
   "color": {
     "$type": "color",
-    "$description": "Backgrounds, foregrounds, borders and status colours. Roles, never a palette.",
+    "$description": "Backgrounds, foregrounds, borders and status colours. Roles, never a palette. Written by hand in OKLCH; a role that carries text or a boundary declares the pairings it must clear in $extensions[\"dev.lacquer\"].contrast and the build measures them.",
     "bg": {
       "surface": {
+        "$description": "The page.",
         "$value": {
-          "colorSpace": "srgb",
-          "components": [1, 1, 1],
-          "hex": "#ffffff"
+          "colorSpace": "oklch",
+          "components": [0.99, 0.003, 55],
+          "hex": "#fdfbfa"
         }
       },
       "surface-secondary": {
+        "$description": "A card or panel on the page.",
         "$value": {
-          "colorSpace": "srgb",
-          "components": [1, 1, 1],
-          "hex": "#ffffff"
+          "colorSpace": "oklch",
+          "components": [0.975, 0.004, 55],
+          "hex": "#f9f6f4"
         }
       },
       "surface-tertiary": {
+        "$description": "A well inside a panel: code, a quoted block.",
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.9569, 0.9569, 0.9608],
-          "hex": "#f4f4f5"
+          "colorSpace": "oklch",
+          "components": [0.955, 0.005, 55],
+          "hex": "#f3efed"
         }
       },
       "primary": {
+        "$description": "The one primary action in a view.",
+        "$extensions": {
+          "dev.lacquer": {
+            "contrast": [
+              {
+                "on": "color.bg.surface",
+                "min": 3
+              },
+              {
+                "on": "color.bg.surface-secondary",
+                "min": 3
+              },
+              {
+                "on": "color.bg.surface-tertiary",
+                "min": 3
+              }
+            ]
+          }
+        },
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.0941, 0.0941, 0.1059],
-          "hex": "#18181b"
+          "colorSpace": "oklch",
+          "components": [0.24, 0.012, 55],
+          "hex": "#241e1a"
         }
       },
       "primary-hover": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.1529, 0.1529, 0.1647],
-          "hex": "#27272a"
+          "colorSpace": "oklch",
+          "components": [0.31, 0.012, 55],
+          "hex": "#352f2b"
         }
       },
       "secondary": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.9569, 0.9569, 0.9608],
-          "hex": "#f4f4f5"
+          "colorSpace": "oklch",
+          "components": [0.95, 0.007, 55],
+          "hex": "#f2edea"
         }
       },
       "secondary-hover": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.8941, 0.8941, 0.9059],
-          "hex": "#e4e4e7"
+          "colorSpace": "oklch",
+          "components": [0.915, 0.008, 55],
+          "hex": "#e7e2de"
         }
       },
       "accent": {
+        "$description": "The hover wash on a quiet control: the brand at a whisper.",
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.9569, 0.9569, 0.9608],
-          "hex": "#f4f4f5"
+          "colorSpace": "oklch",
+          "components": [0.955, 0.02, 195],
+          "hex": "#e2f5f4"
         }
       },
       "destructive": {
+        "$description": "A destructive action's fill; `status.error` and `border.danger` alias it.",
+        "$extensions": {
+          "dev.lacquer": {
+            "contrast": [
+              {
+                "on": "color.fg.on-destructive",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.surface",
+                "min": 3
+              },
+              {
+                "on": "color.bg.surface-secondary",
+                "min": 3
+              },
+              {
+                "on": "color.bg.surface-tertiary",
+                "min": 3
+              }
+            ]
+          }
+        },
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.8627, 0.149, 0.149],
-          "hex": "#dc2626"
+          "colorSpace": "oklch",
+          "components": [0.56, 0.2, 27],
+          "hex": "#d02c2a"
         }
       },
       "destructive-hover": {
+        "$extensions": {
+          "dev.lacquer": {
+            "contrast": [
+              {
+                "on": "color.fg.on-destructive",
+                "min": 4.5
+              }
+            ]
+          }
+        },
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.7255, 0.1098, 0.1098],
-          "hex": "#b91c1c"
+          "colorSpace": "oklch",
+          "components": [0.5, 0.2, 27],
+          "hex": "#bb0916"
         }
       },
       "selected": {
+        "$description": "A pressed toggle, a chosen row.",
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.8941, 0.8941, 0.9059],
-          "hex": "#e4e4e7"
+          "colorSpace": "oklch",
+          "components": [0.92, 0.03, 195],
+          "hex": "#cfebeb"
         }
       },
       "scrim": {
+        "$description": "Behind a modal.",
         "$value": {
           "colorSpace": "srgb",
           "components": [0, 0, 0],
@@ -91,71 +149,187 @@
     },
     "fg": {
       "default": {
+        "$description": "Body text on every neutral ground.",
+        "$extensions": {
+          "dev.lacquer": {
+            "contrast": [
+              {
+                "on": "color.bg.surface",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.surface-secondary",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.surface-tertiary",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.secondary",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.secondary-hover",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.accent",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.selected",
+                "min": 4.5
+              }
+            ]
+          }
+        },
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.0353, 0.0353, 0.0431],
-          "hex": "#09090b"
+          "colorSpace": "oklch",
+          "components": [0.2, 0.012, 55],
+          "hex": "#1a1511"
         }
       },
       "muted": {
+        "$description": "Secondary text; still readable on the deepest well.",
+        "$extensions": {
+          "dev.lacquer": {
+            "contrast": [
+              {
+                "on": "color.bg.surface",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.surface-secondary",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.surface-tertiary",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.secondary",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.secondary-hover",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.accent",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.selected",
+                "min": 4.5
+              }
+            ]
+          }
+        },
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.4431, 0.4431, 0.4784],
-          "hex": "#71717a"
+          "colorSpace": "oklch",
+          "components": [0.508, 0.015, 55],
+          "hex": "#6d635e"
         }
       },
       "on-primary": {
+        "$extensions": {
+          "dev.lacquer": {
+            "contrast": [
+              {
+                "on": "color.bg.primary",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.primary-hover",
+                "min": 4.5
+              }
+            ]
+          }
+        },
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.9804, 0.9804, 0.9804],
-          "hex": "#fafafa"
+          "colorSpace": "oklch",
+          "components": [0.985, 0.004, 55],
+          "hex": "#fcf9f8"
         }
       },
       "on-secondary": {
+        "$extensions": {
+          "dev.lacquer": {
+            "contrast": [
+              {
+                "on": "color.bg.secondary",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.secondary-hover",
+                "min": 4.5
+              }
+            ]
+          }
+        },
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.0941, 0.0941, 0.1059],
-          "hex": "#18181b"
+          "colorSpace": "oklch",
+          "components": [0.2, 0.012, 55],
+          "hex": "#1a1511"
         }
       },
       "on-destructive": {
+        "$description": "White on the destructive fill.",
         "$value": {
-          "colorSpace": "srgb",
-          "components": [1, 1, 1],
+          "colorSpace": "oklch",
+          "components": [1, 0, 0],
           "hex": "#ffffff"
         }
       },
       "link": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.0941, 0.0941, 0.1059],
-          "hex": "#18181b"
-        }
+        "$description": "Links are the brand color.",
+        "$value": "{color.accent.brand}"
       }
     },
     "border": {
       "default": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.8941, 0.8941, 0.9059],
-          "hex": "#e4e4e7"
+          "colorSpace": "oklch",
+          "components": [0.9, 0.008, 55],
+          "hex": "#e2ddd9"
         }
       },
       "subtle": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.9412, 0.9412, 0.9451],
-          "hex": "#f0f0f1"
+          "colorSpace": "oklch",
+          "components": [0.94, 0.006, 55],
+          "hex": "#eeeae7"
         }
       },
       "input": {
+        "$description": "An input's boundary; 3:1 against the page (WCAG 1.4.11).",
+        "$extensions": {
+          "dev.lacquer": {
+            "contrast": [
+              {
+                "on": "color.bg.surface",
+                "min": 3
+              },
+              {
+                "on": "color.bg.surface-secondary",
+                "min": 3
+              },
+              {
+                "on": "color.bg.surface-tertiary",
+                "min": 3
+              }
+            ]
+          }
+        },
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.8314, 0.8314, 0.8471],
-          "hex": "#d4d4d8"
+          "colorSpace": "oklch",
+          "components": [0.636, 0.012, 55],
+          "hex": "#918984"
         }
       },
       "focus": {
+        "$description": "The focus ring: the brand color, 3:1 on every surface.",
         "$extensions": {
           "dev.lacquer": {
             "tailwind": {
@@ -163,61 +337,138 @@
             }
           }
         },
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.0941, 0.0941, 0.1059],
-          "hex": "#18181b"
-        }
+        "$value": "{color.accent.brand}"
       },
       "danger": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.8627, 0.149, 0.149],
-          "hex": "#dc2626"
-        }
+        "$value": "{color.bg.destructive}"
       }
     },
     "status": {
       "pending": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.4431, 0.4431, 0.4784],
-          "hex": "#71717a"
-        }
+        "$description": "Not started yet: the muted text color.",
+        "$value": "{color.fg.muted}"
       },
       "running": {
+        "$extensions": {
+          "dev.lacquer": {
+            "contrast": [
+              {
+                "on": "color.bg.surface",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.surface-secondary",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.surface-tertiary",
+                "min": 4.5
+              }
+            ]
+          }
+        },
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.1451, 0.3882, 0.9216],
-          "hex": "#2563eb"
+          "colorSpace": "oklch",
+          "components": [0.539, 0.17, 255],
+          "hex": "#0f6cce"
         }
       },
       "success": {
+        "$extensions": {
+          "dev.lacquer": {
+            "contrast": [
+              {
+                "on": "color.bg.surface",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.surface-secondary",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.surface-tertiary",
+                "min": 4.5
+              }
+            ]
+          }
+        },
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.0863, 0.6392, 0.2902],
-          "hex": "#16a34a"
+          "colorSpace": "oklch",
+          "components": [0.518, 0.142, 150],
+          "hex": "#027e38"
         }
       },
       "error": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.8627, 0.149, 0.149],
-          "hex": "#dc2626"
-        }
+        "$value": "{color.bg.destructive}"
       },
       "warning": {
+        "$extensions": {
+          "dev.lacquer": {
+            "contrast": [
+              {
+                "on": "color.bg.surface",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.surface-secondary",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.surface-tertiary",
+                "min": 4.5
+              }
+            ]
+          }
+        },
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.851, 0.4667, 0.0235],
-          "hex": "#d97706"
+          "colorSpace": "oklch",
+          "components": [0.542, 0.116, 72],
+          "hex": "#986200"
         }
       }
     },
     "accent": {
+      "brand": {
+        "$description": "The one chromatic brand color. Links, the focus ring, and the AI accent alias it.",
+        "$extensions": {
+          "dev.lacquer": {
+            "contrast": [
+              {
+                "on": "color.bg.surface",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.surface-secondary",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.surface-tertiary",
+                "min": 4.5
+              },
+              {
+                "on": "color.bg.surface",
+                "min": 3
+              },
+              {
+                "on": "color.bg.surface-secondary",
+                "min": 3
+              },
+              {
+                "on": "color.bg.surface-tertiary",
+                "min": 3
+              }
+            ]
+          }
+        },
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.515, 0.087, 195],
+          "hex": "#047777"
+        }
+      },
       "ai": {
         "$description": "The AI accent. An alias of a brand token, never a new hue (LQ-STYLE-01).",
-        "$value": "{color.bg.primary}"
+        "$value": "{color.accent.brand}"
       }
     }
   },
@@ -501,10 +752,12 @@
     "family": {
       "mono": {
         "$type": "fontFamily",
+        "$description": "The platform's monospace.",
         "$value": ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"]
       },
       "sans": {
         "$type": "fontFamily",
+        "$description": "The platform's sans.",
         "$value": ["ui-sans-serif", "system-ui", "sans-serif"]
       }
     }

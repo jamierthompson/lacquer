@@ -40,6 +40,7 @@ import {
 } from "./lib/spec.ts";
 import {
   bindingCollisions,
+  checkContrast,
   deriveBindings,
   HTML_THEME_FILE,
   readTokens,
@@ -580,6 +581,8 @@ async function main() {
   for (const p of [...bindingCollisions(html), ...bindingCollisions(tailwind)])
     err(null, `spec/tokens: ${p}`);
   const theme = themeOf(tokenSet);
+  const { pairings, problems: contrastProblems } = checkContrast(tokenSet);
+  for (const p of contrastProblems) err(null, `spec/tokens: ${p}`);
 
   if (errors.length) {
     console.error(`\n${errors.length} error(s):`);
@@ -680,6 +683,7 @@ async function main() {
       tailwind,
       theme,
       aliases: themeAliases(html, tailwind),
+      contrast: pairings,
     }),
   );
   await emit(HTML_THEME_FILE, renderHtmlTheme(theme));
@@ -702,7 +706,7 @@ async function main() {
     `${withGaps} entries list ${gapCount} missing item(s); see each SKILL.md or dist/components/<id>.json → missing`,
   );
   console.log(
-    `${tokenSet.tokens.size} token roles (${tokenSet.contexts.join(", ")}) bound in html and tailwind; ${Object.keys(theme.dark).length} dark overrides`,
+    `${tokenSet.tokens.size} token roles (${tokenSet.contexts.join(", ")}) bound in html and tailwind; ${Object.keys(theme.dark).length} dark overrides; ${pairings.length} contrast pairings cleared`,
   );
   if (check && stale) {
     console.error(`\n${stale} generated file(s) out of date. Run: pnpm build`);

@@ -5,162 +5,171 @@
     "bg": {
       "surface": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.0353, 0.0353, 0.0431],
-          "hex": "#09090b"
+          "colorSpace": "oklch",
+          "components": [0.17, 0.008, 55],
+          "hex": "#120f0c"
         }
       },
       "surface-secondary": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.0941, 0.0941, 0.1059],
-          "hex": "#18181b"
+          "colorSpace": "oklch",
+          "components": [0.21, 0.008, 55],
+          "hex": "#1b1715"
         }
       },
       "surface-tertiary": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.1529, 0.1529, 0.1647],
-          "hex": "#27272a"
+          "colorSpace": "oklch",
+          "components": [0.25, 0.009, 55],
+          "hex": "#25211e"
         }
       },
       "primary": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.9804, 0.9804, 0.9804],
-          "hex": "#fafafa"
+          "colorSpace": "oklch",
+          "components": [0.95, 0.006, 55],
+          "hex": "#f2edeb"
         }
       },
       "primary-hover": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.8941, 0.8941, 0.9059],
-          "hex": "#e4e4e7"
+          "colorSpace": "oklch",
+          "components": [0.88, 0.006, 55],
+          "hex": "#dbd6d4"
         }
       },
       "secondary": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.1529, 0.1529, 0.1647],
-          "hex": "#27272a"
+          "colorSpace": "oklch",
+          "components": [0.28, 0.01, 55],
+          "hex": "#2d2824"
         }
       },
       "secondary-hover": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.2471, 0.2471, 0.2745],
-          "hex": "#3f3f46"
+          "colorSpace": "oklch",
+          "components": [0.33, 0.01, 55],
+          "hex": "#3a3431"
         }
       },
       "accent": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.1529, 0.1529, 0.1647],
-          "hex": "#27272a"
+          "colorSpace": "oklch",
+          "components": [0.29, 0.035, 195],
+          "hex": "#143131"
+        }
+      },
+      "destructive": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.56, 0.19, 27],
+          "hex": "#cc3430"
+        }
+      },
+      "destructive-hover": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.59, 0.19, 27],
+          "hex": "#d73f39"
         }
       },
       "selected": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.2471, 0.2471, 0.2745],
-          "hex": "#3f3f46"
+          "colorSpace": "oklch",
+          "components": [0.34, 0.045, 195],
+          "hex": "#173f3f"
         }
       }
     },
     "fg": {
       "default": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.9804, 0.9804, 0.9804],
-          "hex": "#fafafa"
+          "colorSpace": "oklch",
+          "components": [0.96, 0.005, 55],
+          "hex": "#f5f1ef"
         }
       },
       "muted": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.6314, 0.6314, 0.6667],
-          "hex": "#a1a1aa"
+          "colorSpace": "oklch",
+          "components": [0.72, 0.012, 55],
+          "hex": "#aba39e"
         }
       },
       "on-primary": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.0941, 0.0941, 0.1059],
-          "hex": "#18181b"
+          "colorSpace": "oklch",
+          "components": [0.2, 0.012, 55],
+          "hex": "#1a1511"
         }
       },
       "on-secondary": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.9804, 0.9804, 0.9804],
-          "hex": "#fafafa"
+          "colorSpace": "oklch",
+          "components": [0.96, 0.005, 55],
+          "hex": "#f5f1ef"
         }
       },
-      "link": {
+      "on-destructive": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.9804, 0.9804, 0.9804],
-          "hex": "#fafafa"
+          "colorSpace": "oklch",
+          "components": [1, 0, 0],
+          "hex": "#ffffff"
         }
       }
     },
     "border": {
       "default": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.1529, 0.1529, 0.1647],
-          "hex": "#27272a"
+          "colorSpace": "oklch",
+          "components": [0.3, 0.01, 55],
+          "hex": "#322d29"
         }
       },
       "subtle": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.1216, 0.1216, 0.1373],
-          "hex": "#1f1f23"
+          "colorSpace": "oklch",
+          "components": [0.26, 0.009, 55],
+          "hex": "#282320"
         }
       },
       "input": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.2471, 0.2471, 0.2745],
-          "hex": "#3f3f46"
-        }
-      },
-      "focus": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.9804, 0.9804, 0.9804],
-          "hex": "#fafafa"
+          "colorSpace": "oklch",
+          "components": [0.528, 0.012, 55],
+          "hex": "#716a65"
         }
       }
     },
     "status": {
       "running": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.3765, 0.6471, 0.9804],
-          "hex": "#60a5fa"
+          "colorSpace": "oklch",
+          "components": [0.75, 0.13, 255],
+          "hex": "#73b1ff"
         }
       },
       "success": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.2902, 0.8706, 0.502],
-          "hex": "#4ade80"
-        }
-      },
-      "error": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.9725, 0.4431, 0.4431],
-          "hex": "#f87171"
+          "colorSpace": "oklch",
+          "components": [0.78, 0.15, 150],
+          "hex": "#67d283"
         }
       },
       "warning": {
         "$value": {
-          "colorSpace": "srgb",
-          "components": [0.9843, 0.749, 0.1412],
-          "hex": "#fbbf24"
+          "colorSpace": "oklch",
+          "components": [0.82, 0.149, 72],
+          "hex": "#ffb346"
+        }
+      }
+    },
+    "accent": {
+      "brand": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.76, 0.11, 195],
+          "hex": "#47c7c7"
         }
       }
     }

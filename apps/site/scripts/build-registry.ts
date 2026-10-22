@@ -30,6 +30,17 @@ const strip = (vars: Record<string, string>) =>
     ]),
   );
 
+/** The light values of the roles dark changes: what a scoped `.light` restores. */
+const lightOverrides = () => {
+  const light: Record<string, string> = bindings.theme.light;
+  return Object.fromEntries(
+    Object.keys(bindings.theme.dark).map((property) => [
+      property,
+      light[property],
+    ]),
+  );
+};
+
 export function baseItem() {
   return {
     name: "base",
@@ -62,7 +73,20 @@ export function baseItem() {
       light: strip(bindings.theme.light),
       dark: strip(bindings.theme.dark),
     },
+    // The theme convention, the same one the generated stylesheets carry:
+    // cssVars puts light on :root and dark on .dark; this adds the system
+    // preference as the default and a scoped .light, so a consumer with no
+    // theme switcher follows the OS and one with next-themes overrides it.
     css: {
+      ":root": { "color-scheme": "light" },
+      "@media (prefers-color-scheme: dark)": {
+        ":root:not(.light)": {
+          "color-scheme": "dark",
+          ...bindings.theme.dark,
+        },
+      },
+      ".dark": { "color-scheme": "dark" },
+      ".light": { "color-scheme": "light", ...lightOverrides() },
       "@layer base": {
         "@media (prefers-reduced-motion: reduce)": {
           "*, ::before, ::after": {
@@ -79,7 +103,7 @@ export function baseItem() {
       roles: Object.keys(bindings.html.roles).length,
       spec: "packages/core/spec/tokens",
     },
-    docs: "Dark mode is class-based: add `dark` to `<html>`, for example with next-themes (not installed by this item). Lacquer components read token roles only, through the --lq-* properties and the lq- utilities (LQ-TOKEN-01); retheme by overriding --lq-* on :root and .dark. The roles and their values live in packages/core/spec/tokens (DTCG 2025.10); this item is generated from them.",
+    docs: "Dark mode follows the system preference by default; a `light` or `dark` class on <html> (next-themes, not installed by this item) or on any scope overrides it. The family roles are the platform stacks; set a brand face by overriding --lq-type-family-sans and --lq-type-family-mono. Lacquer components read token roles only, through the --lq-* properties and the lq- utilities (LQ-TOKEN-01); retheme by overriding --lq-* on :root and .dark. The roles and their values live in packages/core/spec/tokens (DTCG 2025.10), in OKLCH with every contrast pairing checked by the build; this item is generated from them.",
   };
 }
 

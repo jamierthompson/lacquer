@@ -116,14 +116,31 @@ and is read with Tailwind's variable syntax, `p-(--lq-space-inset-control-md)`.
 The few places the derivation needs steering sit on the token itself, in
 `$extensions["dev.lacquer"]`.
 
+Colors are OKLCH, so the dark theme is the same hue at another lightness,
+and the brand is one hue: `color.accent.brand`, which
+`fg.link`, `border.focus` and `accent.ai` alias (no AI purple, LQ-STYLE-01).
+A role that carries text or a control boundary declares, in
+`$extensions["dev.lacquer"].contrast`, the roles it is read against and the
+WCAG 2.x ratio it must clear (4.5 for text, 3 for a boundary). The build
+measures every declaration in every theme and fails on a miss; the measured
+pairings are emitted into `dist/bindings.json` as `contrast`, which the
+color foundation page renders. The values themselves are written by hand:
+there is no generator here, since a value sometimes has to be nudged by
+eye, and the check is what keeps a nudge honest. The conversion and the
+meter are colorjs.io's (`scripts/lib/color.ts` is the thin edge the build
+uses), and a colour outside sRGB is refused rather than clipped.
+
 The build validates the tokens (types and shapes, aliases, categories against
-`vocab.yaml`), derives both bindings into `dist/bindings.json`, and generates
-the two stylesheets in `spec/bindings/`: `html.theme.css`, which the catalog's
-HTML examples link, and `tailwind.theme.css`, which the site imports and the
-registry's base item is built from. Component CSS reads roles only, through
-`var(--lq-…)`; registry code reads them through the `lq-` utilities.
-`@lacquer/grade` runs the LQ-TOKEN-01 check over both today; the grader's
-token dimension grows from it.
+`vocab.yaml`, an OKLCH token's `hex` against its components), derives both
+bindings into `dist/bindings.json`, and generates the two stylesheets in
+`spec/bindings/`: `html.theme.css`, which the catalog's HTML examples link,
+and `tailwind.theme.css`, which the site imports and the registry's base item
+is built from. Both carry the same theme rules: light on `:root`, dark under
+the system preference unless the root says `light`, and a `dark` or `light`
+class on any scope that wins; the site's next-themes sets exactly that.
+Component CSS reads roles only, through `var(--lq-…)`; registry code reads
+them through the `lq-` utilities. `@lacquer/grade` runs the LQ-TOKEN-01 check
+over both today; the grader's token dimension grows from it.
 
 ## Renderers
 

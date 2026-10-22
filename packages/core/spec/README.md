@@ -20,12 +20,13 @@ spec/
     universal.yaml          cross-component rules (LQ-STATE, LQ-FOCUS, LQ-TOKEN …)
     ai-loop.yaml            agent-loop rules (LQ-WAIT, LQ-STREAM, LQ-TOOL, LQ-GATE …)
   tokens/
-    lacquer.tokens.json     every token role with its type and light value (DTCG Format Module 2025.10)
+    lacquer.tokens.json     every token role with its type and light value (DTCG Format Module 2025.10);
+                            colours in OKLCH, each with the pairings it must clear (`contrast`)
     dark.tokens.json        the roles whose value changes in dark
     lacquer.resolver.json   how the two compose: a `theme` modifier, light | dark (Resolver Module 2025.10)
   bindings/                 GENERATED from tokens/; never edited
-    html.theme.css          the html binding's reference theme (dark follows the system preference)
-    tailwind.theme.css      the Tailwind binding's stylesheet (@theme aliases; dark is the `dark` class)
+    html.theme.css          the html binding's reference theme
+    tailwind.theme.css      the Tailwind binding's stylesheet (@theme aliases, then the same theme rules)
   catalog/
     core/<group>/<id>/      product-agnostic components
     ai/<group>/<id>/        AI-interface components, patterns and principles
@@ -37,7 +38,12 @@ spec/
 ```
 
 The build (`../scripts/build-spec.ts`) compiles all of this into `../dist/`,
-which is not committed.
+which is not committed. Both theme stylesheets follow one dark-mode rule:
+the system preference by default, and a `light` or `dark` class on the root
+(or on any scope) wins. Colour values are OKLCH, written by hand; when you
+change one, update its `hex` too (the build tells you the right one) and
+keep every contrast pairing it declares clearing its floor in both themes,
+or the build fails.
 
 ## Writing an HTML example
 

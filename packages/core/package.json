@@ -28,6 +28,7 @@
     "@types/node": "^24.13.3",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
+    "colorjs.io": "^0.7.1",
     "typescript": "^7.0.2",
     "yaml": "^2.8.1"
   }

@@ -17,11 +17,28 @@
  *                                         unit the dimension type lacks
  *                `tailwind: { namespace?, class?, property? }`
  *                                         overrides for the derived binding
+ *                `contrast: [{ on, min }]`  a colour role must clear `min`:1
+ *                                         (WCAG 2.x) against role `on`, in
+ *                                         every theme; the build fails if not
  */
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
-import type { Binding, BindingRole, Theme } from "../../src/types.ts";
+import type {
+  Binding,
+  BindingRole,
+  ContrastPairing,
+  Theme,
+} from "../../src/types.ts";
+import {
+  contrast as contrastRatio,
+  hexToSrgb,
+  inSrgb,
+  type Oklch,
+  oklchToSrgb,
+  type Rgb,
+  toHex,
+} from "./color.ts";
 import { SPEC_DIR } from "./spec.ts";
 
 export const TOKENS_DIR = path.join(SPEC_DIR, "tokens");
@@ -99,6 +116,7 @@ export interface LacquerExtensions {
   shorthand?: "padding";
   unit?: string;
   tailwind?: { namespace?: string | null; class?: string; property?: string };
+  contrast?: { on: string; min: number }[];
 }
 
 /** One role, after resolution: its type and its metadata. Values live in TokenSet.values. */
@@ -359,6 +377,17 @@ function checkShape(type: TokenType, v: unknown): string | null {
         return "color needs { colorSpace, components[] }";
       if (c.hex !== undefined && !/^#[0-9a-f]{6}$/.test(c.hex))
         return "color.hex must be 6-digit lowercase hex";
+      if (c.colorSpace === "oklch") {
+        const [l, ch, h] = c.components;
+        if ([l, ch, h].some((x) => typeof x !== "number"))
+          return "oklch needs numeric [l, c, h]";
+        const value = { l: l as number, c: ch as number, h: h as number };
+        if (!inSrgb(value))
+          return "oklch value is outside sRGB; it is refused, not clipped";
+        const expected = toHex(value);
+        if (c.hex !== undefined && c.hex !== expected)
+          return `color.hex ${c.hex} is not its oklch value; set it to ${expected}`;
+      }
       return null;
     }
     case "dimension":
@@ -424,6 +453,75 @@ function checkShape(type: TokenType, v: unknown): string | null {
         : "a padding shorthand group needs dimension children block and inline";
     }
   }
+}
+
+// ---------------------------------------------------------------- contrast
+
+/** A colour role's sRGB in one context, following aliases; null when not a colour. */
+function srgbOf(
+  set: TokenSet,
+  role: string,
+  context: string,
+  seen = new Set<string>(),
+): Rgb | null {
+  if (seen.has(role)) return null;
+  seen.add(role);
+  const t = set.tokens.get(role);
+  if (t?.type !== "color") return null;
+  const contexts = set.values.get(role) ?? {};
+  const v = contexts[context] ?? contexts[set.contexts[0]];
+  const target = aliasTarget(v);
+  if (target) return srgbOf(set, target, context, seen);
+  const c = v as Color;
+  if (c.colorSpace === "oklch") {
+    const [l, ch, h] = c.components as number[];
+    const value: Oklch = { l, c: ch, h };
+    // An out-of-gamut value is already a shape problem; it has no sRGB to measure.
+    return inSrgb(value) ? oklchToSrgb(value) : null;
+  }
+  if (c.hex) return hexToSrgb(c.hex);
+  if (c.colorSpace === "srgb") return c.components as Rgb;
+  return null;
+}
+
+/**
+ * Every `contrast` declaration evaluated in every context: the proof the
+ * hand-written values clear what they claim, for the build to gate on and
+ * the colour foundation page to show. A pairing on a translucent or non-colour role
+ * is a problem, not a silent pass.
+ */
+export function checkContrast(set: TokenSet): {
+  pairings: ContrastPairing[];
+  problems: string[];
+} {
+  const pairings: ContrastPairing[] = [];
+  const problems: string[] = [];
+  for (const [role, t] of set.tokens) {
+    for (const { on, min } of t.ext.contrast ?? []) {
+      if (t.type !== "color") {
+        problems.push(`${role}: contrast is declared on a ${t.type} role`);
+        continue;
+      }
+      for (const context of set.contexts) {
+        const fg = srgbOf(set, role, context);
+        const bg = srgbOf(set, on, context);
+        if (!fg || !bg) {
+          problems.push(
+            `${role} (${context}): cannot check contrast against ${on} (not an opaque colour role)`,
+          );
+          continue;
+        }
+        const ratio = Math.round(contrastRatio(fg, bg) * 100) / 100;
+        const pass = ratio >= min;
+        pairings.push({ role, on, context, min, ratio, pass });
+        if (!pass)
+          problems.push(
+            `${role} (${context}): ${ratio}:1 against ${on}, needs ${min}:1`,
+          );
+      }
+    }
+  }
+  return { pairings, problems };
 }
 
 // ---------------------------------------------------------------- bindings
@@ -615,7 +713,8 @@ const comp = (x: number | "none") => (x === "none" ? x : num(x));
 
 function cssColor(c: Color): string {
   const alpha = c.alpha ?? 1;
-  if (c.hex && alpha === 1) return c.hex;
+  // hex is the sRGB fallback; a wider-gamut or perceptual space is emitted as itself.
+  if (c.hex && alpha === 1 && c.colorSpace === "srgb") return c.hex;
   const a = alpha === 1 ? "" : ` / ${num(alpha)}`;
   if (c.colorSpace === "srgb")
     return `rgb(${c.components
@@ -629,7 +728,9 @@ function cssColor(c: Color): string {
 const cssDim = (d: Dimension) => `${num(d.value)}${d.unit}`;
 const cssDur = (d: Duration) => `${num(d.value)}${d.unit}`;
 const cssFamily = (f: string | string[]) =>
-  Array.isArray(f) ? f.join(", ") : f;
+  (Array.isArray(f) ? f : [f])
+    .map((name) => (/[^a-z-]/i.test(name) ? `"${name}"` : name))
+    .join(", ");
 
 /** A sub-value that may be an alias, emitted as the html property reference. */
 function part<T>(v: T | string, emit: (x: T) => string): string {
@@ -710,28 +811,65 @@ const GENERATED = [
   " *",
 ];
 
-/** The html binding's reference theme: light on :root, dark under the system preference. */
+/**
+ * The theme rules both stylesheets share, so every binding, the base item
+ * and a site that embeds an HTML example agree on one convention: the
+ * system preference by default, and an explicit `light` or `dark` class
+ * (on the root, or on a scope) wins. That is what next-themes sets.
+ */
+/** The light values of only the roles dark changes: what a scoped `.light` has to restore. */
+export const lightOverrides = (t: Theme): Record<string, string> =>
+  Object.fromEntries(
+    Object.keys(t.dark).map((property) => [property, t.light[property]]),
+  );
+
+export function renderThemeRules(t: Theme): string {
+  return [
+    ":root {",
+    "  color-scheme: light;",
+    declarations(t.light),
+    "}",
+    "",
+    "@media (prefers-color-scheme: dark) {",
+    "  :root:not(.light) {",
+    "    color-scheme: dark;",
+    declarations(t.dark, "    "),
+    "  }",
+    "}",
+    "",
+    ".dark {",
+    "  color-scheme: dark;",
+    declarations(t.dark),
+    "}",
+    "",
+    ".light {",
+    "  color-scheme: light;",
+    declarations(lightOverrides(t)),
+    "}",
+    "",
+  ].join("\n");
+}
+
+const CONVENTION = [
+  " * Dark mode: the system preference by default; a `light` or `dark` class",
+  " * on the root (or on a scope) overrides it. The two stylesheets, the base",
+  " * registry item and the site all follow this one rule.",
+];
+
+/** The html binding's reference theme. */
 export function renderHtmlTheme(t: Theme): string {
   return [
     ...GENERATED,
     " * The html binding's reference theme: a value for every `--lq-*` property",
     " * so the catalog's HTML examples render on their own. A consumer overrides",
     " * any property on :root (or on a scope) and every example follows.",
+    ...CONVENTION,
     " */",
-    ":root {",
-    declarations(t.light),
-    "}",
-    "",
-    "@media (prefers-color-scheme: dark) {",
-    "  :root {",
-    declarations(t.dark, "    "),
-    "  }",
-    "}",
-    "",
+    renderThemeRules(t),
   ].join("\n");
 }
 
-/** The tailwind binding's stylesheet: aliases, then the values, dark on `.dark`. */
+/** The tailwind binding's stylesheet: aliases, then the theme rules. */
 export function renderTailwindTheme(
   html: Binding,
   tailwind: Binding,
@@ -743,19 +881,13 @@ export function renderTailwindTheme(
     " * Tailwind theme variable to the html binding's `--lq-*` property, so",
     " * `bg-lq-bg-primary` reads `var(--lq-color-bg-primary)` and retheming",
     " * the `--lq-*` properties rethemes both bindings. The values below are",
-    " * the reference theme; dark mode is the `dark` class on an ancestor.",
+    " * the reference theme.",
+    ...CONVENTION,
     " */",
     "@theme inline {",
     declarations(themeAliases(html, tailwind)),
     "}",
     "",
-    ":root {",
-    declarations(t.light),
-    "}",
-    "",
-    ".dark {",
-    declarations(t.dark),
-    "}",
-    "",
+    renderThemeRules(t),
   ].join("\n");
 }

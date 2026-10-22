@@ -235,6 +235,17 @@ export interface Theme {
   dark: Record<string, string>;
 }
 
+/** One declared color pairing, evaluated: `role` read against `on`, in one theme. */
+export interface ContrastPairing {
+  role: string;
+  on: string;
+  context: string;
+  /** The WCAG 2.x floor the token declares (4.5 for text, 3 for a boundary). */
+  min: number;
+  ratio: number;
+  pass: boolean;
+}
+
 /** dist/bindings.json: both bindings, the theme values and the Tailwind aliases. */
 export interface Bindings {
   version: number;
@@ -243,4 +254,6 @@ export interface Bindings {
   theme: Theme;
   /** Tailwind theme variable -> `var(--lq-…)`, what `@theme inline` declares. */
   aliases: Record<string, string>;
+  /** Every contrast pairing the tokens declare, with its measured ratio; the build fails on a miss. */
+  contrast: ContrastPairing[];
 }
