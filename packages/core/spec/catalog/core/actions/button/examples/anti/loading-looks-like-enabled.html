@@ -1,0 +1,53 @@
+<!--
+  ANTI-EXAMPLE — violates LQ-STATE-01, LQ-BUTTON-02.
+  A grader fixture: this file must FAIL. Do not copy.
+
+  What is wrong:
+   - aria-busy="true" is set while the request is in flight, but no style
+     reads it: the button looks exactly as it does enabled, so the user
+     cannot tell a request is running and presses again.
+   - Nothing blocks the second press: no aria-disabled, no pointer-events
+     gate, no script, so a click or Enter during loading reaches the
+     handler and submits twice.
+   - Everything else is in order (roles through the binding, a focus ring,
+     hover, active and disabled treated), so the findings are loading's.
+-->
+<style>
+  .send {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border: 1px solid transparent;
+    border-radius: var(--lq-radius-control);
+    padding: var(--lq-space-inset-control-md);
+    block-size: var(--lq-size-control-md);
+    font: var(--lq-type-label-md);
+    background-color: var(--lq-color-bg-primary);
+    color: var(--lq-color-fg-on-primary);
+    cursor: pointer;
+  }
+  .send:hover {
+    background-color: var(--lq-color-bg-primary-hover);
+  }
+  .send:active {
+    translate: 0 1px;
+  }
+  .send:focus-visible {
+    outline: var(--lq-focus-ring-width) solid var(--lq-color-border-focus);
+    outline-offset: var(--lq-focus-ring-offset);
+  }
+  .send:disabled {
+    opacity: var(--lq-opacity-disabled);
+  }
+  /* no .send[aria-busy="true"] rule, and the spinner part is never styled */
+</style>
+<button type="button" class="send" onclick="send()">
+  <span data-slot="label">Send</span>
+</button>
+<button type="button" class="send" disabled>
+  <span data-slot="label">Send</span>
+</button>
+<button type="button" class="send" aria-busy="true" onclick="send()">
+  <span data-slot="label">Send</span>
+</button>

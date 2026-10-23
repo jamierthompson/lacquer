@@ -8,6 +8,7 @@ import path from "node:path";
 import { loadComponent, resolvePath } from "@lacquer/core";
 import { describe, expect, it } from "vitest";
 import { PAGE_CHECKS } from "../src/checks/page.ts";
+import { gate } from "../src/drift.ts";
 import { gradeComponent, gradeFragment } from "../src/grade.ts";
 
 const REPO = path.resolve(import.meta.dirname, "../../..");
@@ -28,7 +29,9 @@ describe("button's anti-examples fail the rules they cite", () => {
       const fired = new Set(report.findings.map((f) => f.rule));
       for (const rule of executable)
         expect(fired, `${rule} should fire`).toContain(rule);
-      expect(report.findings.some((f) => f.level === "MUST")).toBe(true);
+      expect(gate(report)).not.toEqual([]);
+      // Every anti-example breaks a gate dimension (structure, states or
+      // accessibility), so the letter is capped as well as the gate failed.
       expect(report.score.letter).not.toBe("A");
     }, 60_000);
   }

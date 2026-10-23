@@ -190,6 +190,8 @@ What the grader enforces. MUST = defect, SHOULD = deduction.
 - ✗ A div pretending to be a button — `examples/anti/div-as-button.html` violates LQ-BUTTON-01, LQ-SEM-01, LQ-NAME-01
 - ✗ Literal palette values and a removed focus ring — `examples/anti/literal-purple-no-focus.html` violates LQ-TOKEN-01, LQ-FOCUS-01, LQ-STYLE-01
 - ✗ Loading state that swaps the label for a spinner and reflows — `examples/anti/spinner-reflow.html` violates LQ-BUTTON-02
+- ✗ A press that looks exactly like a hover — `examples/anti/active-looks-like-hover.html` violates LQ-STATE-01
+- ✗ aria-busy set and nothing reads it — `examples/anti/loading-looks-like-enabled.html` violates LQ-STATE-01, LQ-BUTTON-02
 
 ## Implementations
 

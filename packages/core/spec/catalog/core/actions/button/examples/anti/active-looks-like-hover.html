@@ -1,0 +1,54 @@
+<!--
+  ANTI-EXAMPLE — violates LQ-STATE-01.
+  A grader fixture: this file must FAIL. Do not copy.
+
+  What is wrong:
+   - There is no active treatment. Pressing the button looks exactly like
+     hovering it: the pointer is still over the element, so the hover
+     background is on, and nothing else changes. The user gets no
+     confirmation that the press registered until the handler does
+     something.
+   - Everything else is in order (roles through the binding, a focus ring,
+     disabled and loading treated), so the only finding is the one state.
+-->
+<style>
+  .save {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border: 1px solid transparent;
+    border-radius: var(--lq-radius-control);
+    padding: var(--lq-space-inset-control-md);
+    block-size: var(--lq-size-control-md);
+    font: var(--lq-type-label-md);
+    background-color: var(--lq-color-bg-primary);
+    color: var(--lq-color-fg-on-primary);
+    cursor: pointer;
+  }
+  .save:hover {
+    background-color: var(--lq-color-bg-primary-hover);
+  }
+  .save:focus-visible {
+    outline: var(--lq-focus-ring-width) solid var(--lq-color-border-focus);
+    outline-offset: var(--lq-focus-ring-offset);
+  }
+  .save[aria-disabled="true"] {
+    pointer-events: none;
+    opacity: var(--lq-opacity-disabled);
+  }
+  .save[aria-busy="true"] > :not([data-slot="spinner"]) {
+    opacity: 0;
+  }
+  /* no .save:active rule */
+</style>
+<button type="button" class="save" onclick="save()">
+  <span data-slot="label">Save changes</span>
+</button>
+<button type="button" class="save" aria-disabled="true">
+  <span data-slot="label">Save changes</span>
+</button>
+<button type="button" class="save" aria-busy="true" aria-disabled="true">
+  <span data-slot="spinner" aria-hidden="true"></span>
+  <span data-slot="label">Save changes</span>
+</button>

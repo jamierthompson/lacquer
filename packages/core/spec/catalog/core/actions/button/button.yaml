@@ -396,6 +396,19 @@ examples:
       file: examples/anti/spinner-reflow.html
       violates:
         - LQ-BUTTON-02
+    - id: active-looks-like-hover
+      title: A press that looks exactly like a hover
+      renderer: html
+      file: examples/anti/active-looks-like-hover.html
+      violates:
+        - LQ-STATE-01
+    - id: loading-looks-like-enabled
+      title: aria-busy set and nothing reads it
+      renderer: html
+      file: examples/anti/loading-looks-like-enabled.html
+      violates:
+        - LQ-STATE-01
+        - LQ-BUTTON-02
 implementations:
   - renderer: html
     file: examples/html/button.html
