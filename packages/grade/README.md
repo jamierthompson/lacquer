@@ -64,8 +64,8 @@ cites, since it renders nothing itself.
 `grading/rubric.yaml`, compiled to `dist/rubric.json`: per dimension, 100
 minus 25 per MUST and 8 per SHOULD, plus 2 per extra instance of the same
 rule up to 10; only dimensions in which a rule ran are scored; overall is
-the weighted mean; a MUST in structure or accessibility caps the letter at
-C. The build fails if any rule maps to no dimension.
+the weighted mean; a MUST in structure, states or accessibility caps the
+letter at C. The build fails if any rule maps to no dimension.
 
 ## Commands
 

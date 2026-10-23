@@ -19,8 +19,10 @@
 #   single one but does not zero the screen.
 # Overall = weighted mean of the dimensions that had at least one rule run
 # (a dimension whose rules were all skipped is not scored); a subject with
-# any unresolved MUST in `structure` or `accessibility` cannot grade above C
-# regardless of the mean. A skipped rule (one the grader cannot execute yet)
+# any unresolved MUST in `structure`, `states` or `accessibility` cannot grade
+# above C regardless of the mean: a component that is not built right, is not
+# usable in every state, or is not accessible is not an A whatever else it
+# does well. A skipped rule (one the grader cannot execute yet)
 # is listed with its reason and does not score either way.
 
 version: 1
@@ -123,7 +125,7 @@ letter_grades:
   F: 0
 gate:
   # Any MUST finding in these dimensions caps the overall letter at C.
-  cap_at_c_if_must_in: [structure, accessibility]
+  cap_at_c_if_must_in: [structure, states, accessibility]
 
 # What the grader needs to know about the input before it can score.
 detection:

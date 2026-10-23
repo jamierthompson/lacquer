@@ -76,6 +76,18 @@ describe("the rubric's arithmetic", () => {
     expect(s.capped).toBe(true);
   });
 
+  it("caps at C on a MUST in states: an untreated state is never an A", () => {
+    const verdicts = ran([
+      ["LQ-STATE-01", "states"],
+      ["LQ-TOKEN-01", "tokens"],
+    ]);
+    const s = score([f("LQ-STATE-01", "MUST", "states")], verdicts, rubric);
+    // states 75 at weight 1.0, tokens 100 at 0.8 -> 86 -> B, capped to C.
+    expect(s.overall).toBe(86);
+    expect(s.letter).toBe("C");
+    expect(s.capped).toBe(true);
+  });
+
   it("does not cap on a MUST outside the gate dimensions", () => {
     const verdicts = ran([
       ["LQ-TOKEN-01", "tokens"],

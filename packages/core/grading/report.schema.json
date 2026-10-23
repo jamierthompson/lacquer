@@ -127,7 +127,7 @@
         "letter": { "type": "string", "enum": ["A", "B", "C", "D", "F"] },
         "capped": {
           "type": "boolean",
-          "description": "True when a MUST in structure/accessibility capped the letter."
+          "description": "True when a MUST in a gate dimension (rubric.yaml gate.cap_at_c_if_must_in: structure, states, accessibility) capped the letter."
         },
         "dimensions": {
           "type": "object",
