@@ -1,8 +1,10 @@
 /**
  * What CI fails on: the gate (any MUST finding) and drift against the
- * committed baseline (a state that passed and no longer does, a rule that
- * passed and now fails, a dimension score that fell). A better report is
- * not drift; the baseline is just stale, and `--write` refreshes it.
+ * committed baseline: a state or rule that passed and no longer does, in
+ * any direction (it fails, it is skipped, or it is gone from the report), or
+ * a dimension score that fell. A check removed from the grader or a rule
+ * dropped from the catalog is a weaker grade, so it is drift too. A better
+ * report is not drift; the baseline is just stale, and `--write` refreshes it.
  */
 import type { Report } from "./report.ts";
 
@@ -35,11 +37,19 @@ export function drift(baseline: Report, fresh: Report): string[] {
   const ruleWas = new Map(baseline.rules.map((r) => [r.id, r.verdict]));
   for (const r of fresh.rules) {
     const before = ruleWas.get(r.id);
-    if (before === "pass" && r.verdict === "fail")
+    if (before !== "pass" || r.verdict === "pass") continue;
+    if (r.verdict === "fail")
       out.push(
         `rule ${r.id}: was pass, now fail (${r.findings} finding${r.findings === 1 ? "" : "s"})`,
       );
+    else
+      out.push(
+        `rule ${r.id}: was pass, now skipped${r.reason ? ` (${r.reason})` : ""}`,
+      );
   }
+  for (const [id, before] of ruleWas)
+    if (before === "pass" && !fresh.rules.some((r) => r.id === id))
+      out.push(`rule ${id}: was pass, now absent from the report`);
   for (const [d, before] of Object.entries(baseline.score.dimensions)) {
     const now = fresh.score.dimensions[d];
     if (now !== undefined && now < before)

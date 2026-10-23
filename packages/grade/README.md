@@ -76,8 +76,10 @@ pnpm grade:check                      # CI: regrade every baseline, fail on the 
 pnpm --filter @lacquer/grade check    # LQ-TOKEN-01 over the registry source and the catalog's examples
 ```
 
-Drift is a state that passed and no longer does, a rule that passed and now
-fails, or a dimension score that fell. A better report is not drift; the
+Drift is a state or rule that passed and no longer does, in any direction:
+it fails, it is skipped (a check removed from the grader), or it is gone from
+the report (a rule dropped from the catalog); or a dimension score that fell.
+A better report is not drift; the
 baseline is stale, and `--write` refreshes it. `generated_at` is ignored when
 comparing, and an unchanged report is not rewritten.
 

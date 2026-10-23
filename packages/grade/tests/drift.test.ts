@@ -93,6 +93,24 @@ describe("drift against the baseline", () => {
     expect(same(a, b)).toBe(false);
   });
 
+  it("reports a rule that passed and is now skipped or gone", () => {
+    const a = base();
+    const skipped = base();
+    skipped.rules[0] = {
+      ...skipped.rules[0],
+      verdict: "skipped",
+      reason: "check removed",
+    };
+    expect(drift(a, skipped)).toEqual([
+      "rule LQ-STATE-01: was pass, now skipped (check removed)",
+    ]);
+    const gone = base();
+    gone.rules = gone.rules.filter((r) => r.id !== "LQ-STATE-01");
+    expect(drift(a, gone)).toEqual([
+      "rule LQ-STATE-01: was pass, now absent from the report",
+    ]);
+  });
+
   it("reports a state the spec dropped", () => {
     const a = base();
     const b = base();
