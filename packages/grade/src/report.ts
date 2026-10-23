@@ -200,8 +200,8 @@ export async function assemble(a: Assembly): Promise<Report> {
         };
   const report = {
     version: 1 as const,
-    mode:
-      a.subject.kind === "page" ? ("runtime" as const) : ("runtime" as const),
+    // Both subject kinds are exercised, not just read: a page is driven, a module is imported and run.
+    mode: "runtime" as const,
     generated_at: new Date().toISOString(),
     component: a.spec.id,
     subject,

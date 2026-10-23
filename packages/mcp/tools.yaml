@@ -152,7 +152,9 @@ tools:
       properties:
         product_type: { type: string, enum: [classic, ai-augmented, ai-native] }
 
-  # ------------------------- grade tools: PLANNED, not implemented; they land with packages/grade
+  # ---------------------------------------------------------------- grade tools
+  # lacquer_report is implemented; lacquer_lint and lacquer_grade are PLANNED
+  # and land as packages/grade grows a screen-level mode.
   - name: lacquer_report
     phase: grade
     description: >
