@@ -154,7 +154,11 @@ export async function gradeComponent(
   id: string,
   repo: string,
 ): Promise<Graded[]> {
-  const spec = await loadComponent(id);
+  const spec = await loadComponent(id).catch(() => {
+    throw new Error(
+      `no catalog entry "${id}"; ids are the <id>.yaml names under packages/core/spec/catalog`,
+    );
+  });
   const subjects = await subjectsFor(spec, repo);
   if (!subjects.length)
     throw new Error(`${id} registers no implementation; nothing to grade`);

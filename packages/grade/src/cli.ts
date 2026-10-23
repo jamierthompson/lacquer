@@ -111,9 +111,20 @@ async function grade(args: string[]) {
 async function check(args: string[]) {
   const dir = path.join(REPO, "apps/site/reports");
   const ids = args.filter((a) => !a.startsWith("--"));
+  const all = (await readdir(dir)).filter((f) => f.endsWith(".json")).sort();
+  // A component graded for one renderer is <id>.json; for several, <id>.<renderer>.json.
   const baselines = ids.length
-    ? ids.map((id) => `${id}.json`)
-    : (await readdir(dir)).filter((f) => f.endsWith(".json")).sort();
+    ? ids.flatMap((id) => {
+        const mine = all.filter(
+          (f) => f === `${id}.json` || f.startsWith(`${id}.`),
+        );
+        if (!mine.length)
+          throw new Error(
+            `no baseline for "${id}" in apps/site/reports; write one with: lacquer-grade ${id} --write`,
+          );
+        return mine;
+      })
+    : all;
   let failed = false;
   for (const name of baselines) {
     const baseline = JSON.parse(
@@ -140,21 +151,27 @@ async function check(args: string[]) {
 
 // pnpm forwards a literal `--` when a script is given one; it is not a command.
 const [command, ...rest] = process.argv.slice(2).filter((a) => a !== "--");
-switch (command) {
-  case "tokens":
-    await tokens(rest);
-    break;
-  case "check":
-    await check(rest);
-    break;
-  case undefined:
-  case "--help":
-  case "-h":
-    console.error(
-      "usage: lacquer-grade <id>… [--write] [--json] | check [<id>…] | tokens [--json] [path…]",
-    );
-    process.exitCode = 2;
-    break;
-  default:
-    await grade([command, ...rest]);
+try {
+  switch (command) {
+    case "tokens":
+      await tokens(rest);
+      break;
+    case "check":
+      await check(rest);
+      break;
+    case undefined:
+    case "--help":
+    case "-h":
+      console.error(
+        "usage: lacquer-grade <id>… [--write] [--json] | check [<id>…] | tokens [--json] [path…]",
+      );
+      process.exitCode = 2;
+      break;
+    default:
+      await grade([command, ...rest]);
+  }
+} catch (e) {
+  // A message, not a stack: an unknown id or a missing baseline is a usage error.
+  console.error(`lacquer-grade: ${e instanceof Error ? e.message : String(e)}`);
+  process.exitCode = 1;
 }
