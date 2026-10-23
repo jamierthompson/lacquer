@@ -85,7 +85,7 @@ export async function gradePage(
     ran[rule.id] = { how: "runtime" };
     findings.push(...(await check(ctx, rule)));
   }
-  const states = await coverage(ctx, findings);
+  const states = await coverage(ctx);
   const report = await assemble({
     spec,
     subject,

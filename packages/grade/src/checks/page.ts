@@ -48,7 +48,13 @@ export interface Driven {
   required: boolean;
   /** How the grader reached the state. */
   how: string;
-  /** Styles in the state, when it could be reached. */
+  /**
+   * The state whose snapshot this one's treatment is measured against:
+   * `enabled` for most, `hover` for active, since the pointer is still over
+   * the element while it is pressed and the hover treatment is already on.
+   */
+  against: string;
+  /** Styles in the state, when it could be reached; the grader's own scaffolding (an injected part) removed. */
   snapshot?: Snapshot;
   /** The page shows an instance in this state (attribute states), or the state was driven. */
   demonstrated: boolean;
@@ -119,11 +125,25 @@ async function enabledInstance(ctx: PageContext): Promise<Locator | null> {
 
 // ---------------------------------------------------------------- states
 
+/** The part the grader injects while driving loading, when the anatomy has one. */
+const INJECTED_PART = "spinner";
+
 /** The spec's loading markup, when the anatomy has a spinner part: what an implementation adds while loading. */
 const loadingMarkup = (spec: CatalogComponent) =>
-  spec.anatomy?.some((p) => p.part === "spinner")
-    ? `<span data-slot="spinner" aria-hidden="true"></span>`
+  spec.anatomy?.some((p) => p.part === INJECTED_PART)
+    ? `<span data-slot="${INJECTED_PART}" aria-hidden="true"></span>`
     : undefined;
+
+/**
+ * A snapshot without the part the grader injected: the scaffolding is not
+ * the implementation's treatment, so it must not count as one. A loading
+ * state whose only difference from enabled is the grader's own spinner has
+ * no treatment.
+ */
+const withoutInjected = (s: Snapshot): Snapshot => {
+  const { [INJECTED_PART]: _, ...rest } = s;
+  return rest;
+};
 
 /** Reach every state the spec names on the enabled instance and read its styles. */
 async function driveStates(ctx: PageContext): Promise<Driven[]> {
@@ -140,6 +160,7 @@ async function driveStates(ctx: PageContext): Promise<Driven[]> {
         id: s.id,
         required,
         how: "default",
+        against: s.id,
         snapshot: base,
         demonstrated: Boolean(enabled),
         reason: enabled ? undefined : "no instance is in the enabled state",
@@ -151,6 +172,7 @@ async function driveStates(ctx: PageContext): Promise<Driven[]> {
         id: s.id,
         required,
         how: v?.input ?? v?.attribute?.[0] ?? "",
+        against: "enabled",
         demonstrated: false,
         reason: "no enabled instance to drive",
       });
@@ -173,6 +195,9 @@ async function driveStates(ctx: PageContext): Promise<Driven[]> {
         id: s.id,
         required,
         how,
+        // Pressing keeps the pointer over the element, so the hover
+        // treatment is on; active has to differ from hover, not from enabled.
+        against: v.input === "press" ? "hover" : "enabled",
         snapshot,
         demonstrated: !reason,
         reason,
@@ -193,19 +218,24 @@ async function driveStates(ctx: PageContext): Promise<Driven[]> {
           demonstrated++;
       // An optional state the page does not show is not driven: the
       // treatment belongs to the component that uses it (a toggle button).
+      const markup = s.id === "loading" ? loadingMarkup(spec) : undefined;
       const snapshot =
         demonstrated > 0 || required
           ? await driver.withAttributes(
               enabled,
               [attrs[0]],
-              () => driver.snapshot(enabled),
-              s.id === "loading" ? loadingMarkup(spec) : undefined,
+              async () => {
+                const snap = await driver.snapshot(enabled);
+                return markup ? withoutInjected(snap) : snap;
+              },
+              markup,
             )
           : undefined;
       out.push({
         id: s.id,
         required,
         how: `attribute: ${attrs[0]}`,
+        against: "enabled",
         snapshot,
         demonstrated: demonstrated > 0,
         reason:
@@ -221,6 +251,7 @@ async function driveStates(ctx: PageContext): Promise<Driven[]> {
       id: s.id,
       required,
       how: "",
+      against: "enabled",
       demonstrated: false,
       reason: "the vocab gives this state no attribute and no input",
     });
@@ -301,21 +332,24 @@ const stateFinding = (
   evidence,
 });
 
+/** The snapshot a driven state's treatment is measured against, when both were reached. */
+const reference = (driven: Driven[], d: Driven): Snapshot | undefined =>
+  driven.find((x) => x.id === d.against)?.snapshot;
+
 const STATE_01: Check = async (ctx, rule) => {
   const driven = await driveStates(ctx);
-  const base = driven.find((d) => d.id === "enabled")?.snapshot;
-  if (!base) return [];
   const out: Finding[] = [];
   for (const d of driven) {
-    if (d.id === "enabled" || !d.snapshot) continue;
+    const base = reference(driven, d);
+    if (d.id === d.against || !d.snapshot || !base) continue;
     if (diff(base, d.snapshot).length === 0)
       out.push(
         stateFinding(
           ctx,
           rule,
           d.id,
-          `The ${d.id} state has no visual treatment: nothing differs from enabled.`,
-          `${d.how}; computed styles of the root and its parts are identical to enabled`,
+          `The ${d.id} state has no visual treatment: nothing differs from ${d.against}.`,
+          `${d.how}; computed styles of the root and its parts are identical to ${d.against}`,
         ),
       );
   }
@@ -324,11 +358,10 @@ const STATE_01: Check = async (ctx, rule) => {
 
 const STATE_02: Check = async (ctx, rule) => {
   const driven = await driveStates(ctx);
-  const base = driven.find((d) => d.id === "enabled")?.snapshot;
-  if (!base) return [];
   const out: Finding[] = [];
   for (const d of driven) {
-    if (d.id === "enabled" || !d.snapshot) continue;
+    const base = reference(driven, d);
+    if (d.id === d.against || !d.snapshot || !base) continue;
     const deltas = diff(base, d.snapshot);
     if (deltas.length && !survivesGrayscale(deltas))
       out.push(
@@ -336,7 +369,7 @@ const STATE_02: Check = async (ctx, rule) => {
           ctx,
           rule,
           d.id,
-          `The ${d.id} state is expressed by hue alone; in grayscale it is the enabled state.`,
+          `The ${d.id} state is expressed by hue alone; in grayscale it is the ${d.against} state.`,
           describe(deltas),
         ),
       );
@@ -759,32 +792,20 @@ export const PAGE_CHECKS: Record<string, Check> = {
   "LQ-BUTTON-05": BUTTON_05,
 };
 
-/** The coverage grid rows, from the driven states and the findings that name them. */
-export async function coverage(
-  ctx: PageContext,
-  findings: Finding[],
-): Promise<StateCoverage[]> {
+/**
+ * The coverage grid rows, from the driven states alone: demonstrated or
+ * not. A demonstrated state starts as `pass`; `assemble` turns it into
+ * `fail` once findings have ids and some name the state.
+ */
+export async function coverage(ctx: PageContext): Promise<StateCoverage[]> {
   const driven = await driveStates(ctx);
-  return driven.map((d) => {
-    const named = findings
-      .filter((f) => f.state === d.id && f.id)
-      .map((f) => f.id as string);
-    const status: StateCoverage["status"] = !d.demonstrated
-      ? d.required
-        ? "missing"
-        : "skipped"
-      : named.length
-        ? "fail"
-        : "pass";
-    return {
-      id: d.id,
-      required: d.required,
-      status,
-      how: d.how || undefined,
-      reason: d.reason,
-      findings: named.length ? named : undefined,
-    };
-  });
+  return driven.map((d) => ({
+    id: d.id,
+    required: d.required,
+    status: !d.demonstrated ? (d.required ? "missing" : "skipped") : "pass",
+    how: d.how || undefined,
+    reason: d.reason,
+  }));
 }
 
 export const relative = (repo: string, file: string) =>
